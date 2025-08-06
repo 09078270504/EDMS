@@ -11,6 +11,16 @@ class Documents(models.Model):
     filename = models.CharField(max_length=255)
     document_name = models.CharField(max_length=255)
 
+    # status
+    STATUS_CHOICES = [
+        ('updated', 'Updated'),
+        ('processing', 'Processing'),
+        ('ready', 'Ready'),
+        ('error', 'Error'),
+    ]
+
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='updated')
+
     # file path
     original_path = models.CharField(max_length=500)
     ocr_path = models.CharField(max_length=500)
