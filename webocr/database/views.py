@@ -79,7 +79,7 @@ class ForgotPasswordForm(forms.Form):
         return email
 
 def base(request):
-    return render(request, 'base.html')
+    return render(request, 'search/search_form.html')
 
 # Login Form
 def login_view(request):
@@ -89,7 +89,7 @@ def login_view(request):
             user = form.get_user()
             login(request, user)
 
-            return redirect('search_form') 
+            return redirect('search_form')
         else:
             return render(request, 'auth/login.html', {'form': form})
     else:
@@ -187,7 +187,7 @@ def dashboard(request):
 # Logout 
 def logout_view(request):
     logout(request)
-    return redirect('login')
+    return redirect('base')
 
 # Search Form
 @login_required
