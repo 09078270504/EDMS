@@ -15,9 +15,18 @@ from pathlib import Path
 # Environment Variables (DONOT REMOVE)
 from decouple import config
 
+# Environment Variable (django-environ)
+import environ
+
+# importing OS
+import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# set-up environtment
+env = environ.Env(DEBUG=(bool, False)) # if we make mistakes it will read as False
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -26,9 +35,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9@@+p03*kn6hshiy!90j=%wj^peif$!c69$3#_)p%re#27r+4_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default= [])
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -78,14 +87,7 @@ WSGI_APPLICATION = 'webocr.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'archive_db',
-        'USER': 'archive_user',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
+    'default': env.db() # it read and analyze the db info
 }
 
 

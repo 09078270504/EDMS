@@ -13,3 +13,6 @@ mysql
 
 #Password reset functionality
 python-decouple>=3.8.0
+
+# Environment variable management
+django-environ>=0.12.0
