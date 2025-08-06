@@ -1,0 +1,19 @@
+<!-- templates/search/document_detail.html -->
+{% extends 'base.html' %}
+
+{% block title %}Document Detail - Archive System{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-lg">
+    <h2 class="text-2xl font-bold mb-4">{{ document.document_name }}</h2>
+    
+    <p><strong>OCR Text:</strong> {{ document.ocr_text }}</p>
+    <p><strong>File Size:</strong> {{ document.file_size }} bytes</p>
+    <p><strong>Uploaded At:</strong> {{ document.uploaded_at }}</p>
+    <p><strong>Original Path:</strong> {{ document.original_path }}</p>
+    <p><strong>OCR Path:</strong> {{ document.ocr_path }}</p>
+    <p><strong>Metadata Path:</strong> {{ document.metadata_path }}</p>
+    
+    <a href="{% url 'search_documents' %}" class="text-green-500 hover:underline">Back to Search</a>
+</div>
+{% endblock %}

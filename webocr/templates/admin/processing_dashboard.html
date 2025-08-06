@@ -1,0 +1,59 @@
+<!-- templates/admin/processing_dashboard.html -->
+<div class="bg-white p-6 rounded-lg shadow">
+    <h2 class="text-2xl font-bold mb-6">Document Processing</h2>
+    
+    <!-- Batch Processing Controls -->
+    <div class="mb-6">
+        <h3 class="text-lg font-semibold mb-4">Batch Operations</h3>
+        <div class="flex gap-4">
+            <button onclick="processPendingDocuments()" 
+                    class="bg-green-600 text-white px-4 py-2 rounded">
+                Process All Pending
+            </button>
+            <button onclick="reprocessFailed()" 
+                    class="bg-yellow-600 text-white px-4 py-2 rounded">
+                Reprocess Failed
+            </button>
+        </div>
+    </div>
+    
+    <!-- Processing Status -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-blue-100 p-4 rounded">
+            <h4 class="font-semibold">Uploaded</h4>
+            <p class="text-2xl font-bold">{{ status.uploaded }}</p>
+        </div>
+        <div class="bg-yellow-100 p-4 rounded">
+            <h4 class="font-semibold">Processing</h4>
+            <p class="text-2xl font-bold">{{ status.processing }}</p>
+        </div>
+        <div class="bg-green-100 p-4 rounded">
+            <h4 class="font-semibold">Complete</h4>
+            <p class="text-2xl font-bold">{{ status.complete }}</p>
+        </div>
+        <div class="bg-red-100 p-4 rounded">
+            <h4 class="font-semibold">Failed</h4>
+            <p class="text-2xl font-bold">{{ status.failed }}</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // WebSocket or AJAX for real-time processing updates
+function updateProcessingStatus() {
+    fetch('/api/processing-status/')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('processing-count').textContent = data.processing;
+            document.getElementById('complete-count').textContent = data.complete;
+        });
+}
+
+setInterval(updateProcessingStatus, 5000); // Update every 5 seconds
+            if (!userDropdown.classList.contains('hidden') && !userMenuButton.contains(e.target)) {
+                        userDropdown.classList.add('hidden');
+                    }
+                });
+            }
+        });
+    </script>

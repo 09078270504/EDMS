@@ -1,0 +1,34 @@
+<!-- templates/documents/document_view.html -->
+{% extends search_documents %}
+{% block title %}Document View - Archive System{% endblock %}
+    
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Original Document Panel -->
+    <div class="bg-white p-4 rounded-lg shadow">
+        <h3 class="text-lg font-semibold mb-4">Original Document</h3>
+        <div class="document-viewer">
+            <iframe src="{{ document.original_path }}" 
+                    class="w-full h-96 border rounded"></iframe>
+  </div>
+        <div class="mt-4 flex gap-2">
+            <button onclick="zoomIn()" class="bg-gray-600 text-white px-3 py-1 rounded">Zoom In</button>
+            <button onclick="zoomOut()" class="bg-gray-600 text-white px-3 py-1 rounded">Zoom Out</button>
+            <a href="{{ document.original_path }}" download 
+               class="bg-blue-600 text-white px-3 py-1 rounded">Download PDF</a>
+        </div>
+    </div>
+    
+    <!-- Extracted Text Panel -->
+    <div class="bg-white p-4 rounded-lg shadow">
+        <h3 class="text-lg font-semibold mb-4">Extracted Text</h3>
+        <div class="h-96 overflow-y-auto border rounded p-3 bg-gray-50">
+            <pre class="whitespace-pre-wrap">{{ document.ocr_text }}</pre>
+        </div>
+        <div class="mt-4 flex gap-2">
+            <button onclick="copyText()" class="bg-green-600 text-white px-3 py-1 rounded">Copy Text</button>
+            <a href="{{ document.ocr_path }}" download 
+               class="bg-blue-600 text-white px-3 py-1 rounded">Download TXT</a>
+        </div>
+    </div>
+</div>

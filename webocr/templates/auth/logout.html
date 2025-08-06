@@ -1,0 +1,28 @@
+<!-- templates/auth/login_required.html -->
+{% extends 'base.html' %}
+
+{% block title %}Please Log In{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div class="max-w-md w-full space-y-8 p-8">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold text-gray-900">You Need to Log In</h2>
+            <p class="mt-2 text-sm text-gray-600">Please sign in or register to access the documents and other features.</p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-xl">
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-xl">
+                    Sign In
+                </button>
+            </form>
+            <div class="mt-4 text-center">
+                <p class="text-sm">Don't have an account?</p>
+                <a href="{% url 'register' %}" class="text-blue-500 hover:text-blue-700">Register Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

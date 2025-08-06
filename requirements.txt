@@ -1,0 +1,15 @@
+# Django Framework
+Django>=4.2.0,<5.0.0
+
+# MySQL Database Connector
+mysqlclient>=2.1.0
+
+# Django REST Framework
+djangorestframework>=3.14.0
+
+# MySQL Database Adapter for Django
+django-mysql>=4.0.0
+mysql
+
+#Password reset functionality
+python-decouple>=3.8.0

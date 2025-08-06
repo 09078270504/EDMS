@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Archive System{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="bg-green-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Archive System</h1>
+            <div class="flex items-center space-x-4">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'search_form' %}"class="ml-4 hover:bg-green-700 
+                    px-3 py-2 rounded-md cursor-pointer transition-colors duration-200">Home</a>
+                    <a href="{% url 'dashboard' %}" class="ml-4 hover:bg-green-700 
+                    px-3 py-2 rounded-md cursor-pointer transition-colors duration-200">Documents</a>
+                    <a href="{% url 'logout' %}" class="ml-4 hover:bg-green-700 
+                    px-3 py-2 rounded-md cursor-pointer transition-colors duration-200">Logout</a>
+                    
+                    <!-- User dropdown menu -->
+                    <div class="relative">
+                        <button id="userMenuButton" class="ml-4 hover:bg-green-700 
+                        px-3 py-2 rounded-md cursor-pointer transition-colors duration-200">
+                            {{ user.username }}
+                            <svg class="inline ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Dropdown menu -->
+                        <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="{% url 'change_password' %}" class="block 
+                            px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
+                                Change Password
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="hover:underline">Login</a>
+                    <a href="{% url 'register' %}" class="hover:underline">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-8">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- JavaScript for dropdown functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuButton = document.getElementById('userMenuButton');
+            const userDropdown = document.getElementById('userDropdown');
+            
+            if (userMenuButton && userDropdown) {
+                // Toggle dropdown when button is clicked
+                userMenuButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('hidden');
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                        userDropdown.classList.add('hidden');
+                    }
+                });
+            }
+        });
+    </script>
+
+</body> 
+</html>

@@ -1,0 +1,30 @@
+<!-- Display Search Results -->
+{% extends 'base.html' %}
+
+{% block title %}Search Results - Archive System{% endblock %}
+{% block page_title %}Search Results{% endblock %}
+
+{% block content %}
+{% if documents in results %}
+    <h3 class="text-xl font-semibold mt-6">Results for: "{{ search_query }}"</h3>
+    <ul class="space-y-4 mt-4">
+        {% for document in results %}
+            <div class="bg-white p-4 border rounded-lg shadow hover:shadow-md">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="font-semibold">{{ document.metadata.invoice_number|default:document.filename }}</h3>
+                        <p class="text-gray-600">₱{{ document.metadata.amount|floatformat:2 }}</p>
+                        <p class="text-sm text-gray-500">{{ document.metadata.date_issued }}</p>
+                        <p class="text-sm">{{ document.metadata.client_name }}</p>
+                    </div>
+                    <a href="{% url 'view_document' document.id %}" class="bg-blue-600 text-white px-4 py-2 rounded">View</a>
+                </div>
+            </div>
+        {% endfor %}
+    </ul>
+{% else %}
+    {% if search_query %}
+        <p class="mt-4 text-red-500">No documents found matching your search query.</p>
+    {% endif %}
+{% endif %}
+{% endblock %}
