@@ -14,10 +14,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 # Environment Variables (DONOT REMOVE)
 from decouple import config
-
 # Environment Variable (django-environ)
 import environ
-
 # importing OS
 import os
 
@@ -32,7 +30,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9@@+p03*kn6hshiy!90j=%wj^peif$!c69$3#_)p%re#27r+4_'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
