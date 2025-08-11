@@ -18,49 +18,6 @@ from django import forms
 from django.core.mail import send_mail
 from django.conf import settings
 
-# User Creation Form
-class CustomUserCreationForm(forms.ModelForm):
-    email = forms.EmailField(
-        label='Email Address',
-        widget=forms.EmailInput(attrs={'placeholder': 'Enter your email address'}),
-        help_text='Required. Please enter a valid email address.'
-    )
-    password1 = forms.CharField(
-        label='Password',
-        widget=forms.PasswordInput,
-        help_text='Enter a password.'
-    )
-    password2 = forms.CharField(
-        label='Password confirmation',
-        widget=forms.PasswordInput,
-        help_text='Enter the same password as before, for verification.'
-    )
-
-    class Meta:
-        model = get_user_model()
-        fields = ('username', 'email')
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if get_user_model().objects.filter(email=email).exists():
-            raise forms.ValidationError("A user with this email already exists.")
-        return email
-
-    def clean_password2(self):
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("Passwords don't match")
-        return password2
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
-        user.email = self.cleaned_data["email"]
-        if commit:
-            user.save()
-        return user
-
 # Forgot Password Form
 class ForgotPasswordForm(forms.Form):
     email = forms.EmailField(
@@ -96,21 +53,6 @@ def login_view(request):
         form = AuthenticationForm()
 
     return render(request, 'auth/login.html', {'form': form})
-
-# Register Form
-def register_view(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            messages.success(request, 'Registration successful! You can now log in.')
-            return redirect('login')
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = CustomUserCreationForm()
-
-    return render(request, 'auth/register.html', {'form': form})
 
 # Forgot Password Form
 def forgot_password_view(request):

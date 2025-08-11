@@ -16,8 +16,6 @@
                         px-3 py-2 rounded-md cursor-pointer transition-colors duration-200">Home</a>
                         <a href="{% url 'dashboard' %}" class="ml-4 hover:bg-green-700 
                         px-3 py-2 rounded-md cursor-pointer transition-colors duration-200">Documents</a>
-                        <a href="{% url 'logout' %}" class="ml-4 hover:bg-green-700 
-                        px-3 py-2 rounded-md cursor-pointer transition-colors duration-200">Logout</a>
                         <!-- User dropdown menu -->
                         <div class="relative">
                             <button id="userMenuButton" class="ml-4 hover:bg-green-700 
@@ -33,13 +31,17 @@
                                 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
                                     Change Password
                                 </a>
+                                </a>
+                            <hr class="border-gray-200 my-1">
+                            <a href="{% url 'logout' %}" class="block 
+                            px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
+                                Logout
+                            </a>
                             </div>
                         </div>
                     {% else %}
                         <a href="{% url 'login' %}" class="ml-4 hover:bg-green-700 
                         px-3 py-2 rounded-md cursor-pointer transition-colors duration-200">Login</a>
-                        <a href="{% url 'register' %}" class="ml-4 hover:bg-green-700 
-                        px-3 py-2 rounded-md cursor-pointer transition-colors duration-200">Register</a>
                     {% endif %}
                 </div>
             </div>
