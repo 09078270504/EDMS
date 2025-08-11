@@ -6,23 +6,21 @@ from . import views
 from .views import change_password
 
 urlpatterns = [
-    #Root URL of site
+    # Root URL of site
     path('search/', views.search_form, name='search_form'),
-    #Base URL of the site
+    # Base URL of the site
     path('', views.base, name='base'),
-    #Authentication URLs
+    # Authentication URLs
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
-    #Home page / Dashboard
+    # Home page / Dashboard
     path('dashboard/', views.dashboard, name='dashboard'),
-    #Search URLs
+    # Search URLs
     path('search_documents/', views.search_documents, name='search_documents'),
     path('documents_view/', views.dashboard, name='documents_view'),
     path('document/<int:document_id>/', views.document_detail, name='document_detail'),
-    #Registration URL
-    path('register/', views.register_view, name='register'),
-    #Password Change URL
+    # Password Change URL
     path('change_password/', change_password, name='change_password'),
-    #Forgot password functionality
+    # Forgot password functionality
     path('forgot-password/', views.forgot_password_view, name='forgot_password'),
 ]
