@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'database',
     'rest_framework',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -133,7 +134,7 @@ LOGIN_URL = '/login/'  # Fixed: Added leading slash to prevent relative URL issu
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'database.User'
+AUTH_USER_MODEL = 'core.User'
 
 # Email configuration for password reset
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
