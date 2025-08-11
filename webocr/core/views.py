@@ -17,6 +17,7 @@ from django import forms
 #For Email Functionality
 from django.core.mail import send_mail
 from django.conf import settings
+from database.models import Document
 
 # Forgot Password Form
 class ForgotPasswordForm(forms.Form):
