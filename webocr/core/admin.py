@@ -1,7 +1,7 @@
 # Register your models here.
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User  # Import your custom user model
+from database.models import User  # Import your custom user model
 
 # Register your models here.
 class CustomUserAdmin(UserAdmin):

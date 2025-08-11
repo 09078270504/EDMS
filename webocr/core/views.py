@@ -1,5 +1,5 @@
 #From models app
-from .models import Document
+from database.models import Document
 #Core Django shortcut
 from django.shortcuts import render, redirect, get_object_or_404
 #Database query

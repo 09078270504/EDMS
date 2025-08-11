@@ -134,7 +134,7 @@ LOGIN_URL = '/login/'  # Fixed: Added leading slash to prevent relative URL issu
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = 'database.User'
 
 # Email configuration for password reset
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
