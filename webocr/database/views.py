@@ -79,7 +79,7 @@ class ForgotPasswordForm(forms.Form):
         return email
 
 def base(request):
-    return render(request, 'auth/login.html')
+    return render(request, 'base.html')
 
 # Login Form
 def login_view(request):
