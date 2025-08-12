@@ -31,7 +31,7 @@
             </div>
 
             <!-- Buttons row -->
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center justify-center space-x-4">
                 <!-- Search button -->
                 <button
                 type="submit" id="search-btn" rows="4"
@@ -45,39 +45,6 @@
                 </svg>
                 Search Documents
                 </button>
-
-                <!-- Upload File button -->
-                <label
-                for="document_file"
-                class="inline-flex items-center gap-2 bg-green-50 text-green-800
-                        px-4 py-2 rounded-full border border-green-200 hover:bg-green-100 cursor-pointer"
-                >
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M7 16V4h6l4 4v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/>
-                </svg>
-                Upload File
-                <input type="file" id="document_file" name="document_file" class="hidden" />
-                </label>
-
-                <!-- Upload Image button -->
-                <label
-                for="document_image"
-                class="inline-flex items-center gap-2 bg-green-50 text-green-800
-                        px-4 py-2 rounded-full border border-green-200 hover:bg-green-100 cursor-pointer"
-                >
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7
-                            a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M8 13l2 2 4-4"/>
-                </svg>
-                Upload Image
-                <input type="file" id="document_image" name="document_image" accept="image/*" class="hidden" />
-                </label>
             </div>
         </form>
 
