@@ -40,3 +40,16 @@ class Document(models.Model):
         if self.ocr_filename:
             return f"/webocr/ocr/{self.ocr_filename}"
         return None
+    
+    # for readability
+    def __str__(self):
+        return f"{self.client_name} - {self.document_name}"
+    
+    # for query performance
+    class Meta:
+        ordering = ['-upload_date']
+        indexes = (
+            models.Index(fields=['client_name']),
+            models.Index(fields=['status']),
+            models.Index(fields=['upload_date']),
+        )
