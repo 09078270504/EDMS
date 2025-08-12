@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Temporarily Locked - Archive System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #e8f5f3 0%, #d1ede7 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .lockout-container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease-out;
+            border: 1px solid #e9ecef;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .lock-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #17a2b8, #20c997);
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .lock-icon svg {
+            width: 40px;
+            height: 40px;
+            color: white;
+        }
+
+        h1 {
+            color: #2c5530;
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .message {
+            color: #5a6c7d;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .countdown {
+            background: #f8fffe;
+            border: 2px solid #20c997;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .countdown-timer {
+            font-size: 24px;
+            font-weight: bold;
+            color: #17a2b8;
+            margin-bottom: 10px;
+        }
+
+        .countdown-text {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .security-tips {
+            background: #e8f8f5;
+            border-left: 4px solid #20c997;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .security-tips h3 {
+            color: #20c997;
+            font-size: 16px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .security-tips ul {
+            color: #495057;
+            font-size: 14px;
+            list-style-position: inside;
+        }
+
+        .security-tips li {
+            margin-bottom: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #20c997;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #17a2b8;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(32, 201, 151, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 480px) {
+            .lockout-container {
+                padding: 30px 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lockout-container">
+        <div class="lock-icon">
+            <svg fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+            </svg>
+        </div>
+        
+        <h1>Account Temporarily Locked</h1>
+        
+        <p class="message">
+            Your account has been temporarily locked due to 5 failed login attempts. 
+            This is a security measure to protect your account.
+        </p>
+
+        <div class="countdown">
+            <div class="countdown-timer" id="countdown">05:00</div>
+            <div class="countdown-text">Time remaining until unlock</div>
+        </div>
+
+        <div class="security-tips">
+            <h3>
+                <svg width="16" height="16" fill="currentColor" style="margin-right: 8px;" viewBox="0 0 16 16">
+                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                </svg>
+                Security Tips
+            </h3>
+            <ul>
+                <li>Make sure you're using the correct username and password</li>
+                <li>Check if Caps Lock is enabled</li>
+                <li>Consider resetting your password if you've forgotten it</li>
+                <li>Contact support if you believe this is an error</li>
+            </ul>
+        </div>
+
+        <div class="action-buttons">
+            <a href="{% url 'forgot_password' %}" class="btn btn-primary">Reset Password</a>
+            <a href="/login/" class="btn btn-primary" id="tryAgainBtn" style="display: none;">Try Again</a>
+        </div>
+    </div>
+
+    <script>
+        // Set default values if Django context variables are not available
+        let timeLeft = 300; // Default 5 minutes
+        let lockoutExpired = false;
+        
+        // Try to get values from Django context if available
+        try {
+            // These will be replaced by Django template variables when properly configured
+            timeLeft = parseInt("{{ remaining_seconds|default:300 }}") || 300;
+            lockoutExpired = "{{ lockout_expired|yesno:'true,false' }}" === "true";
+        } catch (e) {
+            // Fallback to defaults if template variables aren't available
+            console.log("Using default timer values");
+        }
+        
+        function updateCountdown() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            
+            document.getElementById('countdown').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft > 0) {
+                timeLeft--;
+            } else {
+                // Timer finished
+                document.getElementById('countdown').textContent = "00:00";
+                document.querySelector('.countdown-text').textContent = "You can now try logging in again";
+                document.querySelector('.countdown').style.background = "#e8f5e9";
+                document.querySelector('.countdown').style.borderColor = "#4caf50";
+                
+                // Show the "Try Again" button and hide "Reset Password"
+                document.getElementById('tryAgainBtn').style.display = 'inline-block';
+                document.querySelector('a[href="/password-reset/"]').style.display = 'none';
+                
+                // Update the main message
+                document.querySelector('.message').innerHTML = 
+                    'The lockout period has ended. You can now attempt to log in again.';
+                    
+                // Add some visual feedback
+                document.querySelector('.countdown-timer').style.color = '#4caf50';
+            }
+        }
+        
+        // If lockout already expired when page loads
+        if (lockoutExpired) {
+            timeLeft = 0;
+            updateCountdown();
+        } else {
+            // Update countdown every second
+            setInterval(updateCountdown, 1000);
+            updateCountdown(); // Initial call
+        }
+    </script>
+</body>
+</html>

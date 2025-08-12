@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
+from datetime import timedelta
 
 # model for user
 class User(AbstractUser):
@@ -53,3 +55,35 @@ class Document(models.Model):
             models.Index(fields=['status']),
             models.Index(fields=['upload_date']),
         )
+    
+# For login attempts
+class LoginAttempt(models.Model):
+    ip_address = models.GenericIPAddressField()
+    username = models.CharField(max_length=150, blank=True)
+    attempt_time = models.DateTimeField(auto_now_add=True)
+    failures_count = models.IntegerField(default=1)
+    
+    def is_locked_out(self):
+        if self.failures_count >= 5:
+            lockout_time = self.attempt_time + timedelta(seconds=300)  # 5 minutes
+            return timezone.now() < lockout_time
+        return False
+    
+    def remaining_lockout_time(self):
+        if self.is_locked_out():
+            lockout_time = self.attempt_time + timedelta(seconds=300)
+            return int((lockout_time - timezone.now()).total_seconds())
+        return 0
+    
+    # Correct __str__ method for LoginAttempt
+    def __str__(self):
+        return f"Login attempt from {self.ip_address} - {self.username}"
+    
+    # Correct Meta class for LoginAttempt
+    class Meta:
+        ordering = ['-attempt_time']
+        indexes = [
+            models.Index(fields=['ip_address']),
+            models.Index(fields=['username']),
+            models.Index(fields=['attempt_time']),
+        ]

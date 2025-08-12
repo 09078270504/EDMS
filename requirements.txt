@@ -16,3 +16,9 @@ python-decouple>=3.8.0
 
 # Environment variable management
 django-environ>=0.12.0
+
+# For django CSP
+django-csp>=4.0
+
+# For keeping track of user login attempts
+django-axes>=8.0.0
