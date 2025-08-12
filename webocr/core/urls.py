@@ -23,4 +23,6 @@ urlpatterns = [
     path('change_password/', change_password, name='change_password'),
     # Forgot password functionality
     path('forgot-password/', views.forgot_password_view, name='forgot_password'),
+    # Account lock
+    path('account-locked/', views.account_locked_view, name='account_locked'),
 ]
