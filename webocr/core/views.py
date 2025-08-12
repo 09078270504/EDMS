@@ -18,7 +18,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 #For Log in attempts 
 from django.utils import timezone
-from database.models import LoginAttempt
+from .models import LoginAttempt
 from datetime import timedelta
 
 from database.models import Document
