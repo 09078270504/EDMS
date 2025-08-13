@@ -426,8 +426,12 @@ def login_view(request):
             # Success - clear any failed attempts
             LoginAttempt.objects.filter(ip_address=ip_address, username=username).delete()
             login(request, user)
+            
             return redirect('search_form')
             return redirect('dashboard')  # Change to your success page
+
+            return redirect('search_form')  # Change to your success page
+
         else:
             # Failed login - record attempt
             attempt, created = LoginAttempt.objects.get_or_create(
