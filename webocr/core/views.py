@@ -387,6 +387,8 @@ class ForgotPasswordForm(forms.Form):
         return email
 
 def base(request):
+    if request.user.is_authenticated:
+        return redirect('search_form')  # Replace 'search_form' with your actual URL name
     return render(request, 'base.html')
 
 # Register Form (aint no way im sure)
@@ -428,9 +430,6 @@ def login_view(request):
             login(request, user)
             
             return redirect('search_form')
-            return redirect('dashboard')  # Change to your success page
-
-            return redirect('search_form')  # Change to your success page
 
         else:
             # Failed login - record attempt
