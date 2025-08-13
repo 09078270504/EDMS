@@ -1,24 +1,27 @@
 #For URL routes
 from django.urls import path
 #Imports views.py
-from . import views
+from .import views
 #Imports change_password from views.py
 from .views import change_password
 
 urlpatterns = [
-    # Root URL of site
-    path('search/', views.search_form, name='search_form'),
-    # Base URL of the site
-    path('', views.base, name='base'),
     # Authentication URLs
+    path('', views.base, name='base'),
     path('login/', views.login_view, name='login'),
+    #path('register/', views.register_view, name='register'),
+    path('forgot-password/', views.forgot_password_view, name='forgot_password'),
     path('logout/', views.logout_view, name='logout'),
-    # Home page / Dashboard
     path('dashboard/', views.dashboard, name='dashboard'),
-    # Search URLs
-    path('search_documents/', views.search_documents, name='search_documents'),
-    path('documents_view/', views.dashboard, name='documents_view'),
+    path('change-password/', views.change_password, name='change_password'),
+    
+    # Search URLs (Simplified)
+    path('search/', views.search_form, name='search_form'),                    # Search form
+    path('search/documents/', views.search_documents, name='search_documents'), # Results page (automatic search)
+    
+    # Document URLs
     path('document/<int:document_id>/', views.document_detail, name='document_detail'),
+    path('documents/', views.documents_view, name='documents_view'),
     # Password Change URL
     path('change_password/', change_password, name='change_password'),
     # Forgot password functionality
@@ -26,3 +29,5 @@ urlpatterns = [
     # Account lock
     path('account-locked/', views.account_locked_view, name='account_locked'),
 ]
+
+
