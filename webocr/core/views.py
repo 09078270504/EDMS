@@ -724,7 +724,7 @@ def change_password(request):
             user = form.save()
             update_session_auth_hash(request, user)
             messages.success(request, 'Your password has been successfully updated!')
-            return redirect('dashboard')
+            return redirect('search_form')
         else:
             for field, errors in form.errors.items():
                 for error in errors:
