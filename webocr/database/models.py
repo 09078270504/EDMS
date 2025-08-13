@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.utils import timezone
-from datetime import timedelta
 
 # model for user
 class User(AbstractUser):
@@ -55,4 +53,3 @@ class Document(models.Model):
             models.Index(fields=['status']),
             models.Index(fields=['upload_date']),
         )
-    
