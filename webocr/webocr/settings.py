@@ -16,6 +16,7 @@ from pathlib import Path
 import environ
 # importing OS
 import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,6 +24,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # set-up environtment
 env = environ.Env(DEBUG=(bool, False)) # if we make mistakes it will read as False
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# Directory
+UPLOAD_FOLDER = BASE_DIR.parent / 'upload'
+ARCHIVE_FOLDER = BASE_DIR.parent / 'archive'
+DATABASE_FOLDER = BASE_DIR.parent / 'database'
+
+#  OCR Configuration
+OPENAI_API_KEY = config('OPENAI_API_KEY', default='')
+TESSERACT_CMD = config('TESSERACT_CMD', default='/usr/bin/tesseract')
+
+DOCUMENT_PROCESSING_MAX_RETRIES = 3  # Maximum retry attempts per document
+DOCUMENT_PROCESSING_RETRY_DELAY = 2  # Base delay between retries (seconds)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -46,6 +59,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'csp', # For Content Security Policy 
     'core',
+    # 'document_processor',
 ]
 
 MIDDLEWARE = [

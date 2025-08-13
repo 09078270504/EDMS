@@ -1,24 +1,30 @@
 # Django Framework
 Django>=4.2.0,<5.0.0
 
-# MySQL Database Connector
+# Database
 mysqlclient>=2.1.0
+django-mysql>=4.0.0
 
-# Django REST Framework
+# REST API
 djangorestframework>=3.14.0
 
-# MySQL Database Adapter for Django
-django-mysql>=4.0.0
-mysql
-
-#Password reset functionality
+# Environment & Configuration
 python-decouple>=3.8.0
-
-# Environment variable management
 django-environ>=0.12.0
 
-# For django CSP
+# Security & Auth
 django-csp>=4.0
-
-# For keeping track of user login attempts
 django-axes>=8.0.0
+
+# Document Processing Core
+openai>=1.40.0
+PyMuPDF>=1.23.0
+Pillow>=10.0.0
+pytz>=2023.3
+
+# Optional Document Processing
+pdf2image>=1.16.0
+python-magic>=0.4.0
+
+# Production (Optional)
+gunicorn>=21.2.0
