@@ -1,33 +1,36 @@
-#From models app
-from database.models import Document# Fixed: Use consistent model name
-from database.serializer import DocumentListSerializer
-#Core Django shortcut
-from django.shortcuts import render, redirect, get_object_or_404
-#Database query
-from django.db.models import Q
-#For Authentication System
-from django.contrib.auth import login, logout, get_user_model, update_session_auth_hash, authenticate
-#Authentication Forms
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
-#For Access Control
-from django.contrib.auth.decorators import login_required
-#For User Interface
-from django.contrib import messages
-from django import forms
-#For Email Functionality
-from django.core.mail import send_mail
-from django.conf import settings
-#For SEARCH API
-import json
-import os
-import re
-from django.http import JsonResponse
-#For Log in attempts 
-from django.utils import timezone
-from .models import LoginAttempt
-from datetime import timedelta
+# ===========================
+# DJANGO IMPORTS
+# ===========================
+from django.shortcuts import render, redirect, get_object_or_404  # Core shortcuts
+from django.http import JsonResponse  # For API responses
+from django.views.decorators.http import require_GET  # For GET-only views
+from django.db.models import Q  # For advanced queries
+from django.contrib.auth import (
+    login, logout, get_user_model, update_session_auth_hash, authenticate)# Auth functions
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm  # Auth forms
+from django.contrib.auth.decorators import login_required  # Access control
+from django.contrib import messages  # User messages
+from django import forms  # Forms
+from django.core.mail import send_mail  # Email
+from django.conf import settings  # Settings
+from django.utils import timezone  # Timezone
 
-# User Creation Form (aint sure)
+# ===========================
+# PROJECT IMPORTS
+# ===========================
+from .models import LoginAttempt  # Local models
+from database.models import Document  # Document model
+from database.serializer import DocumentListSerializer  # Serializer
+
+# ===========================
+# STANDARD LIBRARY IMPORTS
+# ===========================
+import json  # JSON handling
+import os  # File system
+import re  # Regex
+from datetime import timedelta  # Time delta
+
+# User Creation Form
 """class CustomUserCreationForm(forms.ModelForm):
     email = forms.EmailField(
         label='Email Address',
@@ -364,11 +367,6 @@ search_engine = TwoStageSearchEngine()
 
 # ===================================
 #For Log in attempts 
-from django.utils import timezone
-from .models import LoginAttempt
-from datetime import timedelta
-
-from database.models import Document
 
 # Forgot Password Form
 class ForgotPasswordForm(forms.Form):
@@ -734,7 +732,10 @@ def change_password(request):
         form = PasswordChangeForm(request.user)
     return render(request, 'auth/change_password.html', {'form': form})
 
-def some_api_view(request):
+@require_GET
+@login_required
+def document_list_api(request):
+    """API endpoint to return all documents as JSON."""
     documents = Document.objects.all()
     serializer = DocumentListSerializer(documents, many=True)
     return JsonResponse(serializer.data, safe=False)
