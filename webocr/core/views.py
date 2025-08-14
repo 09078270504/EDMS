@@ -619,8 +619,7 @@ def search_documents(request):
     
     if search_query:
         search_performed = True
-        
-        print(f"Starting automatic search for: '{search_query}'")
+        print(f"Starting search: '{search_query}'")
         
         # STAGE 1: Try metadata search first (fast)
         print(f"Stage 1: Searching metadata...")
@@ -636,9 +635,7 @@ def search_documents(request):
             
         else:
             # No results in metadata - automatically try deep search
-            print(f"Stage 1 found 0 results - trying Stage 2...")
-            print(f"Stage 2: Searching full OCR content...")
-            
+            print("No Stage 1 matches - falling back to Stage 2")
             stage_2_results = search_engine.stage_2_search(search_query, 'all', client_filter)
             
             if stage_2_results:
