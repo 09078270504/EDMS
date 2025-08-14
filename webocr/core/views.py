@@ -1,32 +1,36 @@
-#From models app
-from database.models import Document  # Fixed: Use consistent model name
-#Core Django shortcut
-from django.shortcuts import render, redirect, get_object_or_404
-#Database query
-from django.db.models import Q
-#For Authentication System
-from django.contrib.auth import login, logout, get_user_model, update_session_auth_hash, authenticate
-#Authentication Forms
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
-#For Access Control
-from django.contrib.auth.decorators import login_required
-#For User Interface
-from django.contrib import messages
-from django import forms
-#For Email Functionality
-from django.core.mail import send_mail
-from django.conf import settings
-#For SEARCH API
-import json
-import os
-import re
-from django.http import JsonResponse
-#For Log in attempts 
-from django.utils import timezone
-from .models import LoginAttempt
-from datetime import timedelta
+# ===========================
+# DJANGO IMPORTS
+# ===========================
+from django.shortcuts import render, redirect, get_object_or_404  # Core shortcuts
+from django.http import JsonResponse  # For API responses
+from django.views.decorators.http import require_GET  # For GET-only views
+from django.db.models import Q  # For advanced queries
+from django.contrib.auth import (
+    login, logout, get_user_model, update_session_auth_hash, authenticate)# Auth functions
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm  # Auth forms
+from django.contrib.auth.decorators import login_required  # Access control
+from django.contrib import messages  # User messages
+from django import forms  # Forms
+from django.core.mail import send_mail  # Email
+from django.conf import settings  # Settings
+from django.utils import timezone  # Timezone
 
-# User Creation Form (aint sure)
+# ===========================
+# PROJECT IMPORTS
+# ===========================
+from .models import LoginAttempt  # Local models
+from database.models import Document  # Document model
+from database.serializer import DocumentListSerializer  # Serializer
+
+# ===========================
+# STANDARD LIBRARY IMPORTS
+# ===========================
+import json  # JSON handling
+import os  # File system
+import re  # Regex
+from datetime import timedelta  # Time delta
+
+# User Creation Form
 """class CustomUserCreationForm(forms.ModelForm):
     email = forms.EmailField(
         label='Email Address',
@@ -86,7 +90,7 @@ class TwoStageSearchEngine:
         Stage 1: Search only metadata files
         Returns: List of matching documents with metadata preview
         """
-        print(f"🔍 Stage 1: Searching metadata for '{query}'")
+        print(f"Stage 1: Searching metadata for '{query}'")
         
         # Get all documents from database with file paths
         documents = Document.objects.all()  # Fixed: Use Document instead of Documents
@@ -363,11 +367,6 @@ search_engine = TwoStageSearchEngine()
 
 # ===================================
 #For Log in attempts 
-from django.utils import timezone
-from .models import LoginAttempt
-from datetime import timedelta
-
-from database.models import Document
 
 # Forgot Password Form
 class ForgotPasswordForm(forms.Form):
@@ -620,38 +619,25 @@ def search_documents(request):
     
     if search_query:
         search_performed = True
-        
-        print(f"Starting automatic search for: '{search_query}'")
+        print(f"Starting search: '{search_query}'")
         
         # STAGE 1: Try metadata search first (fast)
-        print(f"Stage 1: Searching metadata...")
         stage_1_results = search_engine.stage_1_search(search_query, client_filter)
         
         if stage_1_results:
             # Found results in metadata - use them
-            print(f"Stage 1 found {len(stage_1_results)} results - using metadata search")
             results = convert_stage_1_results(stage_1_results)
             total_results = len(results)
             search_stage_used = 1
             search_type = 'metadata'
-            
         else:
             # No results in metadata - automatically try deep search
-            print(f"Stage 1 found 0 results - trying Stage 2...")
-            print(f"Stage 2: Searching full OCR content...")
-            
+            print("No Stage 1 matches - falling back to Stage 2")
             stage_2_results = search_engine.stage_2_search(search_query, 'all', client_filter)
             
             if stage_2_results:
-                print(f"Stage 2 found {len(stage_2_results)} results - using deep search")
                 results = convert_stage_2_results(stage_2_results)
                 total_results = len(results)
-                search_stage_used = 2
-                search_type = 'full_content'
-            else:
-                print(f"Stage 2 found 0 results - no documents found")
-                results = []
-                total_results = 0
                 search_stage_used = 2
                 search_type = 'full_content'
     
@@ -661,7 +647,7 @@ def search_documents(request):
         'results': results,
         'total_results': total_results,
         'search_performed': search_performed,
-        'search_stage_used': search_stage_used,  # Which stage actually found results
+        'search_stage_used': search_stage_used,
         'search_type': search_type,
         'available_clients': Document.objects.values_list('client_name', flat=True).distinct()
     }
@@ -724,7 +710,7 @@ def change_password(request):
             user = form.save()
             update_session_auth_hash(request, user)
             messages.success(request, 'Your password has been successfully updated!')
-            return redirect('dashboard')
+            return redirect('search_form')
         else:
             for field, errors in form.errors.items():
                 for error in errors:
@@ -732,3 +718,11 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'auth/change_password.html', {'form': form})
+
+@require_GET
+@login_required
+def document_list_api(request):
+    """API endpoint to return all documents as JSON."""
+    documents = Document.objects.all()
+    serializer = DocumentListSerializer(documents, many=True)
+    return JsonResponse(serializer.data, safe=False)
