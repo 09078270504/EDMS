@@ -33,13 +33,25 @@
     </div>
 </div>
 <script>
+    // Function to zoom in the document
     function zoomIn() {
-    // Implement zoom functionality
-}
+        const iframe = document.querySelector('.document-viewer iframe');
+        let currentZoom = parseFloat(iframe.style.zoom) || 1;
+        currentZoom += 0.1;
+        iframe.style.zoom = currentZoom;
+    }
 
-function copyText() {
-    const textContent = document.querySelector('pre').textContent;
-    navigator.clipboard.writeText(textContent);
-}
+    // Function to zoom out the document
+    function zoomOut() {
+        const iframe = document.querySelector('.document-viewer iframe');
+        let currentZoom = parseFloat(iframe.style.zoom) || 1;
+        currentZoom = Math.max(0.1, currentZoom - 0.1);
+        iframe.style.zoom = currentZoom;
+    }
 
+    // Function to copy extracted text to clipboard
+    function copyText() {
+        const textContent = document.querySelector('.bg-gray-50 pre').textContent;
+        navigator.clipboard.writeText(textContent);
+    }
 </script>

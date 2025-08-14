@@ -10,9 +10,9 @@
     <p><strong>OCR Text:</strong> {{ document.ocr_text }}</p>
     <p><strong>File Size:</strong> {{ document.file_size }} bytes</p>
     <p><strong>Uploaded At:</strong> {{ document.uploaded_at }}</p>
-    <p><strong>Original Path:</strong> {{ document.original_path }}</p>
-    <p><strong>OCR Path:</strong> {{ document.ocr_path }}</p>
-    <p><strong>Metadata Path:</strong> {{ document.metadata_path }}</p>
+    <p><strong>Original File Path:</strong> {{ document.original_file_path }}</p>
+    <p><strong>OCR File Path:</strong> {{ document.ocr_file_path }}</p>
+    <p><strong>Metadata File Path:</strong> {{ document.metadata_file_path }}</p>
     
     <a href="{% url 'search_documents' %}" class="text-green-500 hover:underline">Back to Search</a>
 </div>
