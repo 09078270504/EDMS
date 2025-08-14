@@ -1,5 +1,6 @@
 #From models app
-from database.models import Document  # Fixed: Use consistent model name
+from database.models import Document# Fixed: Use consistent model name
+from database.serializer import DocumentListSerializer
 #Core Django shortcut
 from django.shortcuts import render, redirect, get_object_or_404
 #Database query
@@ -732,3 +733,8 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'auth/change_password.html', {'form': form})
+
+def some_api_view(request):
+    documents = Document.objects.all()
+    serializer = DocumentListSerializer(documents, many=True)
+    return JsonResponse(serializer.data, safe=False)
