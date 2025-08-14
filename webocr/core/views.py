@@ -90,7 +90,7 @@ class TwoStageSearchEngine:
         Stage 1: Search only metadata files
         Returns: List of matching documents with metadata preview
         """
-        print(f"🔍 Stage 1: Searching metadata for '{query}'")
+        print(f"Stage 1: Searching metadata for '{query}'")
         
         # Get all documents from database with file paths
         documents = Document.objects.all()  # Fixed: Use Document instead of Documents
@@ -622,32 +622,22 @@ def search_documents(request):
         print(f"Starting search: '{search_query}'")
         
         # STAGE 1: Try metadata search first (fast)
-        print(f"Stage 1: Searching metadata...")
         stage_1_results = search_engine.stage_1_search(search_query, client_filter)
         
         if stage_1_results:
             # Found results in metadata - use them
-            print(f"Stage 1 found {len(stage_1_results)} results - using metadata search")
             results = convert_stage_1_results(stage_1_results)
             total_results = len(results)
             search_stage_used = 1
             search_type = 'metadata'
-            
         else:
             # No results in metadata - automatically try deep search
             print("No Stage 1 matches - falling back to Stage 2")
             stage_2_results = search_engine.stage_2_search(search_query, 'all', client_filter)
             
             if stage_2_results:
-                print(f"Stage 2 found {len(stage_2_results)} results - using deep search")
                 results = convert_stage_2_results(stage_2_results)
                 total_results = len(results)
-                search_stage_used = 2
-                search_type = 'full_content'
-            else:
-                print(f"Stage 2 found 0 results - no documents found")
-                results = []
-                total_results = 0
                 search_stage_used = 2
                 search_type = 'full_content'
     
@@ -657,7 +647,7 @@ def search_documents(request):
         'results': results,
         'total_results': total_results,
         'search_performed': search_performed,
-        'search_stage_used': search_stage_used,  # Which stage actually found results
+        'search_stage_used': search_stage_used,
         'search_type': search_type,
         'available_clients': Document.objects.values_list('client_name', flat=True).distinct()
     }
