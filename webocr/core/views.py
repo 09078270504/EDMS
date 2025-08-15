@@ -5,8 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404  # Core shortcu
 from django.http import JsonResponse  # For API responses
 from django.views.decorators.http import require_GET  # For GET-only views
 from django.db.models import Q  # For advanced queries
-from django.contrib.auth import (
-    login, logout, get_user_model, update_session_auth_hash, authenticate)# Auth functions
+from django.contrib.auth import login, logout, get_user_model, update_session_auth_hash, authenticate # Auth functions
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm  # Auth forms
 from django.contrib.auth.decorators import login_required  # Access control
 from django.contrib import messages  # User messages
@@ -14,13 +13,17 @@ from django import forms  # Forms
 from django.core.mail import send_mail  # Email
 from django.conf import settings  # Settings
 from django.utils import timezone  # Timezone
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.views import View
 
 # ===========================
 # PROJECT IMPORTS
 # ===========================
-from .models import LoginAttempt  # Local models
+from .models import LoginAttempt, SecurityEvent, UserSession, SuspiciousActivity  # Local models
 from database.models import Document  # Document model
 from database.serializer import DocumentListSerializer  # Serializer
+from .security_utils import log_security_event, track_user_session, check_multiple_failed_logins # For enhanced log in view
 
 # ===========================
 # STANDARD LIBRARY IMPORTS
@@ -29,6 +32,46 @@ import json  # JSON handling
 import os  # File system
 import re  # Regex
 from datetime import timedelta  # Time delta
+
+
+# For team integrations
+@method_decorator(csrf_exempt, name='dispatch')
+class SecurityEventsAPI(View):
+    """API endpoint for other teams to access security events"""
+    
+    def get(self, request):
+        # Get recent security events
+        events = SecurityEvent.objects.filter(
+            timestamp__gte=timezone.now() - timedelta(hours=24)
+        ).values(
+            'event_type', 'user__username', 'ip_address', 
+            'timestamp', 'risk_level'
+        )[:100]
+        
+        return JsonResponse({
+            'status': 'success',
+            'events': list(events),
+            'count': len(events)
+        })
+
+@method_decorator(csrf_exempt, name='dispatch') 
+class SuspiciousActivitiesAPI(View):
+    """API endpoint for suspicious activities"""
+    
+    def get(self, request):
+        activities = SuspiciousActivity.objects.filter(
+            is_resolved=False
+        ).values(
+            'activity_type', 'user__username', 'ip_address',
+            'description', 'timestamp'
+        )
+        
+        return JsonResponse({
+            'status': 'success',
+            'suspicious_activities': list(activities),
+            'count': len(activities)
+        })
+
 
 # User Creation Form
 """class CustomUserCreationForm(forms.ModelForm):
@@ -416,6 +459,13 @@ def login_view(request):
         try:
             attempt = LoginAttempt.objects.get(ip_address=ip_address, username=username)
             if attempt.is_locked_out():
+                # Log account locked event
+                log_security_event(
+                    event_type='account_locked',
+                    username_attempted=username,
+                    request=request,
+                    risk_level='medium'
+                )
                 return redirect('account_locked')
         except LoginAttempt.DoesNotExist:
             pass
@@ -424,14 +474,26 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
-            # Success - clear any failed attempts
+            # SUCCESS - Clear failed attempts and log
             LoginAttempt.objects.filter(ip_address=ip_address, username=username).delete()
+            
+            # Log successful login
+            log_security_event(
+                event_type='login_success',
+                user=user,
+                request=request,
+                risk_level='low'
+            )
+            
+            # Track user session
+            track_user_session(user, request)
+            
+            # Django login
             login(request, user)
             
             return redirect('search_form')
-
         else:
-            # Failed login - record attempt
+            # FAILURE - Record attempt and log
             attempt, created = LoginAttempt.objects.get_or_create(
                 ip_address=ip_address,
                 username=username,
@@ -442,8 +504,26 @@ def login_view(request):
                 attempt.attempt_time = timezone.now()
                 attempt.save()
             
+            # Log failed login
+            log_security_event(
+                event_type='login_failure',
+                username_attempted=username,
+                request=request,
+                extra_data={'failures_count': attempt.failures_count},
+                risk_level='medium' if attempt.failures_count >= 3 else 'low'
+            )
+            
+            # Check for suspicious activity
+            check_multiple_failed_logins(ip_address, username)
+            
             # Check if now locked out
             if attempt.failures_count >= 5:
+                log_security_event(
+                    event_type='account_locked',
+                    username_attempted=username,
+                    request=request,
+                    risk_level='high'
+                )
                 return redirect('account_locked')
             
             messages.error(request, 'Invalid username or password')
@@ -482,10 +562,27 @@ def forgot_password_view(request):
                 User = get_user_model()
                 user = User.objects.get(email=email)
                 
-                # User password set to default "comfac123" when reset
+                # Log password reset request
+                log_security_event(
+                    event_type='password_reset_request',
+                    user=user,
+                    request=request,
+                    risk_level='medium'
+                )
+                
+                # Reset password
                 user.set_password("comfac123")
                 user.save()
                 
+                # Log password reset completion
+                log_security_event(
+                    event_type='password_reset_complete',
+                    user=user,
+                    request=request,
+                    risk_level='medium'
+                )
+                
+                # Send email (your existing code)
                 subject = 'Password Reset - Archive System'
                 message = f'''
 Dear {user.first_name or user.username},
@@ -501,9 +598,6 @@ For your security, we recommend that you:
 
 Best regards,
 Archive System Team
-
----
-This is an automated message. Please do not reply to this email.
                 '''
                 
                 send_mail(
@@ -544,6 +638,23 @@ def dashboard(request):
 
 # Logout 
 def logout_view(request):
+    user = request.user
+    
+    if user.is_authenticated:
+        # Log logout event
+        log_security_event(
+            event_type='logout',
+            user=user,
+            request=request,
+            risk_level='low'
+        )
+        
+        # End user session
+        UserSession.objects.filter(
+            user=user,
+            session_key=request.session.session_key
+        ).update(is_active=False)
+    
     logout(request)
     return redirect('base')
 
@@ -709,6 +820,15 @@ def change_password(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
+            
+            # Log password change
+            log_security_event(
+                event_type='password_change',
+                user=user,
+                request=request,
+                risk_level='medium'
+            )
+            
             messages.success(request, 'Your password has been successfully updated!')
             return redirect('search_form')
         else:
@@ -718,6 +838,7 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'auth/change_password.html', {'form': form})
+
 
 @require_GET
 @login_required

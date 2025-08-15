@@ -3,7 +3,7 @@ from django.urls import path
 #Imports views.py
 from .import views
 #Imports change_password from views.py
-from .views import change_password
+from .views import change_password, SecurityEventsAPI, SuspiciousActivitiesAPI
 
 urlpatterns = [
     # Authentication URLs
@@ -28,6 +28,9 @@ urlpatterns = [
     path('forgot-password/', views.forgot_password_view, name='forgot_password'),
     # Account lock
     path('account-locked/', views.account_locked_view, name='account_locked'),
+    # For team integrations
+    path('api/security-events/', SecurityEventsAPI.as_view(), name='security_events_api'),
+    path('api/suspicious-activities/', SuspiciousActivitiesAPI.as_view(), name='suspicious_activities_api'),
 ]
 
 

@@ -1,22 +1,20 @@
 # core/middleware.py
-from django.shortcuts import redirect
-from django.urls import reverse, resolve
-from database.models import LoginAttempt
+from django.utils import timezone
+from .models import UserSession  
+from .security_utils import log_security_event
 
-class LockoutMiddleware:
+class SecurityMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        current_url = resolve(request.path_info).url_name
-        
-        # Block access to login if locked out
-        if current_url == 'login':
-            ip_address = request.META.get('REMOTE_ADDR', '')
-            attempt = LoginAttempt.objects.filter(ip_address=ip_address).order_by('-attempt_time').first()
-            
-            if attempt and attempt.is_locked_out():
-                return redirect('account_locked')
+        # Update last activity for authenticated users
+        if request.user.is_authenticated and hasattr(request, 'session'):
+            UserSession.objects.filter(
+                user=request.user,
+                session_key=request.session.session_key,
+                is_active=True
+            ).update(last_activity=timezone.now())
         
         response = self.get_response(request)
         return response
