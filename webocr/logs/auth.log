@@ -1,0 +1,10 @@
+INFO 2025-08-15 14:02:50,647 security_utils 9532 21372 login_failure: User=Crissel, IP=127.0.0.1
+INFO 2025-08-15 14:04:58,299 security_utils 16940 23080 login_failure: User=Crissel, IP=127.0.0.1
+INFO 2025-08-15 14:10:21,520 security_utils 16940 23080 login_success: User=Crissel, IP=127.0.0.1
+INFO 2025-08-15 14:10:29,658 security_utils 16940 23080 logout: User=Crissel, IP=127.0.0.1
+INFO 2025-08-15 14:10:34,421 security_utils 16940 23080 login_failure: User=Crissel, IP=127.0.0.1
+INFO 2025-08-15 14:10:38,343 security_utils 16940 23080 login_failure: User=Crissel, IP=127.0.0.1
+INFO 2025-08-15 14:10:41,423 security_utils 16940 23080 login_failure: User=Crissel, IP=127.0.0.1
+INFO 2025-08-15 14:10:44,588 security_utils 16940 23080 login_failure: User=Crissel, IP=127.0.0.1
+INFO 2025-08-15 14:10:48,075 security_utils 16940 23080 login_failure: User=Crissel, IP=127.0.0.1
+INFO 2025-08-15 14:15:54,225 security_utils 16940 22836 login_success: User=Crissel, IP=127.0.0.1
