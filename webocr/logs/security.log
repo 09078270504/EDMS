@@ -17,3 +17,6 @@ INFO 2025-08-15 14:10:48,075 security_utils 16940 23080 login_failure: User=Cris
 WARNING 2025-08-15 14:10:48,084 security_utils 16940 23080 suspicious_activity: User=, IP=127.0.0.1
 WARNING 2025-08-15 14:10:48,089 security_utils 16940 23080 account_locked: User=Crissel, IP=127.0.0.1
 INFO 2025-08-15 14:15:54,224 security_utils 16940 22836 login_success: User=Crissel, IP=127.0.0.1
+INFO 2025-08-15 14:40:59,759 security_utils 5964 7772 logout: User=lim123, IP=127.0.0.1
+INFO 2025-08-15 14:41:02,669 security_utils 5964 7772 login_success: User=lim123, IP=127.0.0.1
+INFO 2025-08-15 14:41:06,034 security_utils 5964 7772 logout: User=lim123, IP=127.0.0.1
