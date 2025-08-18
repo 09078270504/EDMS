@@ -32,4 +32,18 @@ INFO 2025-08-18 16:07:48,164 security_utils 13392 14088 login_success: User=lim1
 INFO 2025-08-18 16:07:55,884 security_utils 13392 14088 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-18 16:12:29,164 security_utils 748 268 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-18 16:14:01,353 security_utils 748 268 login_success: User=lim123, IP=127.0.0.1
+<<<<<<< Updated upstream
 
+=======
+INFO 2025-08-18 08:28:35,832 security_utils 32239 126290778646208 login_failure: User=Bunsenpasta, IP=127.0.0.1
+INFO 2025-08-18 08:28:43,206 security_utils 32239 126290778646208 login_failure: User=Bunsenpasta, IP=127.0.0.1
+INFO 2025-08-18 08:28:45,865 security_utils 32239 126290778646208 login_failure: User=Bunsenpasta, IP=127.0.0.1
+WARNING 2025-08-18 08:28:46,041 security_utils 32239 126290778646208 suspicious_activity: User=, IP=127.0.0.1
+INFO 2025-08-18 08:28:49,155 security_utils 32239 126290778646208 login_failure: User=Bunsenpasta, IP=127.0.0.1
+WARNING 2025-08-18 08:28:49,296 security_utils 32239 126290778646208 suspicious_activity: User=, IP=127.0.0.1
+INFO 2025-08-18 08:29:00,157 security_utils 32239 126290778646208 login_failure: User=Bunsenpasta, IP=127.0.0.1
+WARNING 2025-08-18 08:29:00,330 security_utils 32239 126290778646208 suspicious_activity: User=, IP=127.0.0.1
+WARNING 2025-08-18 08:29:00,505 security_utils 32239 126290778646208 account_locked: User=Bunsenpasta, IP=127.0.0.1
+INFO 2025-08-18 08:31:54,802 security_utils 33111 126237423953600 login_success: User=Chimpanzee, IP=127.0.0.1
+INFO 2025-08-18 08:36:38,537 security_utils 33111 126237423953600 login_success: User=Chimpanzee, IP=127.0.0.1
+>>>>>>> Stashed changes
