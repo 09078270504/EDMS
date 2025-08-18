@@ -29,3 +29,5 @@ INFO 2025-08-18 08:28:49,155 security_utils 32239 126290778646208 login_failure:
 INFO 2025-08-18 08:29:00,158 security_utils 32239 126290778646208 login_failure: User=Bunsenpasta, IP=127.0.0.1
 INFO 2025-08-18 08:31:54,803 security_utils 33111 126237423953600 login_success: User=Chimpanzee, IP=127.0.0.1
 INFO 2025-08-18 08:36:38,538 security_utils 33111 126237423953600 login_success: User=Chimpanzee, IP=127.0.0.1
+INFO 2025-08-18 16:58:00,834 security_utils 6008 27104 login_success: User=arvie, IP=127.0.0.1
+INFO 2025-08-18 16:59:12,586 security_utils 6008 26140 login_success: User=arvie, IP=127.0.0.1
