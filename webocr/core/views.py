@@ -815,23 +815,17 @@ def documents_view(request):
 
 # Password Change
 
+
+
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            update_session_auth_hash(request, user)
-            
-            # Log password change
-            log_security_event(
-                event_type='password_change',
-                user=user,
-                request=request,
-                risk_level='medium'
-            )
-            
-            messages.success(request, 'Your password has been successfully updated!')
-            return redirect('search_form')
+            # Don't update session auth hash since we're logging out
+            messages.success(request, 'Password changed successfully! Please log in again.')
+            logout(request)  # Add this line to log the user out
+            return redirect('login')
         else:
             for field, errors in form.errors.items():
                 for error in errors:
