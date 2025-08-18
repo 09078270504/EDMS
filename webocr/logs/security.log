@@ -24,5 +24,12 @@ INFO 2025-08-18 10:54:25,455 security_utils 5576 11692 logout: User=lim123, IP=1
 INFO 2025-08-18 10:54:45,024 security_utils 5576 11692 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-18 10:54:45,808 security_utils 5576 7348 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-18 13:09:41,058 security_utils 14756 13960 login_success: User=lim123, IP=127.0.0.1
+
 INFO 2025-08-18 15:56:38,828 security_utils 16148 22580 login_failure: User=Crissel, IP=127.0.0.1
 INFO 2025-08-18 15:57:08,399 security_utils 16148 22580 login_success: User=Zapatero, IP=127.0.0.1
+
+INFO 2025-08-18 16:07:48,164 security_utils 13392 14088 login_success: User=lim123, IP=127.0.0.1
+INFO 2025-08-18 16:07:55,884 security_utils 13392 14088 logout: User=lim123, IP=127.0.0.1
+INFO 2025-08-18 16:12:29,164 security_utils 748 268 login_success: User=lim123, IP=127.0.0.1
+INFO 2025-08-18 16:14:01,353 security_utils 748 268 login_success: User=lim123, IP=127.0.0.1
+
