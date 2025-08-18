@@ -814,6 +814,7 @@ def documents_view(request):
     return render(request, 'documents/documents_view.html', {'document': document})
 
 # Password Change
+
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
