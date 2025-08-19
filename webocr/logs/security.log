@@ -55,9 +55,3 @@ INFO 2025-08-19 05:32:06,288 security_utils 17386 130043969791680 login_failure:
 INFO 2025-08-19 05:32:26,218 security_utils 17386 130043969791680 login_success: User=zapatero, IP=127.0.0.1
 INFO 2025-08-19 06:20:11,704 security_utils 17386 130043892201152 logout: User=zapatero, IP=127.0.0.1
 INFO 2025-08-19 06:20:19,535 security_utils 17386 130043892201152 login_success: User=zapatero, IP=127.0.0.1
-INFO 2025-08-19 15:44:13,982 security_utils 5440 1916 logout: User=lim123, IP=127.0.0.1
-INFO 2025-08-19 15:44:17,213 security_utils 5440 1916 login_success: User=lim123, IP=127.0.0.1
-INFO 2025-08-19 15:44:59,486 security_utils 5440 1916 logout: User=lim123, IP=127.0.0.1
-INFO 2025-08-19 15:45:02,320 security_utils 5440 1916 login_success: User=lim123, IP=127.0.0.1
-INFO 2025-08-19 15:49:42,691 security_utils 14412 12644 login_success: User=lim123, IP=127.0.0.1
-INFO 2025-08-19 15:50:26,798 security_utils 14412 12644 logout: User=lim123, IP=127.0.0.1
