@@ -6,41 +6,42 @@
 {% block content %}
 <div class="min-h-screen">
     <!-- Header-->
-    <div id="greetingSection" class="h-screen flex items-center justify-center px-4 transition-all duration-700 ease-out">
-        <div class="w-full max-w-3xl">
-            <!-- Main title -->
-            <div id="pageHeader" class="text-center mb-16 transition-all duration-500">
-                <h1 class="text-4xl sm:text-5xl font-extrabold tracking-wide text-green-700">
-                    How can I help you today?
-                </h1>
-            </div>
+<div id="greetingSection" class="h-screen flex items-center justify-center px-4 transition-all duration-700 ease-out">
+    <div class="w-full max-w-3xl flex flex-col items-center space-y-8">
+        <!-- Main title -->
+        <div id="pageHeader" class="text-center transition-all duration-500">
+            <h1 class="text-4xl sm:text-5xl font-extrabold tracking-wide text-green-700">
+                How can I help you today?
+            </h1>
+        </div>
 
-            <!-- Input area -->
-            <div id="initialInputContainer" class="relative transition-all duration-700 ease-out">
-                <form id="chatForm" class="relative">
-                    <div class="flex items-center bg-white rounded-full shadow-lg border border-gray-200 px-6 py-4">
-                        <input
-                            type="text"
-                            id="messageInput"
-                            name="search_query"
-                            placeholder="Ask anything..."
-                            class="flex-1 border-none outline-none text-gray-800 placeholder-gray-400 bg-transparent text-lg"
-                        />
-                        <button
-                            id="sendButton"
-                            type="submit"
-                            disabled
-                            class="ml-4 w-10 h-10 bg-gray-300 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-full transition-all duration-200 flex items-center justify-center hover:bg-green-600 disabled:hover:bg-gray-300"
-                        >
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                            </svg>
-                        </button>
-                    </div>
-                </form>
-            </div>
+        <!-- Input area -->
+        <div id="initialInputContainer" class="w-full transition-all duration-700 ease-out">
+            <form id="chatForm" class="relative">
+                <div class="flex items-center bg-white rounded-full shadow-lg border border-gray-200 px-6 py-4">
+                    <input
+                        type="text"
+                        id="messageInput"
+                        name="search_query"
+                        placeholder="Ask anything..."
+                        class="flex-1 border-none outline-none text-gray-800 placeholder-gray-400 bg-transparent text-lg"
+                    />
+                    <button
+                        id="sendButton"
+                        type="submit"
+                        disabled
+                        class="ml-4 w-10 h-10 bg-gray-300 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-full transition-all duration-200 flex items-center justify-center hover:bg-green-600 disabled:hover:bg-gray-300"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
 
     <!-- Conversation section (nakatago muna) -->
     <div id="conversationSection" class="hidden min-h-screen px-4 pt-4 pb-8">
