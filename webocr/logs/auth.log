@@ -31,3 +31,9 @@ INFO 2025-08-18 08:31:54,803 security_utils 33111 126237423953600 login_success:
 INFO 2025-08-18 08:36:38,538 security_utils 33111 126237423953600 login_success: User=Chimpanzee, IP=127.0.0.1
 INFO 2025-08-18 16:58:00,834 security_utils 6008 27104 login_success: User=arvie, IP=127.0.0.1
 INFO 2025-08-18 16:59:12,586 security_utils 6008 26140 login_success: User=arvie, IP=127.0.0.1
+INFO 2025-08-19 02:20:08,595 security_utils 71985 137476421183168 login_failure: User=Crissel, IP=127.0.0.1
+INFO 2025-08-19 02:20:25,671 security_utils 71985 137476421183168 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-08-19 05:32:06,314 security_utils 17386 130043969791680 login_failure: User=Crissel, IP=127.0.0.1
+INFO 2025-08-19 05:32:26,219 security_utils 17386 130043969791680 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-08-19 06:20:11,882 security_utils 17386 130043892201152 logout: User=zapatero, IP=127.0.0.1
+INFO 2025-08-19 06:20:19,536 security_utils 17386 130043892201152 login_success: User=zapatero, IP=127.0.0.1
