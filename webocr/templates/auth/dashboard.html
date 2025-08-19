@@ -1,462 +1,506 @@
 {% extends "base.html" %}
 
-{% block title %}Document Search - Archive System{% endblock %}
-{% block page_title %}Document Search{% endblock %}
+{% block title %}Smart Chat - Archive System{% endblock %}
+{% block page_title %}Smart chat{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto px-4 py-10">
-
-    <!-- Header -->
-    <div id="pageHeader" class="text-center mb-10 transition-opacity duration-500 ease-out">
-        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-wide text-green-700">Document Search</h1>
-        <p class="mt-3 text-s font-custom-verdana text-gray-600">Find your documents quickly</p>
-    </div>
-
-    <!-- Search (centered, pill) -->
-    <div class="relative max-w-3xl mx-auto">
-        <form id="searchForm" action="{% url 'search_documents' %}" method="GET" class="relative">
-            <!-- left search icon (vertically centered) -->
-            <div class="absolute inset-y-0 left-4 flex items-center">
-                <svg class="h-5 w-5 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"/>
-                </svg>
+<div class="min-h-screen">
+    <!-- Header-->
+    <div id="greetingSection" class="h-screen flex items-center justify-center px-4 transition-all duration-700 ease-out">
+        <div class="w-full max-w-3xl">
+            <!-- Main title -->
+            <div id="pageHeader" class="text-center mb-16 transition-all duration-500">
+                <h1 class="text-4xl sm:text-5xl font-extrabold tracking-wide text-green-700">
+                    How can I help you today?
+                </h1>
             </div>
 
-            <input
-                type="text"
-                id="search_query"
-                name="search_query"
-                placeholder="Search documents..."
-                value="{{ request.GET.search_query }}"
-                autocomplete="off"
-                class="w-full h-14 pl-12 pr-28 rounded-full bg-white shadow-2xl shadow-gray-500/50
-                        focus:ring-2 focus:ring-green-600 focus:outline-none text-base placeholder-gray-400"
-            />
-
-            <!-- Hidden filter inputs for form submission -->
-            <input type="hidden" id="client_filter_hidden" name="client_filter" value="{{ request.GET.client_filter }}">
-            <input type="hidden" id="date_from_hidden" name="date_from" value="{{ request.GET.date_from }}">
-            <input type="hidden" id="date_to_hidden" name="date_to" value="{{ request.GET.date_to }}">
-            <input type="hidden" name="view" value="{{ request.GET.view }}">
-
-            <!-- right-side action icons (always centered inside input) -->
-            <div class="absolute inset-y-0 right-2 flex items-center gap-1">
-                <!-- clear (x) -->
-                <button id="clearBtn" type="button"
-                        class="hidden h-10 w-10 rounded-full hover:bg-gray-100 text-black"
-                        title="Clear">
-                    <svg class="mx-auto h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6L6 18"/>
-                    </svg>
-                </button>
-
-                <!-- filter -->
-                <button id="filterBtn" type="button"
-                        class="h-10 w-10 rounded-full hover:bg-gray-100 text-black transition-colors"
-                        title="Filters">
-                    <svg class="mx-auto h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6h18M6 12h12M10 18h4"/>
-                    </svg>
-                </button>
-            </div>
-
-            <button type="submit" class="hidden">Search</button>
-        </form>
-    </div>
-
-    <!-- View toggles -->
-    <div class="max-w-6xl mx-auto">
-        <div class="mt-6 flex justify-end">
-            <div class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1">
-                <!-- List view -->
-                <a href="?{% for key, value in request.GET.items %}{% if key != 'view' %}{{ key }}={{ value }}&{% endif %}{% endfor %}" title="List view"
-                class="inline-flex h-8 w-8 items-center justify-center rounded-full {% if request.GET.view != 'grid' %}bg-green-200 text-black{% else %}hover:bg-green-200 text-black{% endif %}">
-                    <i class="fa-solid fa-list"></i>
-                </a>
-                <!-- Grid view -->
-                <a href="?view=grid&{% for key, value in request.GET.items %}{% if key != 'view' %}{{ key }}={{ value }}&{% endif %}{% endfor %}" title="Grid view"
-                class="inline-flex h-8 w-8 items-center justify-center rounded-full {% if request.GET.view == 'grid' %}bg-green-200 text-black{% else %}hover:bg-green-200 text-black{% endif %}">
-                    <i class="fa-solid fa-border-all"></i>
-                </a>
+            <!-- Input area -->
+            <div id="initialInputContainer" class="relative transition-all duration-700 ease-out">
+                <form id="chatForm" class="relative">
+                    <div class="flex items-center bg-white rounded-full shadow-lg border border-gray-200 px-6 py-4">
+                        <input
+                            type="text"
+                            id="messageInput"
+                            name="search_query"
+                            placeholder="Ask anything..."
+                            class="flex-1 border-none outline-none text-gray-800 placeholder-gray-400 bg-transparent text-lg"
+                        />
+                        <button
+                            id="sendButton"
+                            type="submit"
+                            disabled
+                            class="ml-4 w-10 h-10 bg-gray-300 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-full transition-all duration-200 flex items-center justify-center hover:bg-green-600 disabled:hover:bg-gray-300"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>  
+    </div>
 
-    <!-- Results section - conditional based on view type -->
-    {% if request.GET.view == 'grid' %}
-        <!-- Grid view -->
-        <div class="mt-4">
-            {% if documents and documents|length > 0 %}
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {% for d in documents %}
-                    <div class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow">
-                        <div class="flex items-center justify-center h-20 mb-3 bg-red-50 rounded-lg">
-                            <span class="inline-flex h-8 w-8 items-center justify-center rounded bg-red-100 text-red-600 font-semibold text-xs">PDF</span>
-                        </div>
-                        <div class="text-center">
-                            <h3 class="font-medium text-gray-900 truncate mb-1" title="{{ d.name }}">{{ d.name }}</h3>
-                            <p class="text-xs text-gray-500 mb-1">{{ d.modified_at|date:"n/j/Y" }}</p>
-                            <p class="text-xs text-gray-500 mb-2">{{ d.size_display }}</p>
-                            <p class="text-xs text-gray-600">{{ d.item_type }}</p>
-                        </div>
-                        <div class="mt-3 flex justify-center">
-                            <button class="inline-flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100" title="More">
-                                <svg class="h-4 w-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                                    <path d="M6 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm6 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm6 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="text-center py-14">
-                    <div class="mx-auto h-16 w-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                        <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+    <!-- Conversation section (nakatago muna) -->
+    <div id="conversationSection" class="hidden min-h-screen px-4 pt-4 pb-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Messages container -->
+            <div id="messagesList" class="space-y-6 pb-32">
+                <!-- Messages will be added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Area ng conversation -->
+    <div id="fixedInputArea" class="hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-10">
+        <div class="max-w-4xl mx-auto">
+            <form id="chatFormActive" action="{% url 'search_documents' %}" method="POST" class="relative">
+                {% csrf_token %}
+                <div class="flex items-end bg-gray-50 rounded-2xl border border-gray-200 px-6 py-3">
+                    <textarea
+                        id="messageInputActive"
+                        name="message"
+                        placeholder="Ask anything..."
+                        rows="1"
+                        class="flex-1 border-none outline-none text-gray-800 placeholder-gray-400 bg-transparent resize-none overflow-y-auto max-h-32 min-h-[24px]"
+                        style="scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent;"
+                    ></textarea>
+                    <button
+                        id="sendButtonActive"
+                        type="submit"
+                        disabled
+                        class="ml-4 w-8 h-8 bg-gray-300 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-full transition-all duration-200 flex items-center justify-center hover:bg-green-600 disabled:hover:bg-gray-300 flex-shrink-0"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                         </svg>
-                    </div>
-                    <p class="text-gray-500">No documents found. Try another query or adjust filters.</p>
+                    </button>
                 </div>
-            {% endif %}
-        </div>
-    {% else %}
-        <!-- List view (table) -->
-        <div class="mt-4 bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-            <div class="overflow-x-auto">
-                <table class="min-w-full text-sm">
-                    <thead class="bg-gray-50 text-gray-600">
-                        <tr>
-                            <th class="py-3 pl-6 pr-3 text-left font-semibold">Name</th>
-                            <th class="px-3 py-3 text-left font-semibold">Date Modified</th>
-                            <th class="px-3 py-3 text-left font-semibold">Item</th>
-                            <th class="px-6 py-3 text-right font-semibold">File Size</th>
-                            <th class="px-3 py-3"></th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 text-gray-800">
-                        {% if documents and documents|length > 0 %}
-                            {% for d in documents %}
-                            <tr class="hover:bg-gray-50">
-                                <td class="py-4 pl-6 pr-3">
-                                    <div class="flex items-center gap-3">
-                                        <span class="inline-flex h-6 w-6 items-center justify-center rounded-sm bg-red-100 text-red-600 font-semibold text-[10px]">PDF</span>
-                                        <div class="truncate">{{ d.name }}</div>
-                                    </div>
-                                </td>
-                                <td class="px-3 py-4 text-gray-600">{{ d.modified_at|date:"n/j/Y g:i A" }}</td>
-                                <td class="px-3 py-4 text-gray-600">{{ d.item_type }}</td>
-                                <td class="px-6 py-4 text-right text-gray-600">{{ d.size_display }}</td>
-                                <td class="px-3 py-4 text-right">
-                                    <button class="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100" title="More">
-                                        <svg class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M6 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm6 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm6 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
-                                        </svg>
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        {% else %}
-                            <tr>
-                                <td colspan="5" class="py-14 text-center text-gray-500">
-                                    No documents found. Try another query or adjust filters.
-                                </td>
-                            </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    {% endif %}
-
-    <!-- Tips -->
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="rounded-xl bg-green-50 border border-green-100 p-6">
-            <h3 class="text-green-900 font-semibold mb-2">How it works</h3>
-            <p class="text-green-800 text-sm">
-                Search by keywords, company names, amounts, or document IDs. Use the filter button to narrow by client and date.
-            </p>
-        </div>
-        <div class="rounded-xl bg-gray-50 border border-gray-200 p-6">
-            <h3 class="text-gray-900 font-semibold mb-2">Search examples</h3>
-            <ul class="text-sm text-gray-700 space-y-1">
-                <li>• "Philippine Airlines"</li>
-                <li>• "PHP 15,000"</li>
-                <li>• "OR-12345"</li>
-                <li>• "invoice 2024"</li>
-            </ul>
+            </form>
         </div>
     </div>
 </div>
 
-<!-- Filter Popup Modal -->
-<div id="filterModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-2xl w-full max-w-2xl mx-4 p-8 shadow-2xl transform transition-all">
-        <!-- Modal Header -->
-        <div class="flex items-center justify-between mb-8">
-            <h3 class="text-2xl font-bold font-custom-verdana text-green-600">Advanced Search</h3>
-            <button id="closeModalBtn" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                <svg class="h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6L6 18"/>
-                </svg>
-            </button>
-        </div>
-
-        <!-- Filter Form -->
-        <div class="space-y-6">
-            <!-- Item Type -->
-            <div>
-                <label class="block text-sm font-medium text-gray-900 mb-3">Item:</label>
-                <div class="relative">
-                    <select id="client_filter" class="w-full appearance-none bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:ring-green-600 focus:border-transparent">
-                        <option value="">Any</option>
-                        {% for client in available_clients %}
-                        <option value="{{ client }}" {% if request.GET.client_filter == client %}selected{% endif %}>{{ client }}</option>
-                        {% endfor %}
-                    </select>
-                    <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Item Name -->
-            <div>
-                <label class="block text-sm font-medium text-gray-900 mb-3">Item name:</label>
-                <input type="text" id="item_name" placeholder="Enter a term that matches part of the file name"
-                       class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-green-600 focus:border-transparent">
-            </div>
-
-            <!-- Includes the words -->
-            <div>
-                <label class="block text-sm font-medium text-gray-900 mb-3">Includes the words:</label>
-                <input type="text" id="includes_words" placeholder="Enter words found in the file"
-                       class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-green-600 focus:border-transparent">
-            </div>
-
-            <!-- Date Range -->
-            <div class="grid grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-3">From:</label>
-                    <input type="date" id="date_from" value="{{ request.GET.date_from }}"
-                           class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:ring-green-600 focus:border-transparent">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-3">To:</label>
-                    <input type="date" id="date_to" value="{{ request.GET.date_to }}"
-                           class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:ring-green-600 focus:border-transparent">
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Footer -->
-        <div class="flex justify-center gap-4 mt-8 pt-6">
-            <button id="resetFiltersBtn" class="px-8 py-3 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors">
-                Reset
-            </button>
-            <button id="applyFiltersBtn" class="px-8 py-3 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors">
-                Search
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- Custom font -->
+<!-- Custom font and styles -->
 <style>
     .font-custom-verdana { 
         font-family: Verdana, sans-serif; 
     }
     
-    /* Modal animation */
-    #filterModal.show {
-        animation: fadeIn 0.2s ease-out;
+    /* Smooth animations */
+    .fade-in {
+        animation: fadeIn 0.8s ease-out;
     }
     
-    #filterModal.show > div {
-        animation: slideUp 0.2s ease-out;
+    .slide-up {
+        animation: slideUp 0.5s ease-out;
+    }
+    
+    .message-appear {
+        animation: messageAppear 0.4s ease-out;
     }
     
     @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
     }
     
     @keyframes slideUp {
-        from { 
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
+        from { opacity: 0; transform: translateY(50px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes messageAppear {
+        from { opacity: 0; transform: translateY(20px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    
+    .typing-indicator {
+        animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    .typing-dots span {
+        animation: typingDots 1.4s infinite;
+    }
+    
+    .typing-dots span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    
+    .typing-dots span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+    
+    @keyframes typingDots {
+        0%, 60%, 100% {
+            opacity: 0.4;
+            transform: translateY(0);
         }
-        to { 
+        30% {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: translateY(-4px);
         }
+    }
+    
+    /* Header fade based on scroll position */
+    .header-fade {
+        transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    }
+    
+    /* Auto-resize textarea */
+    .auto-resize {
+        field-sizing: content;
+    }
+    
+    /* Smooth scrolling */
+    html {
+        scroll-behavior: smooth;
     }
 </style>
 
-<!-- Enhanced JS for popup filter and scroll fade -->
 <script>
-(function () {
-    // Elements
-    const searchInput = document.getElementById('search_query');
-    const clearBtn = document.getElementById('clearBtn');
-    const filterBtn = document.getElementById('filterBtn');
-    const filterModal = document.getElementById('filterModal');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const resetFiltersBtn = document.getElementById('resetFiltersBtn');
-    const applyFiltersBtn = document.getElementById('applyFiltersBtn');
-    const searchForm = document.getElementById('searchForm');
-    const pageHeader = document.getElementById('pageHeader');
-    
-    // Filter form elements
-    const clientFilter = document.getElementById('client_filter');
-    const itemName = document.getElementById('item_name');
-    const includesWords = document.getElementById('includes_words');
-    const dateFrom = document.getElementById('date_from');
-    const dateTo = document.getElementById('date_to');
-    
-    // Hidden form inputs
-    const clientFilterHidden = document.getElementById('client_filter_hidden');
-    const dateFromHidden = document.getElementById('date_from_hidden');
-    const dateToHidden = document.getElementById('date_to_hidden');
-
-    // Header fade effect on scroll
-    function handleScrollFade() {
-        const scrollY = window.scrollY;
-        const fadeStart = 100; // Start fading after 100px
-        const fadeEnd = 300;   // Completely faded at 300px
-        
-        if (scrollY <= fadeStart) {
-            // Fully visible
-            pageHeader.style.opacity = '1';
-            pageHeader.style.transform = 'translateY(0)';
-        } else if (scrollY >= fadeEnd) {
-            // Fully faded
-            pageHeader.style.opacity = '0';
-            pageHeader.style.transform = 'translateY(-20px)';
-        } else {
-            // Gradually fade
-            const fadeProgress = (scrollY - fadeStart) / (fadeEnd - fadeStart);
-            const opacity = 1 - fadeProgress;
-            const translateY = fadeProgress * -20;
+(function() {
+    class ChatInterface {
+        constructor() {
+            this.greetingSection = document.getElementById('greetingSection');
+            this.conversationSection = document.getElementById('conversationSection');
+            this.fixedInputArea = document.getElementById('fixedInputArea');
+            this.pageHeader = document.getElementById('pageHeader');
             
-            pageHeader.style.opacity = opacity;
-            pageHeader.style.transform = `translateY(${translateY}px)`;
+            // Initial form elements
+            this.messageInput = document.getElementById('messageInput');
+            this.sendButton = document.getElementById('sendButton');
+            this.chatForm = document.getElementById('chatForm');
+            
+            // Chat form elements
+            this.messageInputActive = document.getElementById('messageInputActive');
+            this.sendButtonActive = document.getElementById('sendButtonActive');
+            this.chatFormActive = document.getElementById('chatFormActive');
+            this.messagesList = document.getElementById('messagesList');
+            
+            this.isFirstMessage = true;
+            this.isTyping = false;
+            
+            this.initializeEventListeners();
+            this.setupScrollEffects();
         }
-    }
-
-    // Throttle scroll events for better performance
-    let scrollTimeout;
-    function throttledScrollHandler() {
-        if (!scrollTimeout) {
-            scrollTimeout = setTimeout(() => {
-                handleScrollFade();
-                scrollTimeout = null;
-            }, 16); // ~60fps
+        
+        initializeEventListeners() {
+            // Initial form submission
+            this.chatForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleFirstMessage();
+            });
+            
+            // Active chat form submission
+            this.chatFormActive.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleSendMessage();
+            });
+            
+            // Input changes for initial form
+            this.messageInput.addEventListener('input', () => {
+                this.updateSendButton(this.messageInput, this.sendButton);
+            });
+            
+            // Input changes for active chat
+            this.messageInputActive.addEventListener('input', () => {
+                this.updateSendButton(this.messageInputActive, this.sendButtonActive);
+                this.autoResize(this.messageInputActive);
+            });
+            
+            // Enter key handling for textarea
+            this.messageInputActive.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    if (this.messageInputActive.value.trim() && !this.isTyping) {
+                        this.handleSendMessage();
+                    }
+                }
+            });
         }
-    }
-
-    // Add scroll event listener
-    window.addEventListener('scroll', throttledScrollHandler);
-
-    // Clear button functionality
-    function syncClear() {
-        if (searchInput.value && searchInput.value.trim().length > 0) {
-            clearBtn.classList.remove('hidden');
-        } else {
-            clearBtn.classList.add('hidden');
+        
+        autoResize(textarea) {
+            textarea.style.height = 'auto';
+            const newHeight = Math.min(textarea.scrollHeight, 128); // max-h-32 = 128px
+            textarea.style.height = newHeight + 'px';
         }
-    }
-    
-    syncClear();
-    searchInput.addEventListener('input', syncClear);
+        
+        setupScrollEffects() {
+            let ticking = false;
+            
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        this.handleScrollEffects();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+        }
+        
+        handleScrollEffects() {
+            if (!this.isFirstMessage) {
+                const scrollY = window.scrollY;
+                const windowHeight = window.innerHeight;
+                const greetingBottom = this.greetingSection.offsetTop + this.greetingSection.offsetHeight;
+                
+                // Oppasity setting ng greeting habang iniiscroll down
+                const fadeStart = windowHeight * 0.3; // start ng fade which is 30%
+                const fadeEnd = windowHeight * 0.8;   // total fade out at 80%
+                
+                if (scrollY <= fadeStart) {
+                    // Fully visible
+                    this.pageHeader.style.opacity = '1';
+                    this.pageHeader.style.transform = 'translateY(0)';
+                } else if (scrollY >= fadeEnd) {
+                    // Fully faded
+                    this.pageHeader.style.opacity = '0.3';
+                    this.pageHeader.style.transform = 'translateY(-10px)';
+                } else {
+                    // Gradually fade
+                    const fadeProgress = (scrollY - fadeStart) / (fadeEnd - fadeStart);
+                    const opacity = 1 - (fadeProgress * 0.7); // Fade to 0.3, not 0
+                    const translateY = fadeProgress * -10;
+                    
+                    this.pageHeader.style.opacity = opacity;
+                    this.pageHeader.style.transform = `translateY(${translateY}px)`;
+                }
+            }
+        }
+        
+        updateSendButton(input, button) {
+            const hasText = input.value.trim().length > 0;
+            button.disabled = !hasText || this.isTyping;
+            
+            if (hasText && !this.isTyping) {
+                button.classList.remove('bg-gray-300');
+                button.classList.add('bg-green-600');
+            } else {
+                button.classList.add('bg-gray-300');
+                button.classList.remove('bg-green-600');
+            }
+        }
+        
+        async handleFirstMessage() {
+            const message = this.messageInput.value.trim();
+            if (!message || this.isTyping) return;
+            
+            // Store the message
+            const userMessage = message;
+            
+            // Show conversation section
+            this.conversationSection.classList.remove('hidden');
+            
+            // Add scroll effects class to header
+            this.pageHeader.classList.add('header-fade');
+            
+            // Animate the original input box moving down and fading out
+            const initialInputContainer = document.getElementById('initialInputContainer');
+            
+            // Create a clone of the input box for animation
+            const inputClone = initialInputContainer.cloneNode(true);
+            inputClone.style.position = 'fixed';
+            inputClone.style.top = initialInputContainer.getBoundingClientRect().top + 'px';
+            inputClone.style.left = initialInputContainer.getBoundingClientRect().left + 'px';
+            inputClone.style.width = initialInputContainer.getBoundingClientRect().width + 'px';
+            inputClone.style.zIndex = '1000';
+            inputClone.style.pointerEvents = 'none';
+            document.body.appendChild(inputClone);
+            
+            // Hide the original input immediately
+            initialInputContainer.style.opacity = '0';
+            initialInputContainer.style.visibility = 'hidden';
+            
+            // Add the first message
+            this.addMessage(userMessage, 'user');
+            
+            // Show fixed input area (hidden initially)
+            this.fixedInputArea.classList.remove('hidden');
+            this.fixedInputArea.style.transform = 'translateY(100%)';
+            this.fixedInputArea.style.opacity = '0';
+            
+            // Animate the clone moving to bottom
+            setTimeout(() => {
+                const bottomPosition = window.innerHeight - this.fixedInputArea.offsetHeight - 16;
+                inputClone.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                inputClone.style.top = bottomPosition + 'px';
+                inputClone.style.opacity = '0.7';
+                inputClone.style.transform = 'scale(0.95)';
+            }, 100);
+            
+            // Smooth scroll to conversation section
+            setTimeout(() => {
+                this.conversationSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 200);
+            
+            // Remove clone and show the real fixed input
+            setTimeout(() => {
+                inputClone.remove();
+                this.fixedInputArea.style.transform = 'translateY(0)';
+                this.fixedInputArea.style.opacity = '1';
+                this.fixedInputArea.style.transition = 'all 0.4s ease-out';
+            }, 800);
+            
+            // Focus on the new input after animations
+            setTimeout(() => {
+                this.messageInputActive.focus();
+            }, 1200);
+            
+            // Show typing and respond
+            this.showTypingIndicator();
+            this.simulateAIResponse();
+            
+            this.isFirstMessage = false;
+        }
+        
+        async handleSendMessage() {
+            const message = this.messageInputActive.value.trim();
+            if (!message || this.isTyping) return;
+            
+            // Add user message
+            this.addMessage(message, 'user');
+            
+            // Clear input and reset height
+            this.messageInputActive.value = '';
+            this.messageInputActive.style.height = 'auto';
+            this.updateSendButton(this.messageInputActive, this.sendButtonActive);
+            
+            // Show typing indicator
+            this.showTypingIndicator();
+            
+            // Scroll to latest message
+            this.scrollToLatestMessage();
+            
+            // Simulate AI response
+            await this.simulateAIResponse();
+        }
+        
+        addMessage(content, type = 'user') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message-appear ${type === 'user' ? 'flex justify-end' : 'flex justify-start'}`;
+            
+            const messageBubble = document.createElement('div');
+            if (type === 'user') {
+                messageBubble.className = 'bg-green-600 text-white px-4 py-3 rounded-2xl max-w-xs lg:max-w-2xl break-words whitespace-pre-wrap';
+            } else {
+                messageBubble.className = 'bg-gray-100 border border-gray-300 text-gray-800 px-4 py-3 rounded-2xl max-w-xs lg:max-w-2xl shadow-sm break-words whitespace-pre-wrap';
+            }
+            
+            messageBubble.textContent = content;
+            messageDiv.appendChild(messageBubble);
+            
+            this.messagesList.appendChild(messageDiv);
+        }
+        
+        showTypingIndicator() {
+            this.isTyping = true;
+            this.updateSendButton(this.messageInputActive, this.sendButtonActive);
+            
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typingIndicator';
+            typingDiv.className = 'flex justify-start message-appear';
+            
+            const typingBubble = document.createElement('div');
+            typingBubble.className = 'bg-gray-100 border border-gray-300 px-4 py-3 rounded-2xl shadow-sm typing-indicator';
+            
+            const dotsContainer = document.createElement('div');
+            dotsContainer.className = 'typing-dots flex space-x-1';
+            
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('span');
+                dot.className = 'w-2 h-2 bg-gray-400 rounded-full inline-block';
+                dotsContainer.appendChild(dot);
+            }
+            
+            typingBubble.appendChild(dotsContainer);
+            typingDiv.appendChild(typingBubble);
+            
+            this.messagesList.appendChild(typingDiv);
+            this.scrollToLatestMessage();
+        }
+        
+        hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+            this.isTyping = false;
+            this.updateSendButton(this.messageInputActive, this.sendButtonActive);
+        }
+        
+        /* IMPORTANT: Papalitan yung simulateAIresponse kapag may actual AI response na, eto ipapalit natin dito:
 
-    clearBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        searchInput.focus();
-        syncClear();
-    });
-
-    // Modal functionality
-    function openModal() {
-        filterModal.classList.remove('hidden');
-        filterModal.classList.add('show');
-        document.body.style.overflow = 'hidden';
-        console.log('Modal opened'); // Debug log
-    }
-
-    function closeModal() {
-        filterModal.classList.add('hidden');
-        filterModal.classList.remove('show');
-        document.body.style.overflow = 'auto';
-        console.log('Modal closed'); // Debug log
-    }
-
-    // Event listeners for modal
-    filterBtn.addEventListener('click', openModal);
-    
-    // Close button event listener with debugging
-    if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('Close button clicked'); // Debug log
-            closeModal();
+         async callActualAI() {
+    try {
+        // Call your Django backend
+        const response = await fetch('/api/chat/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                message: this.lastUserMessage,
+                conversation_id: this.conversationId // if you track conversations
+            })
         });
-    } else {
-        console.error('Close button not found!');
+        
+        const data = await response.json();
+        
+        this.hideTypingIndicator();
+        this.addMessage(data.ai_response, 'assistant');
+        
+    } catch (error) {
+        this.hideTypingIndicator();
+        this.addMessage("Sorry, I'm having trouble connecting. Please try again.", 'assistant');
+    }
+} */
+
+        async simulateAIResponse() {
+            await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1500));
+            
+            this.hideTypingIndicator();
+            
+            // Sample responses
+            const responses = [
+                "Yoko nga bala ka dyan",
+                "Ganto muna placeholder since wala pa tayu bot",
+                "Bla bla bla",
+            ];
+            
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            this.addMessage(randomResponse, 'assistant');
+            this.scrollToLatestMessage();
+        }
+        
+        scrollToLatestMessage() {
+            setTimeout(() => {
+                const lastMessage = this.messagesList.lastElementChild;
+                if (lastMessage) {
+                    // Eto ung script para ma-scroll sa pinaka-latest na message ng bot kaya wag galawen hehe
+                    const messageTop = lastMessage.offsetTop;
+                    const conversationSectionTop = this.conversationSection.offsetTop;
+                    const targetScrollPosition = conversationSectionTop + messageTop - 50;
+                    
+                    window.scrollTo({
+                        top: targetScrollPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 100);
+        }
     }
     
-    // Close modal when clicking outside
-    filterModal.addEventListener('click', (e) => {
-        if (e.target === filterModal) {
-            closeModal();
-        }
+    //Magloload lang ung interface ng chat kapag meron nang input si user
+    document.addEventListener('DOMContentLoaded', () => {
+        new ChatInterface();
     });
-
-    // Close modal with Escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !filterModal.classList.contains('hidden')) {
-            closeModal();
-        }
-    });
-
-    // Reset filters
-    resetFiltersBtn.addEventListener('click', () => {
-        // Just clear the form fields in the modal - don't submit
-        clientFilter.value = '';
-        itemName.value = '';
-        includesWords.value = '';
-        dateFrom.value = '';
-        dateTo.value = '';
-        
-        console.log('Filters reset'); // Debug log
-    });
-
-    // Apply filters
-    applyFiltersBtn.addEventListener('click', () => {
-        // Update hidden inputs with modal values
-        clientFilterHidden.value = clientFilter.value;
-        dateFromHidden.value = dateFrom.value;
-        dateToHidden.value = dateTo.value;
-        
-        // Close modal and submit form
-        closeModal();
-        searchForm.submit();
-    });
-
-    // Enter key in search input submits form
-    searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            searchForm.submit();
-        }
-    });
-
-    // Initialize scroll fade effect
-    handleScrollFade();
 })();
 </script>
 {% endblock %}
