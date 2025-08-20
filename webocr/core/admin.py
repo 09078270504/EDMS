@@ -2,6 +2,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from database.models import User  # Import your custom user model
+from database.models import Document
 from django.utils.html import format_html
 from django.db.models import Count
 from django.utils import timezone
@@ -14,6 +15,7 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ('is_active', 'last_login')
 
 admin.site.register(User, CustomUserAdmin)  # Register your user model
+admin.site.register(Document) # Register the Document to see the database in the admin
 
 @admin.register(SecurityEvent)
 class SecurityEventAdmin(admin.ModelAdmin):
