@@ -1,0 +1,127 @@
+/* ===== Sidebar width & transition ===== */
+#logo-sidebar {
+  width: 16rem;
+  transition: width .2s ease, transform .2s ease;
+}
+#logo-sidebar.collapsed {
+  width: 4rem;
+}
+
+/* Expanded (sidebar open) */
+#brandToggle {
+  padding-left: .75rem;
+  padding-right: .75rem;
+}
+#brandToggle img {
+  height: 1.75rem;         /* a bit bigger than h-6 */
+  width: 1.75rem;
+}
+
+/* Collapsed (sidebar closed) — make the logo fit perfectly */
+#logo-sidebar.collapsed .h-full > div:first-child { /* brand header row */
+  padding: .5rem;          /* reduce big top/bottom padding */
+}
+#logo-sidebar.collapsed #brandToggle {
+  justify-content: center; /* center the logo */
+  padding: .5rem;          /* equal padding all around */
+  width: 100%;
+}
+#logo-sidebar.collapsed #brandToggle img {
+  height: 2.25rem;         /* ~36px fits nicely in a 4rem (64px) bar */
+  width: 2.25rem;          /* square for crisp look */
+  display: block;
+  border-radius: .5rem;    /* optional rounding */
+  object-fit: contain;
+}
+
+
+/* Hide text labels when collapsed */
+#logo-sidebar.collapsed .brand-text,
+#logo-sidebar.collapsed .item-label {
+  display: none;
+}
+
+/* Hide collapse arrow when collapsed */
+#logo-sidebar.collapsed #collapseSidebar {
+  display: none;
+}
+
+/* ===== Nav & User buttons alignment ===== */
+#logo-sidebar .group,
+#logo-sidebar #brandToggle,
+#logo-sidebar #userMenuButton {
+  padding-left: .75rem;
+  padding-right: .75rem;
+}
+
+/* Collapsed mode: center icons */
+#logo-sidebar.collapsed .group {
+  justify-content: center !important;
+  text-align: center;
+  padding-left: .75rem;
+  padding-right: .75rem;
+  overflow: visible !important; /* tooltips fly out */
+}
+
+#logo-sidebar.collapsed .group > i,
+#logo-sidebar.collapsed .group > svg,
+#logo-sidebar.collapsed .group > img {
+  display: block;
+  margin: 0 auto;
+}
+
+/* User button hitbox collapsed */
+#logo-sidebar.collapsed #userMenuButton {
+  justify-content: center;
+  padding-left: .75rem;
+  padding-right: .75rem;
+}
+
+/* Show tooltips only when collapsed */
+#logo-sidebar.collapsed .item-tooltip {
+  display: block;
+}
+
+/* ===== User dropdown ===== */
+#userDropdown {
+  left: 0;
+  bottom: 100%;
+  margin-bottom: .5rem;
+  width: 100%;
+}
+
+#logo-sidebar.collapsed .user-menu-panel {
+  left: calc(100% + .5rem);
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16rem;
+  white-space: normal;
+  padding: .5rem 0;
+  border-radius: .75rem;
+}
+
+#logo-sidebar.collapsed .user-menu-panel::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8px 8px 8px 0;
+  border-color: transparent #ffffff transparent transparent;
+  filter: drop-shadow(-1px 1px 1px rgba(0,0,0,0.06));
+}
+
+/* ===== Page content shift (≥ sm) ===== */
+@media (min-width: 640px) {
+  #pageContent {
+    margin-left: 16rem;
+    transition: margin-left .2s ease;
+  }
+  #pageContent.collapsed {
+    margin-left: 4rem;
+  }
+}

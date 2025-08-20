@@ -20,6 +20,7 @@ from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # set-up environtment
 env = environ.Env(DEBUG=(bool, False)) # if we make mistakes it will read as False

@@ -1,92 +1,108 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Archive System{% endblock %}</title>
-        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" rel="stylesheet">
-    </head>
-    <body>
-        <nav class="bg-white text-green-600 p-4">
-            <div class="container mx-auto flex justify-between items-center">
-                <h1 class="text-xl font-bold text-green-600 hover:text-green-800 transition-colors duration-200">
-                    Archive System 
-                </h1>    
-                <div class="flex items-center space-x-4">
-                    {% if user.is_authenticated %}
-                    <div class="fixed top-0 left-0 min-h-screen w-48 bg-gray-300 text-white flex flex-col items-start p-6 space-y-4 shadow-lg">
-                        <a href="{% url 'search_form' %}"class="flex text-black hover:bg-green-700 
-                        px-3 py-2 rounded-md cursor-pointer transition-colors duration-200 flex jusitfy-between items-center gap-x-3">
-                        <i class="fa-solid fa-pen-to-square text-lg"></i>
-                        <span>Document</span>
-                        </a>
-                        <a href="{% url 'dashboard' %}" class="flex text-black hover:bg-green-700 
-                        px-3 py-2 rounded-md cursor-pointer transition-colors duration-200 flex jusitfy-between items-center gap-x-3">
-                        <i class="fa-regular fa-file text-lg"></i>
-                        <span>Chat</span>
-                        </a>
-                        <!-- User dropdown menu -->
-                        <div class="relative w-full">
-                            <button id="userMenuButton" 
-                            class="flex text-black hover:bg-green-700 
-                                px-3 py-2 rounded-md cursor-pointer transition-colors duration-200 flex jusitfy-between items-center gap-x-3">
-                                <i class="fa-solid fa-user text-lg"></i>
-                                {{ user.username }}
-                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                    d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </button>
-                            <!-- Dropdown menu -->
-                            <div id="userDropdown" 
-                                 class="hidden absolute left-0 mt-2 w-full bg-white rounded-md shadow-lg py-2 z-50">
-                                <a href="{% url 'change_password' %}" 
-                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    Change Password
-                                </a>
-                                <hr class="border-gray-200 my-1">
-                                <a href="{% url 'logout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    Logout
-                                </a>
-                            </div>
-                        </div>
-                    {% else %}
-                        <a href="{% url 'login' %}" id="loginNavBtn"
-                    class="ml-4 hover:bg-green-700 hover:text-white 
-                    px-3 py-2 rounded-md cursor-pointer transition-colors duration-200">Login</a>
-                    {% endif %}
-                </div>
-            </div>
-        </nav>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Archive System{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" rel="stylesheet">
+  {% load static %}
+  <script src="{% static 'js/base.js' %}" defer></script>
+  {% block styles %}{% endblock %}
+  {% block scripts %}{% endblock %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+</head>
+<body class="bg-gray-50">
 
-    <!-- PAGE-SPECIFIC CONTENT -->
-    <div class="container mx-auto mt-8">
+  {% if not user.is_authenticated %}
+  <!-- Navbar (only shows if NOT logged in) -->
+  <nav class="bg-white text-green-600 p-4 shadow">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold text-green-600 hover:text-green-800 transition-colors duration-200">
+        Archive System
+      </h1>
+      <div class="flex items-center space-x-4">
+        <a href="{% url 'login' %}" id="loginNavBtn"
+           class="ml-4 hover:bg-green-700 hover:text-white px-3 py-2 rounded-md cursor-pointer transition-colors duration-200">
+          Login
+        </a>
+      </div>
+    </div>
+  </nav>
+  {% endif %}
+
+  {% if user.is_authenticated %}
+  <!-- Sidebar (only shows if logged in) -->
+  <aside
+    id="logo-sidebar"
+    class="fixed top-0 left-0 z-40 w-64 h-screen -translate-x-full sm:translate-x-0 bg-white shadow"
+    aria-label="Sidebar">
+
+    <div class="h-full flex flex-col">
+      <!-- Brand + Collapse -->
+      <div class="flex items-center justify-between px-3 py-4 border-b">
+        <button id="brandToggle"
+                class="flex items-center space-x-2 px-3 py-2 w-full overflow-hidden focus:outline-none hover:opacity-90"
+                aria-label="Toggle sidebar" aria-pressed="false" type="button">
+                <img src="https://flowbite.com/docs/images/logo.svg" class="h-6" alt="Logo" />
+                <span class="brand-text text-xl font-semibold whitespace-nowrap">Flowbite</span>
+        </button>
+
+
+        <!-- Collapse arrow -->
+        <button id="collapseSidebar"
+                class="hidden sm:inline-flex items-center justify-center w-8 h-8 rounded hover:bg-gray-100 text-gray-600"
+                aria-label="Collapse sidebar" aria-expanded="true" type="button">
+          <i class="fa-solid fa-angles-left"></i>
+        </button>
+      </div>
+
+      <!-- Apps in Nav -->
+      <nav class="flex-1 px-2 py-3 space-y-1">
+        <a href="{% url 'search_form' %}"
+           class="group relative flex items-center gap-3 px-3 py-2 rounded-md hover:bg-green-50 text-gray-800 transition-colors">
+          <i class="fa-solid fa-pen-to-square text-lg shrink-0"></i>
+          <span class="item-label">Document</span>
+          <span class="item-tooltip pointer-events-none absolute left-12 top-1/2 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100">Document</span>
+        </a>
+
+        <a href="{% url 'dashboard' %}"
+           class="group relative flex items-center gap-3 px-3 py-2 rounded-md hover:bg-green-50 text-gray-800 transition-colors">
+          <i class="fa-regular fa-file text-lg shrink-0"></i>
+          <span class="item-label">Chat</span>
+          <span class="item-tooltip pointer-events-none absolute left-12 top-1/2 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100">Chat</span>
+        </a>
+      </nav>
+
+      <!-- User -->
+      <div class="px-2 py-3 border-t">
+        <div class="group relative w-full overflow-visible">
+          <button id="userMenuButton"
+                  class="group relative flex items-center gap-3 px-3 py-2 w-full rounded-md hover:bg-green-50 text-gray-800 transition-colors">
+            <i class="fa-solid fa-user text-lg shrink-0"></i>
+            <span class="item-label">{{ user.username }}</span>
+            <svg class="item-label w-4 h-4 ml-auto transition-transform duration-150" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+            <span class="item-tooltip pointer-events-none absolute left-12 top-1/2 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100">{{ user.username }}</span>
+          </button>
+
+          <!-- Dropdown (upward by default; flyout when collapsed) -->
+          <div id="userDropdown"
+                class="user-menu-panel hidden absolute left-0 bottom-full mb-2 w-full bg-white rounded-xl shadow-xl ring-1 ring-black/5 py-2 z-60">
+            <a href="{% url 'change_password' %}" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 rounded-md">Change Password</a>
+            <hr class="border-gray-200 my-1">
+            <a href="{% url 'logout' %}" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 rounded-md">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  {% endif %}
+
+  <!-- PAGE-SPECIFIC CONTENT -->
+  <div id="pageContent" class="container mx-auto mt-8">
     {% block content %}{% endblock %}
-    </div>  
+  </div>
 
-        <!-- JavaScript for dropdown functionality -->
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const userMenuButton = document.getElementById('userMenuButton');
-                const userDropdown = document.getElementById('userDropdown');
-                
-                if (userMenuButton && userDropdown) {
-                    // Toggle dropdown when button is clicked
-                    userMenuButton.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        userDropdown.classList.toggle('hidden');
-                    });
-                    
-                    // Close dropdown when clicking outside
-                    document.addEventListener('click', function(e) {
-                        if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
-                            userDropdown.classList.add('hidden');
-                        }
-                    });
-                }
-            });
-        </script>
-
-    </body> 
-    </html>
+</body>
