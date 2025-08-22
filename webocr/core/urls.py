@@ -12,11 +12,11 @@ urlpatterns = [
     #path('register/', views.register_view, name='register'),
     path('forgot-password/', views.forgot_password_view, name='forgot_password'),
     path('logout/', views.logout_view, name='logout'),
-    path('dashboard/', views.dashboard, name='dashboard'),
+    path('chat/', views.dashboard, name='dashboard'),
     path('change-password/', views.change_password, name='change_password'),
     
     # Search URLs (Simplified)
-    path('search/', views.search_form, name='search_form'),                    # Search form
+    path('documents/', views.search_form, name='search_form'),                    # Search form
     path('search/documents/', views.search_documents, name='search_documents'), # Results page (automatic search)
     
     # Document URLs

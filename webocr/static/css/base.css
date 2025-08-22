@@ -2,9 +2,13 @@
 #logo-sidebar {
   width: 16rem;
   transition: width .2s ease, transform .2s ease;
+  --brand-size: 1.75rem; /* 28px */
+  --brand-pad:.5rem;
 }
 #logo-sidebar.collapsed {
   width: 4rem;
+  background:#fff;
+  border-right:1px solid #e5e7eb;
 }
 
 /* Expanded (sidebar open) */
@@ -13,13 +17,28 @@
   padding-right: .75rem;
 }
 #brandToggle img {
-  height: 1.75rem;         /* a bit bigger than h-6 */
-  width: 1.75rem;
+  height: var(--brand-size);         /* a bit bigger than h-6 */
+  width: var(--brand-size);
 }
 
 /* Collapsed (sidebar closed) — make the logo fit perfectly */
-#logo-sidebar.collapsed .h-full > div:first-child { /* brand header row */
-  padding: .5rem;          /* reduce big top/bottom padding */
+#logo-sidebar.collapsed .h-full > div:first-child {         /* brand header row */
+  padding: var(--brand-pad);
+  display: flex;
+  flex-direction: column;          /* reduce big top/bottom padding */
+}
+
+#logo-sidebar.collapsed .h-full > .flex.items-center.justify-between.px-3.py-4.border-b {
+  order: 0;
+}
+
+#logo-sidebar.collapsed .h-full > .px-2.py-3.border-t{
+  order: 2;                 /* after nav */
+  border-top: 1;         /* remove previous top border */
+  padding: .5rem 0; /* reduce top/bottom padding */
+  display: flex;
+  justify-content: center;  /* horizontal centering */
+  align-items: center;      /* if the row gets taller */
 }
 #logo-sidebar.collapsed #brandToggle {
   justify-content: center; /* center the logo */
@@ -27,8 +46,8 @@
   width: 100%;
 }
 #logo-sidebar.collapsed #brandToggle img {
-  height: 2.25rem;         /* ~36px fits nicely in a 4rem (64px) bar */
-  width: 2.25rem;          /* square for crisp look */
+  height: var(--brand-size);         /* ~36px fits nicely in a 4rem (64px) bar */
+  width: var(--brand-size);          /* square for crisp look */
   display: block;
   border-radius: .5rem;    /* optional rounding */
   object-fit: contain;
@@ -72,9 +91,38 @@
 
 /* User button hitbox collapsed */
 #logo-sidebar.collapsed #userMenuButton {
+  box-sizing: border-box;                  /* borders won't change size */
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: .375rem auto;
+  padding: 0;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  padding-left: .75rem;
-  padding-right: .75rem;
+}
+
+/* === Sidebar hover → gray (overrides Tailwind's hover:bg-green-50) === */
+#logo-sidebar nav a.group:hover,
+#logo-sidebar nav a.group:focus-visible,
+#logo-sidebar #userMenuButton:hover,
+#logo-sidebar #userMenuButton:focus-visible {
+  background-color: #f3f4f6 !important; /* gray-100 */
+  color: #111827;                        /* slate-900 text for contrast */
+  outline: none;
+}
+
+/* Optional: subtler active press without shifting */
+#logo-sidebar nav a.group:active,
+#logo-sidebar #userMenuButton:active {
+  background-color: #e5e7eb !important;  /* gray-200 */
+}
+
+/* Keep same behavior when collapsed */
+#logo-sidebar.collapsed nav a.group:hover,
+#logo-sidebar.collapsed nav a.group:focus-visible,
+#logo-sidebar.collapsed #userMenuButton:hover,
+#logo-sidebar.collapsed #userMenuButton:focus-visible {
+  background-color: #f3f4f6 !important;
 }
 
 /* Show tooltips only when collapsed */
@@ -90,29 +138,11 @@
   width: 100%;
 }
 
-#logo-sidebar.collapsed .user-menu-panel {
-  left: calc(100% + .5rem);
-  bottom: auto;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16rem;
-  white-space: normal;
-  padding: .5rem 0;
-  border-radius: .75rem;
-}
-
-#logo-sidebar.collapsed .user-menu-panel::before {
-  content: "";
-  position: absolute;
-  left: -7px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 8px 8px 8px 0;
-  border-color: transparent #ffffff transparent transparent;
-  filter: drop-shadow(-1px 1px 1px rgba(0,0,0,0.06));
+/* Hide the down-arrow/caret inside the user button */
+#userMenuButton > svg,
+#userMenuButton .fa-chevron-down,
+#userMenuButton .fa-angle-down {
+  display: none !important;
 }
 
 /* ===== Page content shift (≥ sm) ===== */

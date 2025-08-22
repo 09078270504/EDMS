@@ -1,0 +1,76 @@
+/* Custom font */
+.font-custom-verdana { 
+  font-family: Verdana, sans-serif; 
+}
+
+/* Smooth animations */
+.fade-in { animation: fadeIn 0.8s ease-out; }
+.slide-up { animation: slideUp 0.5s ease-out; }
+.message-appear { animation: messageAppear 0.4s ease-out; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(50px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes messageAppear {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Typing indicator */
+.typing-indicator { animation: pulse 1.5s ease-in-out infinite; }
+.typing-dots span { animation: typingDots 1.4s infinite; }
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingDots {
+  0%, 60%, 100% { opacity: 0.4; transform: translateY(0); }
+  30%           { opacity: 1;   transform: translateY(-4px); }
+}
+
+/* Header fade based on scroll position */
+.header-fade { transition: opacity 0.3s ease-out, transform 0.3s ease-out; }
+
+/* Auto-resize textarea helper */
+.auto-resize { field-sizing: content; }
+
+/* Smooth page scrolling */
+html { scroll-behavior: smooth; }
+
+/* --- Sidebar-aware layout for the chat panel --- */
+
+/* Default (mobile / no sidebar offset) */
+:root{
+  --sidebar-offset: 0;      /* updated by <html> class from base.js */
+  --input-h: 72px;          /* optional: approx fixed input height */
+}
+
+/* Desktop: offset equals sidebar width (class is toggled by base.js) */
+@media (min-width: 640px){
+  html.sidebar-collapsed { --sidebar-offset: 4rem; }   /* skinny bar */
+  html:not(.sidebar-collapsed) { --sidebar-offset: 16rem; } /* full bar */
+}
+
+/* Make the fixed input respect the sidebar */
+#fixedInputArea{
+  left: var(--sidebar-offset);
+  right: 0;
+}
+
+/* (Optional) prevent horizontal scrolling just in case */
+html, body { overflow-x: hidden; }
+
+/* (Optional) if you want the messages list to never hide behind the input:
+   uncomment and ensure #messagesList exists and is the scroll container
+#messagesList{
+  max-height: calc(100vh - var(--input-h));
+  overflow-y: auto;
+}
+*/
+
