@@ -19,7 +19,7 @@
     <nav class="bg-white text-green-600 p-4 shadow">
       <div class="container mx-auto flex justify-between items-center">
         <h1 class="text-xl font-bold text-green-600">
-          Archive System
+          Fowse
         </h1>
         <div class="flex items-center space-x-4">
           <a href="{% url 'login' %}" id="loginNavBtn"
@@ -35,55 +35,54 @@
     <!-- Sidebar (only shows if logged in) -->
     <aside
       id="logo-sidebar"
-      class="fixed top-0 left-0 z-40 w-64 h-screen -translate-x-full sm:translate-x-0 bg-white shadow"
+      class="fixed inset-y-0 left-0 z-40 bg-white shadow"
       aria-label="Sidebar">
 
       <div class="h-full flex flex-col">
         <!-- Brand + Collapse -->
-        <div class="flex items-center justify-between px-3 py-4 border-b">
+        <div class="flex items-center justify-between px-2.5 py-3 border-b">  <!-- px-3→2.5, py-4→3 -->
           <button id="brandToggle"
-                  class="flex items-center space-x-2 px-3 py-2 w-full overflow-hidden focus:outline-none hover:opacity-90"
-                  aria-label="Toggle sidebar" aria-pressed="false" type="button">
-                  <img src="https://flowbite.com/docs/images/logo.svg" class="h-6" alt="Logo" />
-                  <span class="brand-text text-xl font-semibold whitespace-nowrap">Flowbite</span>
+                  class="flex items-center space-x-2 px-2.5 py-2 w-full overflow-hidden focus:outline-none hover:opacity-90"
+                  type="button" aria-label="Toggle sidebar" aria-pressed="false">
+            <img src="{% static 'img/fowse.png' %}" class="h-5" />
+            <span class="brand-text text-lg font-semibold whitespace-nowrap">Fowse</span> <!-- text-xl→text-lg -->
           </button>
-
-          <!-- Collapse arrow -->
+          
           <button id="collapseSidebar"
                   class="hidden sm:inline-flex items-center justify-center w-8 h-8 rounded hover:bg-gray-100 text-gray-600"
-                  aria-label="Collapse sidebar" aria-expanded="true" type="button">
-            <i class="fa-solid fa-angles-left"></i>
+                  type="button" aria-label="Collapse sidebar" aria-expanded="true">
+            <i class="fa-solid fa-angles-left text-sm"></i> <!-- make icon a bit smaller -->
           </button>
         </div>
 
         <!-- Apps in Nav -->
-        <nav class="flex-1 px-2 py-3 space-y-1">
+        <nav class="flex-1 px-2 py-2 space-y-1"> <!-- px-2 py-3→px-2 py-2 -->
           <a href="{% url 'search_form' %}"
-            class="group relative flex items-center gap-3 px-3 py-2 rounded-md hover:bg-green-50 text-gray-800 transition-colors">
-            <i class="fa-solid fa-pen-to-square text-lg shrink-0"></i>
+            class="group relative flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-green-50 text-gray-800 transition-colors">
+            <i class="fa-solid fa-pen-to-square text-base shrink-0"></i> <!-- text-lg→base -->
             <span class="item-label">Document</span>
-            <span class="item-tooltip pointer-events-none absolute left-12 top-1/2 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100">Document</span>
+            <span class="item-tooltip pointer-events-none absolute left-11 top-1/2 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100">Document</span>
           </a>
 
           <a href="{% url 'dashboard' %}"
-            class="group relative flex items-center gap-3 px-3 py-2 rounded-md hover:bg-green-50 text-gray-800 transition-colors">
-            <i class="fa-regular fa-file text-lg shrink-0"></i>
+            class="group relative flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-green-50 text-gray-800 transition-colors">
+            <i class="fa-regular fa-file text-base shrink-0"></i>
             <span class="item-label">Chat</span>
-            <span class="item-tooltip pointer-events-none absolute left-12 top-1/2 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100">Chat</span>
+            <span class="item-tooltip pointer-events-none absolute left-11 top-1/2 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100">Chat</span>
           </a>
         </nav>
 
         <!-- User -->
-        <div class="px-2 py-3 border-t">
+        <div class="px-2 py-2 border-t"> <!-- py-3→py-2 -->
           <div class="group relative w-full overflow-visible">
             <button id="userMenuButton"
-                    class="group relative flex items-center gap-3 px-3 py-2 w-full rounded-md hover:bg-green-50 text-gray-800 transition-colors">
-              <i class="fa-solid fa-user text-lg shrink-0"></i>
+                    class="group relative flex items-center gap-2.5 px-2.5 py-2 w-full rounded-md hover:bg-green-50 text-gray-800 transition-colors">
+              <i class="fa-solid fa-user text-base shrink-0"></i>
               <span class="item-label">{{ user.username }}</span>
               <svg class="item-label w-4 h-4 ml-auto transition-transform duration-150" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>
-              <span class="item-tooltip pointer-events-none absolute left-12 top-1/2 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100">{{ user.username }}</span>
+              <span class="item-tooltip pointer-events-none absolute left-11 top-1/2 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100">{{ user.username }}</span>
             </button>
 
             <!-- Dropdown (upward by default; flyout when collapsed) -->

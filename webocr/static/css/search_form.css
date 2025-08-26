@@ -1,28 +1,67 @@
 .font-custom-verdana { 
-        font-family: Verdana, sans-serif; 
+    font-family: Verdana, sans-serif; 
+}
+
+/* Modal animation */
+#filterModal.show {
+    animation: fadeIn 0.2s ease-out;
+}
+
+#filterModal.show > div {
+    animation: slideUp 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { 
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
     }
-    
-    /* Modal animation */
-    #filterModal.show {
-        animation: fadeIn 0.2s ease-out;
+    to { 
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
-    
-    #filterModal.show > div {
-        animation: slideUp 0.2s ease-out;
+}
+
+/* --- ChatGPT-style layout glue (panel + sidebar) --- */
+
+/* Sidebar widths (expanded vs collapsed) */
+:root {
+    --sbw: 16rem;          /* expanded */
+    --sbw-collapsed: 4.5rem; /* collapsed */
+}
+
+html, body {
+    overflow-x: hidden;
+}
+
+/* Sidebar width transitions (sidebar itself lives in base.html) */
+#logo-sidebar {
+    width: var(--sbw);
+    transition: width .2s ease;
+}
+
+.sidebar-collapsed #logo-sidebar {
+    width: var(--sbw-collapsed);
+}
+
+/* 🔑 Full-width shell that shifts with the sidebar */
+#pageShell {
+    margin-left: var(--sbw);
+    transition: margin-left .2s ease;
+}
+
+.sidebar-collapsed #pageShell {
+    margin-left: var(--sbw-collapsed);
+}
+
+/* Mobile: sidebar overlays; shell shouldn't be offset */
+@media (max-width: 639px) {
+    #pageShell {
+        margin-left: 0 !important;
     }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    @keyframes slideUp {
-        from { 
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
-        }
-        to { 
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-    }
+}
