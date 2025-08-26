@@ -1,0 +1,202 @@
+/* =========================
+   SIDEBAR WIDTH & TRANSITION
+   ========================= */
+:root {
+  --sbw: 14rem;              /* expanded ~224px */
+  --sbw-collapsed: 3.75rem;  /* collapsed ~60px */
+}
+
+html, body { overflow-x: hidden; }
+
+#logo-sidebar {
+  width: var(--sbw);
+  transition: width .2s ease, transform .2s ease;
+  --brand-size: 1.75rem; /* 28px */
+  --brand-pad: .5rem;
+}
+
+/* Support BOTH toggling modes */
+#logo-sidebar.collapsed,
+.sidebar-collapsed #logo-sidebar {
+  width: var(--sbw-collapsed);
+  background: #fff;
+  border-right: 1px solid #e5e7eb;
+}
+
+/* =========================
+   PAGE PANEL OFFSET
+   ========================= */
+#pageContent {
+  margin-left: var(--sbw);
+  transition: margin-left .2s ease;
+}
+.sidebar-collapsed #pageContent { margin-left: var(--sbw-collapsed); }
+#pageContent.collapsed { margin-left: var(--sbw-collapsed); }
+
+@media (max-width: 639px) { #pageContent { margin-left: 0 !important; } }
+
+/* =========================
+   BRAND ROW
+   ========================= */
+#brandToggle { padding-left: .75rem; padding-right: .75rem; }
+#brandToggle img { height: var(--brand-size); width: var(--brand-size); }
+
+#logo-sidebar.collapsed .h-full > div:first-child,
+.sidebar-collapsed #logo-sidebar .h-full > div:first-child {
+  padding: var(--brand-pad);
+  display: flex;
+  flex-direction: column;
+}
+#logo-sidebar.collapsed #brandToggle,
+.sidebar-collapsed #logo-sidebar #brandToggle {
+  justify-content: center;
+  padding: .5rem;
+  width: 100%;
+}
+#logo-sidebar.collapsed #brandToggle img,
+.sidebar-collapsed #logo-sidebar #brandToggle img {
+  height: var(--brand-size);
+  width: var(--brand-size);
+  display: block;
+  border-radius: .5rem;
+  object-fit: contain;
+}
+
+/* Hide labels & collapse arrow when collapsed */
+#logo-sidebar.collapsed .brand-text,
+#logo-sidebar.collapsed .item-label,
+.sidebar-collapsed #logo-sidebar .brand-text,
+.sidebar-collapsed #logo-sidebar .item-label { display: none; }
+#logo-sidebar.collapsed #collapseSidebar,
+.sidebar-collapsed #logo-sidebar #collapseSidebar { display: none; }
+
+/* =========================
+   NAV ITEMS
+   ========================= */
+#logo-sidebar .group,
+#logo-sidebar #brandToggle,
+#logo-sidebar #userMenuButton {
+  padding-left: .75rem;
+  padding-right: .75rem;
+}
+
+/* Collapsed: make EVERY icon button identical size/spacing */
+#logo-sidebar.collapsed .group,
+.sidebar-collapsed #logo-sidebar .group {
+  justify-content: center !important;
+  text-align: center;
+  padding-left: 0;
+  padding-right: 0;
+  width: 2.75rem;         /* ← match box */
+  height: 2.75rem;
+  margin: .5rem auto;
+  border-radius: .5rem;
+  display: flex;
+  align-items: center;
+}
+#logo-sidebar.collapsed .group > i,
+#logo-sidebar.collapsed .group > svg,
+#logo-sidebar.collapsed .group > img,
+.sidebar-collapsed #logo-sidebar .group > i,
+.sidebar-collapsed #logo-sidebar .group > svg,
+.sidebar-collapsed #logo-sidebar .group > img {
+  display: block;
+  margin: 0 auto;
+  width: 1.125rem;        /* ~18px icon size */
+  height: 1.125rem;
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+/* Hover states (gray) */
+#logo-sidebar nav a.group:hover,
+#logo-sidebar nav a.group:focus-visible,
+#logo-sidebar #userMenuButton:hover,
+#logo-sidebar #userMenuButton:focus-visible {
+  background-color: #f3f4f6 !important; /* gray-100 */
+  color: #111827;                        /* slate-900 */
+  outline: none;
+}
+#logo-sidebar nav a.group:active,
+#logo-sidebar #userMenuButton:active { background-color: #e5e7eb !important; }
+
+/* Only show tooltips when collapsed */
+#logo-sidebar.collapsed .item-tooltip,
+.sidebar-collapsed #logo-sidebar .item-tooltip { display: block; }
+
+/* =========================
+   USER BUTTON (BOTTOM)
+   ========================= */
+
+/* Bottom container: remove extra padding so it aligns with nav */
+#logo-sidebar.collapsed .h-full > .px-2.py-3.border-t,
+.sidebar-collapsed #logo-sidebar .h-full > .px-2.py-3.border-t {
+  order: 2;
+  padding: 0;                       /* ← was .5rem 0; remove to align */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Make the user button box IDENTICAL to nav boxes */
+#logo-sidebar.collapsed #userMenuButton,
+.sidebar-collapsed #logo-sidebar #userMenuButton {
+  width: 2.75rem;                   /* ← identical */
+  height: 2.75rem;
+  margin: .5rem auto;               /* ← identical spacing */
+  padding: 0;
+  border-radius: .5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+/* Same icon size as nav icons */
+/* Same icon size as nav icons */
+#logo-sidebar.collapsed #userMenuButton i,
+#logo-sidebar.collapsed #userMenuButton svg,
+.sidebar-collapsed #logo-sidebar #userMenuButton i,
+.sidebar-collapsed #logo-sidebar #userMenuButton svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  font-size: 1.125rem;
+  line-height: 1;
+  display: block;
+  margin: 0 auto;
+}
+/* Hide the text label & caret */
+#userMenuButton .item-label { display: inline; }
+#logo-sidebar.collapsed #userMenuButton .item-label,
+.sidebar-collapsed #logo-sidebar #userMenuButton .item-label { display: none !important; }
+#userMenuButton > svg,
+#userMenuButton .fa-chevron-down,
+#userMenuButton .fa-angle-down { display: none !important; }
+
+/* =========================
+   USER DROPDOWN
+   ========================= */
+#logo-sidebar:not(.collapsed) #userDropdown,
+:not(.sidebar-collapsed) #logo-sidebar #userDropdown {
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  top: auto;
+  transform: none;
+  margin-bottom: .5rem;
+  width: 100%;
+}
+
+/* Collapsed: flyout to the RIGHT of the rail */
+#logo-sidebar.collapsed #userDropdown,
+.sidebar-collapsed #logo-sidebar #userDropdown {
+  position: absolute;
+  left: calc(100% + .5rem);
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+  width: 12rem;
+  margin: 0;
+  z-index: 60;
+}

@@ -656,7 +656,7 @@ def logout_view(request):
         ).update(is_active=False)
     
     logout(request)
-    return redirect('base')
+    return redirect('login')
 
 # =====================================================
 # TWO-STAGE SEARCH VIEWS 
@@ -832,7 +832,7 @@ def change_password(request):
                     messages.error(request, error)
     else:
         form = PasswordChangeForm(request.user)
-    return render(request, 'auth/change_password.html', {'form': form})
+    return render(request, 'auth/change_password.html', {'form': form, 'hide_sidebar': True})
 
 
 @require_GET

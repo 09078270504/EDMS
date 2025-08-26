@@ -1,10 +1,17 @@
 {% extends "base.html" %}
-
 {% block title %}Document Search - Archive System{% endblock %}
 {% block page_title %}Document Search{% endblock %}
-
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/search_form.css' %}">
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'js/search_form.js' %}" defer></script>
+{% endblock %}
 {% block content %}
-<div class="max-w-6xl mx-auto px-4 py-10">
+<!-- NOTE: add id="pageContent" and overflow-x-hidden to ensure no LR scroll -->
+<div id="pageShell" class="min-h-screen">
+<div class="flex-auto overflow-x-hidden">
 
     <!-- Header -->
     <div id="pageHeader" class="text-center mb-10 transition-opacity duration-500 ease-out">
@@ -66,7 +73,7 @@
     </div>
 
     <!-- View toggles -->
-    <div class="max-w-6xl mx-auto">
+    <div class="mx-auto max-w-6xl">
         <div class="mt-6 flex justify-end">
             <div class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1">
                 <!-- List view -->
@@ -83,10 +90,9 @@
         </div>
     </div>  
 
-    <!-- Results section - conditional based on view type -->
     {% if request.GET.view == 'grid' %}
         <!-- Grid view -->
-        <div class="mt-4">
+        <div class="mt-4 mx-auto max-w-6xl">
             {% if documents and documents|length > 0 %}
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {% for d in documents %}
@@ -123,7 +129,7 @@
         </div>
     {% else %}
         <!-- List view (table) -->
-        <div class="mt-4 bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+        <div class="mt-4 mx-auto max-w-6xl bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm">
                     <thead class="bg-gray-50 text-gray-600">
@@ -171,7 +177,7 @@
     {% endif %}
 
     <!-- Tips -->
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="mt-8 mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="rounded-xl bg-green-50 border border-green-100 p-6">
             <h3 class="text-green-900 font-semibold mb-2">How it works</h3>
             <p class="text-green-800 text-sm">
@@ -263,200 +269,4 @@
         </div>
     </div>
 </div>
-
-<!-- Custom font -->
-<style>
-    .font-custom-verdana { 
-        font-family: Verdana, sans-serif; 
-    }
-    
-    /* Modal animation */
-    #filterModal.show {
-        animation: fadeIn 0.2s ease-out;
-    }
-    
-    #filterModal.show > div {
-        animation: slideUp 0.2s ease-out;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    @keyframes slideUp {
-        from { 
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
-        }
-        to { 
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-    }
-</style>
-
-<!-- Enhanced JS for popup filter and scroll fade -->
-<script>
-(function () {
-    // Elements
-    const searchInput = document.getElementById('search_query');
-    const clearBtn = document.getElementById('clearBtn');
-    const filterBtn = document.getElementById('filterBtn');
-    const filterModal = document.getElementById('filterModal');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const resetFiltersBtn = document.getElementById('resetFiltersBtn');
-    const applyFiltersBtn = document.getElementById('applyFiltersBtn');
-    const searchForm = document.getElementById('searchForm');
-    const pageHeader = document.getElementById('pageHeader');
-    
-    // Filter form elements
-    const clientFilter = document.getElementById('client_filter');
-    const itemName = document.getElementById('item_name');
-    const includesWords = document.getElementById('includes_words');
-    const dateFrom = document.getElementById('date_from');
-    const dateTo = document.getElementById('date_to');
-    
-    // Hidden form inputs
-    const clientFilterHidden = document.getElementById('client_filter_hidden');
-    const dateFromHidden = document.getElementById('date_from_hidden');
-    const dateToHidden = document.getElementById('date_to_hidden');
-
-    // Header fade effect on scroll
-    function handleScrollFade() {
-        const scrollY = window.scrollY;
-        const fadeStart = 100; // Start fading after 100px
-        const fadeEnd = 300;   // Completely faded at 300px
-        
-        if (scrollY <= fadeStart) {
-            // Fully visible
-            pageHeader.style.opacity = '1';
-            pageHeader.style.transform = 'translateY(0)';
-        } else if (scrollY >= fadeEnd) {
-            // Fully faded
-            pageHeader.style.opacity = '0';
-            pageHeader.style.transform = 'translateY(-20px)';
-        } else {
-            // Gradually fade
-            const fadeProgress = (scrollY - fadeStart) / (fadeEnd - fadeStart);
-            const opacity = 1 - fadeProgress;
-            const translateY = fadeProgress * -20;
-            
-            pageHeader.style.opacity = opacity;
-            pageHeader.style.transform = `translateY(${translateY}px)`;
-        }
-    }
-
-    // Throttle scroll events for better performance
-    let scrollTimeout;
-    function throttledScrollHandler() {
-        if (!scrollTimeout) {
-            scrollTimeout = setTimeout(() => {
-                handleScrollFade();
-                scrollTimeout = null;
-            }, 16); // ~60fps
-        }
-    }
-
-    // Add scroll event listener
-    window.addEventListener('scroll', throttledScrollHandler);
-
-    // Clear button functionality
-    function syncClear() {
-        if (searchInput.value && searchInput.value.trim().length > 0) {
-            clearBtn.classList.remove('hidden');
-        } else {
-            clearBtn.classList.add('hidden');
-        }
-    }
-    
-    syncClear();
-    searchInput.addEventListener('input', syncClear);
-
-    clearBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        searchInput.focus();
-        syncClear();
-    });
-
-    // Modal functionality
-    function openModal() {
-        filterModal.classList.remove('hidden');
-        filterModal.classList.add('show');
-        document.body.style.overflow = 'hidden';
-        console.log('Modal opened'); // Debug log
-    }
-
-    function closeModal() {
-        filterModal.classList.add('hidden');
-        filterModal.classList.remove('show');
-        document.body.style.overflow = 'auto';
-        console.log('Modal closed'); // Debug log
-    }
-
-    // Event listeners for modal
-    filterBtn.addEventListener('click', openModal);
-    
-    // Close button event listener with debugging
-    if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('Close button clicked'); // Debug log
-            closeModal();
-        });
-    } else {
-        console.error('Close button not found!');
-    }
-    
-    // Close modal when clicking outside
-    filterModal.addEventListener('click', (e) => {
-        if (e.target === filterModal) {
-            closeModal();
-        }
-    });
-
-    // Close modal with Escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !filterModal.classList.contains('hidden')) {
-            closeModal();
-        }
-    });
-
-    // Reset filters
-    resetFiltersBtn.addEventListener('click', () => {
-        // Just clear the form fields in the modal - don't submit
-        clientFilter.value = '';
-        itemName.value = '';
-        includesWords.value = '';
-        dateFrom.value = '';
-        dateTo.value = '';
-        
-        console.log('Filters reset'); // Debug log
-    });
-
-    // Apply filters
-    applyFiltersBtn.addEventListener('click', () => {
-        // Update hidden inputs with modal values
-        clientFilterHidden.value = clientFilter.value;
-        dateFromHidden.value = dateFrom.value;
-        dateToHidden.value = dateTo.value;
-        
-        // Close modal and submit form
-        closeModal();
-        searchForm.submit();
-    });
-
-    // Enter key in search input submits form
-    searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            searchForm.submit();
-        }
-    });
-
-    // Initialize scroll fade effect
-    handleScrollFade();
-})();
-</script>
 {% endblock %}
