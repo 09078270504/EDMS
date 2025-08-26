@@ -1,0 +1,220 @@
+2025-08-20 00:06:19,931 - core.services.ocr_processor - ERROR - Failed to initialize PaddleOCR: Unknown argument: use_gpu
+2025-08-20 00:06:27,960 - core.services.ocr_processor - INFO - PaddleOCR initialized with fallback settings
+2025-08-20 00:25:50,073 - core.services.ocr_processor - ERROR - Failed to initialize PaddleOCR: Unknown argument: use_gpu
+2025-08-20 00:25:57,439 - core.services.ocr_processor - INFO - PaddleOCR initialized with fallback settings
+2025-08-20 00:26:44,943 - core.services.qwen_extractor - INFO - Qwen 2.5 14B model initialized successfully
+2025-08-20 00:26:45,124 - core.services.archive_manager - ERROR - Error scanning upload categories: [Errno 2] No such file or directory: '/home/ctoai/Documents/archive/webocr/uploads'
+2025-08-20 00:29:00,277 - core.services.ocr_processor - ERROR - Failed to initialize PaddleOCR: Unknown argument: use_gpu
+2025-08-20 00:29:07,749 - core.services.ocr_processor - INFO - PaddleOCR initialized with fallback settings
+2025-08-20 00:30:05,657 - core.services.qwen_extractor - INFO - Qwen 2.5 14B model initialized successfully
+2025-08-20 00:30:05,670 - core.services.archive_manager - ERROR - Error scanning upload categories: [Errno 2] No such file or directory: '/home/ctoai/Documents/archive/webocr/upload'
+2025-08-20 00:32:15,700 - core.services.ocr_processor - ERROR - Failed to initialize PaddleOCR: Unknown argument: use_gpu
+2025-08-20 00:32:22,354 - core.services.ocr_processor - INFO - PaddleOCR initialized with fallback settings
+2025-08-20 00:32:47,140 - core.services.qwen_extractor - INFO - Qwen 2.5 14B model initialized successfully
+2025-08-20 00:32:47,153 - core.services.archive_manager - INFO - Found category 'CALVELO ENGINEERED SYSTEMS 2024' with 9 PDFs
+2025-08-20 00:32:47,153 - core.management.commands.process_documents - INFO - 🚀 Processing: CALVELO ENGINEERED SYSTEMS 2024
+2025-08-20 00:32:47,154 - core.services.archive_manager - INFO - Found category 'CALVELO ENGINEERED SYSTEMS 2024' with 9 PDFs
+2025-08-20 00:32:47,430 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:47,430 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:47,432 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:47,432 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:47,434 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:47,436 - core.services.ocr_processor - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:47,437 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:47,438 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:47,440 - core.services.ocr_processor - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:47,441 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:47,443 - core.services.ocr_processor - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:47,444 - core.services.ocr_processor - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:47,446 - core.services.ocr_processor - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:47,447 - core.services.ocr_processor - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:47,449 - core.services.ocr_processor - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:47,451 - core.services.ocr_processor - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:48,940 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:32:48,947 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:32:48,948 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:32:48,948 - core.services.ocr_processor - INFO - Processing page 1/1
+2025-08-20 00:32:48,948 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:32:48,949 - core.services.ocr_processor - INFO - Processing page 1/1
+2025-08-20 00:32:48,949 - core.services.ocr_processor - INFO - Processing page 1/1
+2025-08-20 00:32:48,955 - core.services.ocr_processor - INFO - Processing page 1/1
+2025-08-20 00:32:49,902 - core.services.ocr_processor - ERROR - OCR extraction failed: PaddleOCR.predict() got an unexpected keyword argument 'cls'
+2025-08-20 00:32:49,923 - core.services.ocr_service - INFO - ✅ PaddleOCR SUCCESS: 0.0% confidence
+2025-08-20 00:32:49,923 - core.management.commands.process_documents - INFO - ⚠️ 240216 Purchase Order 64455.pdf: Skipped - OCR failed - confidence: 0.0% in 2.5s (file remains in upload)
+2025-08-20 00:32:49,940 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:49,975 - core.services.ocr_processor - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:32:50,011 - core.services.ocr_processor - ERROR - OCR extraction failed: PaddleOCR.predict() got an unexpected keyword argument 'cls'
+2025-08-20 00:32:50,016 - core.services.ocr_service - INFO - ✅ PaddleOCR SUCCESS: 0.0% confidence
+2025-08-20 00:32:50,017 - core.management.commands.process_documents - INFO - ⚠️ 240625 Voucher Payable(AP) 182398.pdf: Skipped - OCR failed - confidence: 0.0% in 2.6s (file remains in upload)
+2025-08-20 00:32:50,027 - core.services.ocr_processor - ERROR - OCR extraction failed: PaddleOCR.predict() got an unexpected keyword argument 'cls'
+2025-08-20 00:32:50,034 - core.services.ocr_service - INFO - ✅ PaddleOCR SUCCESS: 0.0% confidence
+2025-08-20 00:32:50,034 - core.management.commands.process_documents - INFO - ⚠️ 240511 Purchase Order 3050.pdf: Skipped - OCR failed - confidence: 0.0% in 2.6s (file remains in upload)
+2025-08-20 00:32:50,078 - core.services.ocr_processor - ERROR - OCR extraction failed: PaddleOCR.predict() got an unexpected keyword argument 'cls'
+2025-08-20 00:32:50,088 - core.services.ocr_service - INFO - ✅ PaddleOCR SUCCESS: 0.0% confidence
+2025-08-20 00:32:50,089 - core.management.commands.process_documents - INFO - ⚠️ 240420 Certificate of Completion and Acceptance 64455.pdf: Skipped - OCR failed - confidence: 0.0% in 2.7s (file remains in upload)
+2025-08-20 00:32:50,178 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:32:50,179 - core.services.ocr_processor - INFO - Processing page 1/1
+2025-08-20 00:32:50,186 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:32:50,186 - core.services.ocr_processor - INFO - Processing page 1/1
+2025-08-20 00:32:50,233 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:32:50,233 - core.services.ocr_processor - INFO - Processing page 1/1
+2025-08-20 00:32:50,267 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:32:50,268 - core.services.ocr_processor - INFO - Processing page 1/1
+2025-08-20 00:32:50,509 - core.services.ocr_processor - ERROR - OCR extraction failed: PaddleOCR.predict() got an unexpected keyword argument 'cls'
+2025-08-20 00:32:50,515 - core.services.ocr_service - INFO - ✅ PaddleOCR SUCCESS: 0.0% confidence
+2025-08-20 00:32:50,515 - core.management.commands.process_documents - INFO - ⚠️ 240701 Collection Receipt 00918.pdf: Skipped - OCR failed - confidence: 0.0% in 3.1s (file remains in upload)
+2025-08-20 00:32:50,599 - core.services.ocr_processor - ERROR - OCR extraction failed: PaddleOCR.predict() got an unexpected keyword argument 'cls'
+2025-08-20 00:32:50,605 - core.services.ocr_service - INFO - ✅ PaddleOCR SUCCESS: 0.0% confidence
+2025-08-20 00:32:50,605 - core.management.commands.process_documents - INFO - ⚠️ 240613 Request for Payment.pdf: Skipped - OCR failed - confidence: 0.0% in 3.2s (file remains in upload)
+2025-08-20 00:32:50,759 - core.services.ocr_processor - ERROR - OCR extraction failed: PaddleOCR.predict() got an unexpected keyword argument 'cls'
+2025-08-20 00:32:50,765 - core.services.ocr_service - INFO - ✅ PaddleOCR SUCCESS: 0.0% confidence
+2025-08-20 00:32:50,765 - core.management.commands.process_documents - INFO - ⚠️ 240627 Check 0000076113.pdf: Skipped - OCR failed - confidence: 0.0% in 3.3s (file remains in upload)
+2025-08-20 00:32:50,896 - core.services.ocr_processor - ERROR - OCR extraction failed: PaddleOCR.predict() got an unexpected keyword argument 'cls'
+2025-08-20 00:32:50,896 - core.services.ocr_service - INFO - ✅ PaddleOCR SUCCESS: 0.0% confidence
+2025-08-20 00:32:50,896 - core.management.commands.process_documents - INFO - ⚠️ 240601 Certificate of Creditable Tax Withheld at Source 2307.pdf: Skipped - OCR failed - confidence: 0.0% in 3.5s (file remains in upload)
+2025-08-20 00:32:51,085 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:32:51,085 - core.services.ocr_processor - INFO - Processing page 1/1
+2025-08-20 00:32:51,295 - core.services.ocr_processor - ERROR - OCR extraction failed: PaddleOCR.predict() got an unexpected keyword argument 'cls'
+2025-08-20 00:32:51,296 - core.services.ocr_service - INFO - ✅ PaddleOCR SUCCESS: 0.0% confidence
+2025-08-20 00:32:51,296 - core.management.commands.process_documents - INFO - ⚠️ 010923 Certificate of Creditable Tax.pdf: Skipped - OCR failed - confidence: 0.0% in 1.4s (file remains in upload)
+2025-08-20 00:32:51,393 - core.management.commands.process_documents - INFO - 🎯 CALVELO ENGINEERED SYSTEMS 2024 complete: {'total': 9, 'successful': 0, 'partial': 0, 'failed': 0, 'skipped': 9}
+2025-08-20 00:35:02,878 - core.services.ocr_processor - ERROR - Failed to initialize PaddleOCR: Unknown argument: use_gpu
+2025-08-20 00:35:08,974 - core.services.ocr_processor - INFO - PaddleOCR initialized with fallback settings
+2025-08-20 00:35:36,167 - core.services.qwen_extractor - INFO - Qwen 2.5 14B model initialized successfully
+2025-08-20 00:35:36,180 - core.services.archive_manager - INFO - Found category 'CALVELO ENGINEERED SYSTEMS 2024' with 9 PDFs
+2025-08-20 00:35:36,181 - core.management.commands.process_documents - INFO - 🚀 Processing: CALVELO ENGINEERED SYSTEMS 2024
+2025-08-20 00:35:36,181 - core.services.archive_manager - INFO - Found category 'CALVELO ENGINEERED SYSTEMS 2024' with 9 PDFs
+2025-08-20 00:35:36,189 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:35:36,191 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:35:36,192 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:35:36,193 - core.services.ocr_processor - INFO - Using PaddleOCR for image-based PDF
+2025-08-20 00:35:36,194 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:35:36,195 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:35:36,196 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:35:36,197 - core.services.ocr_processor - INFO - Using PaddleOCR for image-based PDF
+2025-08-20 00:35:36,198 - core.services.ocr_processor - INFO - Using PaddleOCR for image-based PDF
+2025-08-20 00:35:36,199 - core.services.ocr_processor - INFO - Using PaddleOCR for image-based PDF
+2025-08-20 00:35:36,199 - core.services.ocr_processor - INFO - Using PaddleOCR for image-based PDF
+2025-08-20 00:35:36,200 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:35:36,201 - core.services.ocr_processor - INFO - Using PaddleOCR for image-based PDF
+2025-08-20 00:35:36,202 - core.services.ocr_service - INFO - 📸 Using PaddleOCR for image-based PDF
+2025-08-20 00:35:36,206 - core.services.ocr_processor - INFO - Using PaddleOCR for image-based PDF
+2025-08-20 00:35:36,207 - core.services.ocr_processor - INFO - Using PaddleOCR for image-based PDF
+2025-08-20 00:35:37,443 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:35:37,443 - core.services.ocr_processor - INFO - Processing page 1/1
+2025-08-20 00:35:37,483 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:35:37,484 - core.services.ocr_processor - INFO - Processing page 1/1
+2025-08-20 00:35:37,633 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:35:37,639 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:35:37,644 - core.services.ocr_processor - INFO - Processing page 1/1
+2025-08-20 00:35:37,647 - core.services.ocr_processor - INFO - Processing page 1/1
+2025-08-20 00:44:26,193 - core.services.ocr_processor - ERROR - PaddleOCR initialization failed: Unknown argument: show_log
+2025-08-20 00:44:32,389 - core.services.ocr_processor - INFO - PaddleOCR initialized with minimal settings
+2025-08-20 00:44:32,389 - core.services.qwen_extractor - INFO - Loading Qwen model: Qwen/Qwen2.5-7B-Instruct
+2025-08-20 00:45:10,225 - core.services.ocr_processor - ERROR - PaddleOCR initialization failed: Unknown argument: show_log
+2025-08-20 00:45:17,583 - core.services.ocr_processor - INFO - PaddleOCR initialized with minimal settings
+2025-08-20 00:45:17,584 - core.services.qwen_extractor - INFO - Loading Qwen model: Qwen/Qwen2.5-7B-Instruct
+2025-08-20 00:48:08,364 - core.services.ocr_processor - INFO - PaddleOCR initialized successfully
+2025-08-20 00:48:08,364 - core.services.qwen_extractor - INFO - Loading Qwen model: Qwen/Qwen2.5-7B-Instruct
+2025-08-20 00:50:31,935 - core.services.qwen_extractor - INFO - Qwen model loaded successfully
+2025-08-20 00:50:31,960 - core.services.archive_manager - INFO - Found category 'CALVELO ENGINEERED SYSTEMS 2024' with 9 PDFs
+2025-08-20 00:50:31,960 - core.management.commands.process_documents - INFO - 🚀 Processing: CALVELO ENGINEERED SYSTEMS 2024
+2025-08-20 00:50:31,960 - core.services.archive_manager - INFO - Found category 'CALVELO ENGINEERED SYSTEMS 2024' with 9 PDFs
+2025-08-20 00:50:31,972 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:50:31,974 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:50:31,976 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:50:31,978 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:50:31,979 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:50:31,980 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:50:31,982 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:50:31,984 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:50:32,789 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:50:32,806 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:50:32,842 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:50:32,869 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:50:33,063 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:50:33,185 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:50:33,198 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:50:33,199 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:50:35,424 - core.services.ocr_processor - ERROR - Single image OCR failed: vector<bool>::_M_range_check: __n (which is 57) >= this->size() (which is 42)
+2025-08-20 00:50:35,425 - core.services.ocr_processor - ERROR - Single image OCR failed: vector<bool>::_M_range_check: __n (which is 57) >= this->size() (which is 42)
+2025-08-20 00:50:35,425 - core.services.ocr_processor - ERROR - Single image OCR failed: vector<bool>::_M_range_check: __n (which is 57) >= this->size() (which is 42)
+2025-08-20 00:50:35,426 - core.services.ocr_processor - ERROR - Single image OCR failed: vector<bool>::_M_range_check: __n (which is 57) >= this->size() (which is 42)
+2025-08-20 00:50:35,426 - core.services.ocr_processor - ERROR - Single image OCR failed: vector<bool>::_M_range_check: __n (which is 57) >= this->size() (which is 42)
+2025-08-20 00:50:35,426 - core.services.ocr_processor - ERROR - Single image OCR failed: vector<bool>::_M_range_check: __n (which is 50) >= this->size() (which is 42)
+2025-08-20 00:50:35,426 - core.services.ocr_processor - ERROR - Single image OCR failed: vector<bool>::_M_range_check: __n (which is 57) >= this->size() (which is 42)
+2025-08-20 00:50:35,426 - core.services.ocr_processor - ERROR - Single image OCR failed: vector<bool>::_M_range_check: __n (which is 57) >= this->size() (which is 42)
+2025-08-20 00:50:36,148 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:50:36,843 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:50:37,079 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:50:37,498 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:50:37,693 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:50:39,049 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:50:39,049 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:50:39,049 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:50:39,049 - core.management.commands.process_documents - INFO - ⚠️ 240613 Request for Payment.pdf: Skipped - OCR failed - confidence: 0.0% in 7.1s (file remains in upload)
+2025-08-20 00:50:39,049 - core.management.commands.process_documents - INFO - ⚠️ 240601 Certificate of Creditable Tax Withheld at Source 2307.pdf: Skipped - OCR failed - confidence: 0.0% in 7.1s (file remains in upload)
+2025-08-20 00:50:39,050 - core.management.commands.process_documents - INFO - ⚠️ 240701 Collection Receipt 00918.pdf: Skipped - OCR failed - confidence: 0.0% in 7.1s (file remains in upload)
+2025-08-20 00:50:39,050 - core.management.commands.process_documents - INFO - ⚠️ 240625 Voucher Payable(AP) 182398.pdf: Skipped - OCR failed - confidence: 0.0% in 7.1s (file remains in upload)
+2025-08-20 00:50:39,050 - core.management.commands.process_documents - INFO - ⚠️ 240216 Purchase Order 64455.pdf: Skipped - OCR failed - confidence: 0.0% in 7.1s (file remains in upload)
+2025-08-20 00:50:39,050 - core.management.commands.process_documents - INFO - ⚠️ 240511 Purchase Order 3050.pdf: Skipped - OCR failed - confidence: 0.0% in 7.1s (file remains in upload)
+2025-08-20 00:50:39,051 - core.management.commands.process_documents - INFO - ⚠️ 240627 Check 0000076113.pdf: Skipped - OCR failed - confidence: 0.0% in 7.1s (file remains in upload)
+2025-08-20 00:50:39,051 - core.management.commands.process_documents - INFO - ⚠️ 240420 Certificate of Completion and Acceptance 64455.pdf: Skipped - OCR failed - confidence: 0.0% in 7.1s (file remains in upload)
+2025-08-20 00:50:39,054 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:50:39,708 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:50:40,059 - core.services.ocr_processor - ERROR - Single image OCR failed: vector<bool>::_M_range_check: __n (which is 57) >= this->size() (which is 42)
+2025-08-20 00:50:40,505 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:50:40,505 - core.management.commands.process_documents - INFO - ⚠️ 010923 Certificate of Creditable Tax.pdf: Skipped - OCR failed - confidence: 0.0% in 1.5s (file remains in upload)
+2025-08-20 00:50:40,511 - core.management.commands.process_documents - INFO - 🎯 CALVELO ENGINEERED SYSTEMS 2024 complete: {'total': 9, 'successful': 0, 'partial': 0, 'failed': 0, 'skipped': 9}
+2025-08-20 00:54:23,578 - core.services.ocr_processor - INFO - PaddleOCR initialized successfully
+2025-08-20 00:54:23,578 - core.services.qwen_extractor - INFO - Loading Qwen model: Qwen/Qwen2.5-7B-Instruct
+2025-08-20 00:54:28,455 - core.services.qwen_extractor - INFO - Qwen model loaded successfully
+2025-08-20 00:54:28,473 - core.services.archive_manager - INFO - Found category 'CALVELO ENGINEERED SYSTEMS 2024' with 9 PDFs
+2025-08-20 00:54:28,473 - core.management.commands.process_documents - INFO - 🚀 Processing: CALVELO ENGINEERED SYSTEMS 2024
+2025-08-20 00:54:28,473 - core.services.archive_manager - INFO - Found category 'CALVELO ENGINEERED SYSTEMS 2024' with 9 PDFs
+2025-08-20 00:54:28,484 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:54:28,485 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:54:28,488 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:54:28,490 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:54:28,492 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:54:28,493 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:54:28,496 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:54:28,498 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:54:29,146 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:54:29,149 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:54:29,149 - core.services.ocr_processor - ERROR - OCR failed on page 1: 'PaddleOCRProcessor' object has no attribute '_ocr_single_image'
+2025-08-20 00:54:29,149 - core.services.ocr_processor - ERROR - OCR failed on page 1: 'PaddleOCRProcessor' object has no attribute '_ocr_single_image'
+2025-08-20 00:54:29,368 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:54:29,368 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:54:29,368 - core.management.commands.process_documents - INFO - ⚠️ 240701 Collection Receipt 00918.pdf: Skipped - OCR failed - confidence: 0.0% in 0.9s (file remains in upload)
+2025-08-20 00:54:29,369 - core.management.commands.process_documents - INFO - ⚠️ 240627 Check 0000076113.pdf: Skipped - OCR failed - confidence: 0.0% in 0.9s (file remains in upload)
+2025-08-20 00:54:29,371 - core.services.ocr_processor - INFO - Starting OCR extraction
+2025-08-20 00:54:29,468 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:54:29,469 - core.services.ocr_processor - ERROR - OCR failed on page 1: 'PaddleOCRProcessor' object has no attribute '_ocr_single_image'
+2025-08-20 00:54:29,666 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:54:29,670 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:54:29,670 - core.management.commands.process_documents - INFO - ⚠️ 240613 Request for Payment.pdf: Skipped - OCR failed - confidence: 0.0% in 1.2s (file remains in upload)
+2025-08-20 00:54:29,670 - core.services.ocr_processor - ERROR - OCR failed on page 1: 'PaddleOCRProcessor' object has no attribute '_ocr_single_image'
+2025-08-20 00:54:29,875 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:54:29,876 - core.management.commands.process_documents - INFO - ⚠️ 240601 Certificate of Creditable Tax Withheld at Source 2307.pdf: Skipped - OCR failed - confidence: 0.0% in 1.4s (file remains in upload)
+2025-08-20 00:54:30,059 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:54:30,062 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:54:30,062 - core.services.ocr_processor - ERROR - OCR failed on page 1: 'PaddleOCRProcessor' object has no attribute '_ocr_single_image'
+2025-08-20 00:54:30,065 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:54:30,065 - core.services.ocr_processor - ERROR - OCR failed on page 1: 'PaddleOCRProcessor' object has no attribute '_ocr_single_image'
+2025-08-20 00:54:30,069 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:54:30,277 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:54:30,277 - core.services.ocr_processor - ERROR - OCR failed on page 1: 'PaddleOCRProcessor' object has no attribute '_ocr_single_image'
+2025-08-20 00:54:30,278 - core.services.ocr_processor - INFO - Converted PDF to 1 images
+2025-08-20 00:54:30,494 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:54:30,494 - core.services.ocr_processor - ERROR - OCR failed on page 1: 'PaddleOCRProcessor' object has no attribute '_ocr_single_image'
+2025-08-20 00:54:30,494 - core.management.commands.process_documents - INFO - ⚠️ 240511 Purchase Order 3050.pdf: Skipped - OCR failed - confidence: 0.0% in 2.0s (file remains in upload)
+2025-08-20 00:54:30,717 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:54:30,717 - core.services.ocr_processor - ERROR - OCR failed on page 1: 'PaddleOCRProcessor' object has no attribute '_ocr_single_image'
+2025-08-20 00:54:30,718 - core.management.commands.process_documents - INFO - ⚠️ 240216 Purchase Order 64455.pdf: Skipped - OCR failed - confidence: 0.0% in 2.2s (file remains in upload)
+2025-08-20 00:54:30,944 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:54:30,944 - core.management.commands.process_documents - INFO - ⚠️ 240625 Voucher Payable(AP) 182398.pdf: Skipped - OCR failed - confidence: 0.0% in 2.5s (file remains in upload)
+2025-08-20 00:54:31,144 - core.services.ocr_service - WARNING - OCR low confidence: 0.0%
+2025-08-20 00:54:31,145 - core.management.commands.process_documents - INFO - ⚠️ 240420 Certificate of Completion and Acceptance 64455.pdf: Skipped - OCR failed - confidence: 0.0% in 2.7s (file remains in upload)
+2025-08-20 00:54:31,145 - core.management.commands.process_documents - INFO - ⚠️ 010923 Certificate of Creditable Tax.pdf: Skipped - OCR failed - confidence: 0.0% in 1.8s (file remains in upload)
+2025-08-20 00:54:31,147 - core.management.commands.process_documents - INFO - 🎯 CALVELO ENGINEERED SYSTEMS 2024 complete: {'total': 9, 'successful': 0, 'partial': 0, 'failed': 0, 'skipped': 9}
