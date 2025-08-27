@@ -39,7 +39,14 @@ html, body { overflow-x: hidden; }
    BRAND ROW
    ========================= */
 #brandToggle { padding-left: .75rem; padding-right: .75rem; }
-#brandToggle img { height: var(--brand-size); width: var(--brand-size); }
+#brandToggle img {
+  height: 2.5rem;                  /* bigger */
+  width: 2.5rem;
+  border-radius: 9999px;           /* round */
+  object-fit: cover;
+  border: 2px solid #e5e7eb;       /* border always visible */
+  background-color: #fff;          /* clean circle background */
+}
 
 #logo-sidebar.collapsed .h-full > div:first-child,
 .sidebar-collapsed #logo-sidebar .h-full > div:first-child {
@@ -47,19 +54,29 @@ html, body { overflow-x: hidden; }
   display: flex;
   flex-direction: column;
 }
+
+/* Collapsed: brand button container */
 #logo-sidebar.collapsed #brandToggle,
 .sidebar-collapsed #logo-sidebar #brandToggle {
   justify-content: center;
-  padding: .5rem;
-  width: 100%;
+  width: 3rem;            
+  height: 3rem;
+  margin: .5rem auto;
+  border-radius: 9999px;
+  border-bottom: 1;         
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
+
+/* Collapsed: brand logo image inside */
 #logo-sidebar.collapsed #brandToggle img,
 .sidebar-collapsed #logo-sidebar #brandToggle img {
-  height: var(--brand-size);
-  width: var(--brand-size);
-  display: block;
-  border-radius: .5rem;
-  object-fit: contain;
+  width: 2.5rem;                     /* 32px logo inside */
+  height: 2.5rem;
+  border-radius: 9999px;
+  object-fit: cover;               /* fills circle properly */
 }
 
 /* Hide labels & collapse arrow when collapsed */

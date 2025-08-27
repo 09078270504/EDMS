@@ -13,14 +13,17 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
 </head>
 <body class="bg-gray-50">
-
     {% if not user.is_authenticated %}
     <!-- Navbar (only shows if NOT logged in) -->
-    <nav class="bg-white text-green-600 p-4 shadow">
+    <nav class="bg-white text-green-600 p-4">
       <div class="container mx-auto flex justify-between items-center">
-        <h1 class="text-xl font-bold text-green-600">
-          Fowse
-        </h1>
+        <div class="flex items-center space-x-2">
+          <img src="{% static 'img/fowse.png' %}" class="h-8 inline-block" alt="Fowse Logo" />
+          <h1 class="text-xl font-bold text-green-600">
+            Fowse
+          </h1>
+        </div>
+
         <div class="flex items-center space-x-4">
           <a href="{% url 'login' %}" id="loginNavBtn"
             class="ml-4 hover:bg-green-700 hover:text-white px-3 py-2 rounded-md cursor-pointer transition-colors duration-200">
@@ -32,32 +35,32 @@
     {% endif %}
 
     {% if user.is_authenticated and not hide_sidebar %}
-    <div class="min-h-screen flex">
+    <div class="min-h-screen flex bg-white">
     <!-- Sidebar (only shows if logged in) -->
     <aside id="logo-sidebar" class="fixed inset-y-0 left-0 z-40 bg-white shadow" aria-label="Sidebar">
 
-      <div class="h-full flex flex-col">
+      <div class="h-full flex flex-col bg-gray-200">
         <!-- Brand + Collapse -->
-        <div class="flex items-center justify-between px-2.5 py-3 border-b">  <!-- px-3→2.5, py-4→3 -->
+        <div class="flex items-center justify-between px-2.5 py-3 border-b border-gray-300">
           <button id="brandToggle"
-                  class="flex items-center space-x-2 px-2.5 py-2 w-full overflow-hidden focus:outline-none hover:opacity-90"
-                  type="button" aria-label="Toggle sidebar" aria-pressed="false">
-            <img src="{% static 'img/fowse.png' %}" class="h-5" />
-            <span class="brand-text text-lg font-semibold whitespace-nowrap">Fowse</span> <!-- text-xl→text-lg -->
+            class="flex items-center space-x-2 px-2.5 py-2 w-full overflow-hidden focus:outline-none hover:opacity-90"
+            type="button" aria-label="Toggle sidebar" aria-pressed="false">
+            <img src="{% static 'img/fowse.png' %}"
+           class="h-8 w-8 rounded-full object-cover inline-block" alt="Fowse Logo" />
+            <span class="brand-text text-lg font-semibold whitespace-nowrap">Fowse</span>
           </button>
-          
           <button id="collapseSidebar"
                   class="hidden sm:inline-flex items-center justify-center w-8 h-8 rounded hover:bg-gray-100 text-gray-600"
                   type="button" aria-label="Collapse sidebar" aria-expanded="true">
-            <i class="fa-solid fa-angles-left text-sm"></i> <!-- make icon a bit smaller -->
+            <i class="fa-solid fa-angles-left text-sm"></i>
           </button>
         </div>
 
         <!-- Apps in Nav -->
-        <nav class="flex-1 px-2 py-2 space-y-1"> <!-- px-2 py-3→px-2 py-2 -->
+        <nav class="flex-1 px-2 py-2 space-y-1"> 
           <a href="{% url 'search_form' %}"
             class="group relative flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-green-50 text-gray-800 transition-colors">
-            <i class="fa-solid fa-pen-to-square text-base shrink-0"></i> <!-- text-lg→base -->
+            <i class="fa-solid fa-pen-to-square text-base shrink-0"></i>
             <span class="item-label">Document</span>
             <span class="item-tooltip pointer-events-none absolute left-11 top-1/2 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100">Document</span>
           </a>
@@ -71,7 +74,7 @@
         </nav>
 
         <!-- User -->
-        <div class="px-2 py-2 border-t"> <!-- py-3→py-2 -->
+        <div class="px-2 py-2 border-t border-gray-300"> 
           <div class="group relative w-full overflow-visible">
             <button id="userMenuButton"
                     class="group relative flex items-center gap-2.5 px-2.5 py-2 w-full rounded-md hover:bg-green-50 text-gray-800 transition-colors">
@@ -85,7 +88,7 @@
 
             <!-- Dropdown (upward by default; flyout when collapsed) -->
             <div id="userDropdown"
-                  class="user-menu-panel hidden absolute left-0 bottom-full mb-2 w-full bg-white rounded-xl shadow-xl ring-1 ring-black/5 py-2 z-60">
+                  class="user-menu-panel hidden absolute left-0 bottom-full mb-2 w-full bg-white rounded-xl shadow-xl ring-1 ring-gray-200 py-2 z-60">
               <a href="{% url 'change_password' %}" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 rounded-md">Change Password</a>
               <hr class="border-gray-200 my-1">
               <a href="{% url 'logout' %}" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 rounded-md">Logout</a>
@@ -97,7 +100,7 @@
     {% endif %}
 
     <!-- PAGE-SPECIFIC CONTENT -->
-    <div id="pageContent" class="flex-1 container mx-auto mt-8  {% if hide_sidebar %}no-sidebar{% endif %}">
+    <div id="pageContent" class="flex-1 container mx-auto mt-8 {% if hide_sidebar %}no-sidebar{% endif %}">
       {% block content %}{% endblock %}
     </div>
 

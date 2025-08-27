@@ -1,46 +1,31 @@
-# ===========================
-# DJANGO IMPORTS
-# ===========================
-from django.shortcuts import render, redirect, get_object_or_404  # Core shortcuts
-from django.http import JsonResponse  # For API responses
-from django.views.decorators.http import require_GET  # For GET-only views
-from django.db.models import Q  # For advanced queries
-from django.contrib.auth import login, logout, get_user_model, update_session_auth_hash, authenticate # Auth functions
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm  # Auth forms
-from django.contrib.auth.decorators import login_required  # Access control
-from django.contrib import messages  # User messages
-from django import forms  # Forms
-from django.core.mail import send_mail  # Email
-from django.conf import settings  # Settings
-from django.utils import timezone  # Timezone
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+from django.contrib.auth import login, logout, get_user_model, authenticate
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django import forms
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views import View
 
-# ===========================
-# PROJECT IMPORTS
-# ===========================
-from .models import LoginAttempt, SecurityEvent, UserSession, SuspiciousActivity  # Local models
-from database.models import Document  # Document model
-from database.serializer import DocumentListSerializer  # Serializer
-from .security_utils import log_security_event, track_user_session, check_multiple_failed_logins # For enhanced log in view
+from .models import LoginAttempt, SecurityEvent, UserSession, SuspiciousActivity
+from database.models import Document
+from database.serializer import DocumentListSerializer
+from .security_utils import log_security_event, track_user_session, check_multiple_failed_logins
 
-# ===========================
-# STANDARD LIBRARY IMPORTS
-# ===========================
-import json  # JSON handling
-import os  # File system
-import re  # Regex
-from datetime import timedelta  # Time delta
+import json
+import os
+import re
+from datetime import timedelta
 
-
-# For team integrations
 @method_decorator(csrf_exempt, name='dispatch')
 class SecurityEventsAPI(View):
-    """API endpoint for other teams to access security events"""
-    
     def get(self, request):
-        # Get recent security events
         events = SecurityEvent.objects.filter(
             timestamp__gte=timezone.now() - timedelta(hours=24)
         ).values(
@@ -56,8 +41,6 @@ class SecurityEventsAPI(View):
 
 @method_decorator(csrf_exempt, name='dispatch') 
 class SuspiciousActivitiesAPI(View):
-    """API endpoint for suspicious activities"""
-    
     def get(self, request):
         activities = SuspiciousActivity.objects.filter(
             is_resolved=False
@@ -72,72 +55,15 @@ class SuspiciousActivitiesAPI(View):
             'count': len(activities)
         })
 
-
-# User Creation Form
-"""class CustomUserCreationForm(forms.ModelForm):
-    email = forms.EmailField(
-        label='Email Address',
-        widget=forms.EmailInput(attrs={'placeholder': 'Enter your email address'}),
-        help_text='Required. Please enter a valid email address.'
-    )
-    password1 = forms.CharField(
-        label='Password',
-        widget=forms.PasswordInput,
-        help_text='Enter a password.'
-    )
-    password2 = forms.CharField(
-        label='Password confirmation',
-        widget=forms.PasswordInput,
-        help_text='Enter the same password as before, for verification.'
-    )
-
-    class Meta:
-        model = get_user_model()
-        fields = ('username', 'email')
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if get_user_model().objects.filter(email=email).exists():
-            raise forms.ValidationError("A user with this email already exists.")
-        return email
-
-    def clean_password2(self):
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("Passwords don't match")
-        return password2
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
-        user.email = self.cleaned_data["email"]
-        if commit:
-            user.save()
-        return user """
-
-# ======TWO-STAGE SEARCH ENGINE======
 class TwoStageSearchEngine:
-    """
-    Two-stage search system:
-    Stage 1: Search metadata files (fast)
-    Stage 2: Search full OCR text files (deep)
-    """
-    
     def __init__(self):
         self.stage_1_results = []
         self.stage_2_results = []
     
     def stage_1_search(self, query, client_filter=None):
-        """
-        Stage 1: Search only metadata files
-        Returns: List of matching documents with metadata preview
-        """
         print(f"Stage 1: Searching metadata for '{query}'")
         
-        # Get all documents from database with file paths
-        documents = Document.objects.all()  # Fixed: Use Document instead of Documents
-        
+        documents = Document.objects.all()
         if client_filter:
             documents = documents.filter(client_name__icontains=client_filter)
         
@@ -145,18 +71,15 @@ class TwoStageSearchEngine:
         search_terms = query.lower().split()
         
         for doc in documents:
-            # Get metadata file path from database
             metadata_path = self._get_metadata_path(doc)
             
             if not metadata_path or not os.path.exists(metadata_path):
                 continue
             
             try:
-                # Load and search metadata
                 with open(metadata_path, 'r', encoding='utf-8') as f:
                     metadata = json.load(f)
                 
-                # Search through metadata fields
                 match_score, matched_fields = self._search_metadata(metadata, search_terms)
                 
                 if match_score > 0:
@@ -181,25 +104,19 @@ class TwoStageSearchEngine:
                 print(f"Error reading metadata for {doc.document_name}: {e}")
                 continue
         
-        # Sort by match score
         stage_1_matches.sort(key=lambda x: x['match_score'], reverse=True)
-        
         print(f"Stage 1 found {len(stage_1_matches)} results")
         return stage_1_matches
     
     def stage_2_search(self, query, documents_to_search, client_filter=None):
-        """
-        Stage 2: Search full OCR text files for deeper results
-        documents_to_search: List of document IDs to search, or 'all'
-        """
         print(f"Stage 2: Deep search in OCR text for '{query}'")
         
         if documents_to_search == 'all':
-            documents = Document.objects.all()  # Fixed: Use Document
+            documents = Document.objects.all()
             if client_filter:
                 documents = documents.filter(client_name__icontains=client_filter)
         else:
-            documents = Document.objects.filter(id__in=documents_to_search)  # Fixed: Use Document
+            documents = Document.objects.filter(id__in=documents_to_search)
         
         stage_2_matches = []
         search_terms = query.lower().split()
@@ -211,15 +128,12 @@ class TwoStageSearchEngine:
                 continue
             
             try:
-                # Load and search full OCR text
                 with open(ocr_path, 'r', encoding='utf-8') as f:
                     ocr_text = f.read()
                 
-                # Search through OCR text
                 match_score, matched_snippets = self._search_ocr_text(ocr_text, search_terms)
                 
                 if match_score > 0:
-                    # Also get metadata for preview
                     metadata_path = self._get_metadata_path(doc)
                     metadata = {}
                     if metadata_path and os.path.exists(metadata_path):
@@ -250,49 +164,38 @@ class TwoStageSearchEngine:
                 print(f"Error reading OCR text for {doc.document_name}: {e}")
                 continue
         
-        # Sort by match score
         stage_2_matches.sort(key=lambda x: x['match_score'], reverse=True)
-        
         print(f"Stage 2 found {len(stage_2_matches)} results")
         return stage_2_matches
     
     def _get_metadata_path(self, doc):
-        """Get metadata file path from document record"""
-        # Check if your model has a metadata_path field
         if hasattr(doc, 'metadata_path') and doc.metadata_path:
             return doc.metadata_path
         
-        # Fallback: construct path based on naming convention
         base_name = os.path.splitext(doc.document_name)[0]
         client_name = getattr(doc, 'client_name', 'unknown')
         return f"archive/{client_name}/{base_name}/metadata/{base_name}.json"
     
     def _get_ocr_path(self, doc):
-        """Get OCR text file path from document record"""
         if hasattr(doc, 'ocr_path') and doc.ocr_path:
             return doc.ocr_path
         
-        # Fallback: construct path
         base_name = os.path.splitext(doc.document_name)[0]
         client_name = getattr(doc, 'client_name', 'unknown')
         return f"archive/{client_name}/{base_name}/ocr/{base_name}.txt"
     
     def _get_original_path(self, doc):
-        """Get original PDF file path"""
         if hasattr(doc, 'original_path') and doc.original_path:
             return doc.original_path
         
-        # Fallback: construct path
         base_name = os.path.splitext(doc.document_name)[0]
         client_name = getattr(doc, 'client_name', 'unknown')
         return f"archive/{client_name}/{base_name}/original/{base_name}.pdf"
     
     def _search_metadata(self, metadata, search_terms):
-        """Search through metadata fields and return score + matched fields"""
         matched_fields = []
         total_score = 0
         
-        # Define field weights (higher = more important)
         field_weights = {
             'names': 3,
             'invoice_numbers': 4,
@@ -304,7 +207,6 @@ class TwoStageSearchEngine:
             'addresses': 1
         }
         
-        # Search each metadata field
         for field_name, field_data in metadata.items():
             if not isinstance(field_data, (list, str)):
                 continue
@@ -317,7 +219,6 @@ class TwoStageSearchEngine:
             
             field_text_lower = field_text.lower()
             
-            # Check if any search terms match this field
             field_matches = 0
             for term in search_terms:
                 if term in field_text_lower:
@@ -337,7 +238,6 @@ class TwoStageSearchEngine:
         return total_score, matched_fields
     
     def _search_ocr_text(self, ocr_text, search_terms):
-        """Search through OCR text and return score + matched snippets"""
         ocr_lower = ocr_text.lower()
         matched_snippets = []
         total_score = 0
@@ -345,21 +245,17 @@ class TwoStageSearchEngine:
         for term in search_terms:
             if term in ocr_lower:
                 total_score += 1
-                
-                # Find snippets around matches
                 snippets = self._extract_snippets(ocr_text, term)
                 matched_snippets.extend(snippets)
         
-        # Remove duplicate snippets
         unique_snippets = []
         for snippet in matched_snippets:
             if snippet not in unique_snippets:
                 unique_snippets.append(snippet)
         
-        return total_score, unique_snippets[:5]  # Limit to 5 snippets
+        return total_score, unique_snippets[:5]
     
     def _extract_snippets(self, text, search_term, context_chars=150):
-        """Extract text snippets around search term matches"""
         snippets = []
         text_lower = text.lower()
         term_lower = search_term.lower()
@@ -370,13 +266,11 @@ class TwoStageSearchEngine:
             if pos == -1:
                 break
             
-            # Extract snippet with context
             snippet_start = max(0, pos - context_chars//2)
             snippet_end = min(len(text), pos + len(search_term) + context_chars//2)
             
             snippet = text[snippet_start:snippet_end].strip()
             
-            # Highlight the search term
             highlighted_snippet = re.sub(
                 re.escape(search_term), 
                 f"<mark>{search_term}</mark>", 
@@ -390,28 +284,20 @@ class TwoStageSearchEngine:
         return snippets
     
     def _create_metadata_preview(self, metadata):
-        """Create a preview of key metadata for display"""
         preview = {}
-        
-        # Extract key fields for preview
         preview_fields = ['financial', 'names', 'dates', 'document_type', 'invoice_numbers']
         
         for field in preview_fields:
             if field in metadata and metadata[field]:
                 if isinstance(metadata[field], list):
-                    preview[field] = metadata[field][:3]  # First 3 items
+                    preview[field] = metadata[field][:3]
                 else:
                     preview[field] = metadata[field]
         
         return preview
 
-# Initialize search engine
 search_engine = TwoStageSearchEngine()
 
-# ===================================
-#For Log in attempts 
-
-# Forgot Password Form
 class ForgotPasswordForm(forms.Form):
     email = forms.EmailField(
         label='Email Address',
@@ -430,36 +316,18 @@ class ForgotPasswordForm(forms.Form):
 
 def base(request):
     if request.user.is_authenticated:
-        return redirect('search_form')  # Replace 'search_form' with your actual URL name
+        return redirect('search_form')
     return render(request, 'base.html')
 
-# Register Form (aint no way im sure)
-"""def register_view(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            messages.success(request, 'Registration successful! You can now log in.')
-            return redirect('login')
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = CustomUserCreationForm()
-
-    return render(request, 'auth/register.html', {'form': form})"""
-
-# Login Form
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         ip_address = request.META.get('REMOTE_ADDR', '')
         
-        # Check if locked out
         try:
             attempt = LoginAttempt.objects.get(ip_address=ip_address, username=username)
             if attempt.is_locked_out():
-                # Log account locked event
                 log_security_event(
                     event_type='account_locked',
                     username_attempted=username,
@@ -470,14 +338,11 @@ def login_view(request):
         except LoginAttempt.DoesNotExist:
             pass
         
-        # Try to authenticate
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
-            # SUCCESS - Clear failed attempts and log
             LoginAttempt.objects.filter(ip_address=ip_address, username=username).delete()
             
-            # Log successful login
             log_security_event(
                 event_type='login_success',
                 user=user,
@@ -485,15 +350,11 @@ def login_view(request):
                 risk_level='low'
             )
             
-            # Track user session
             track_user_session(user, request)
-            
-            # Django login
             login(request, user)
             
             return redirect('search_form')
         else:
-            # FAILURE - Record attempt and log
             attempt, created = LoginAttempt.objects.get_or_create(
                 ip_address=ip_address,
                 username=username,
@@ -504,7 +365,6 @@ def login_view(request):
                 attempt.attempt_time = timezone.now()
                 attempt.save()
             
-            # Log failed login
             log_security_event(
                 event_type='login_failure',
                 username_attempted=username,
@@ -513,10 +373,8 @@ def login_view(request):
                 risk_level='medium' if attempt.failures_count >= 3 else 'low'
             )
             
-            # Check for suspicious activity
             check_multiple_failed_logins(ip_address, username)
             
-            # Check if now locked out
             if attempt.failures_count >= 5:
                 log_security_event(
                     event_type='account_locked',
@@ -533,13 +391,11 @@ def login_view(request):
 def account_locked_view(request):
     ip_address = request.META.get('REMOTE_ADDR', '')
     
-    # Get the most recent lockout attempt for this IP
     attempt = LoginAttempt.objects.filter(ip_address=ip_address).order_by('-attempt_time').first()
     
     if attempt and attempt.is_locked_out():
         remaining_seconds = attempt.remaining_lockout_time()
     else:
-        # No lockout or expired - redirect to login
         if attempt:
             attempt.delete()
         return redirect('login')
@@ -551,7 +407,6 @@ def account_locked_view(request):
     
     return render(request, 'auth/account_locked.html', context)
 
-# Forgot Password Form
 def forgot_password_view(request):
     if request.method == 'POST':
         form = ForgotPasswordForm(request.POST)
@@ -562,7 +417,6 @@ def forgot_password_view(request):
                 User = get_user_model()
                 user = User.objects.get(email=email)
                 
-                # Log password reset request
                 log_security_event(
                     event_type='password_reset_request',
                     user=user,
@@ -570,11 +424,9 @@ def forgot_password_view(request):
                     risk_level='medium'
                 )
                 
-                # Reset password
                 user.set_password("comfac123")
                 user.save()
                 
-                # Log password reset completion
                 log_security_event(
                     event_type='password_reset_complete',
                     user=user,
@@ -582,7 +434,6 @@ def forgot_password_view(request):
                     risk_level='medium'
                 )
                 
-                # Send email (your existing code)
                 subject = 'Password Reset - Archive System'
                 message = f'''
 Dear {user.first_name or user.username},
@@ -621,7 +472,6 @@ Archive System Team
 
     return render(request, 'auth/forgot_password.html', {'form': form})
 
-# Dashboard Access
 @login_required
 def dashboard(request):
     total_documents = Document.objects.count()
@@ -636,12 +486,10 @@ def dashboard(request):
     }
     return render(request, 'auth/dashboard.html', context)
 
-# Logout 
 def logout_view(request):
     user = request.user
     
     if user.is_authenticated:
-        # Log logout event
         log_security_event(
             event_type='logout',
             user=user,
@@ -649,7 +497,6 @@ def logout_view(request):
             risk_level='low'
         )
         
-        # End user session
         UserSession.objects.filter(
             user=user,
             session_key=request.session.session_key
@@ -658,19 +505,13 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-# =====================================================
-# TWO-STAGE SEARCH VIEWS 
-# =====================================================
-
 @login_required
 def search_form(request):
-    """Main search form - redirects to results page"""
     return render(request, 'search/search_form.html', {
         'available_clients': Document.objects.values_list('client_name', flat=True).distinct()
     })
 
 def convert_stage_1_results(stage_1_results):
-    """Convert Stage 1 results to template format"""
     results = []
     for result in stage_1_results:
         doc_obj = type('obj', (object,), {
@@ -689,7 +530,6 @@ def convert_stage_1_results(stage_1_results):
     return results
 
 def convert_stage_2_results(stage_2_results):
-    """Convert Stage 2 results to template format"""
     results = []
     for result in stage_2_results:
         doc_obj = type('obj', (object,), {
@@ -707,18 +547,8 @@ def convert_stage_2_results(stage_2_results):
         results.append(doc_obj)
     return results
 
-# =====================================================
-# FUNCTIONS (UPDATED)
-# =====================================================
-
 @login_required
 def search_documents(request):
-    """
-    Automatic two-stage search:
-    1. Try fast metadata search first
-    2. If no results, automatically try deep OCR search
-    3. Show results or "no documents found"
-    """
     search_query = request.GET.get('search_query', '')
     client_filter = request.GET.get('client_filter', '')
     
@@ -732,17 +562,14 @@ def search_documents(request):
         search_performed = True
         print(f"Starting search: '{search_query}'")
         
-        # STAGE 1: Try metadata search first (fast)
         stage_1_results = search_engine.stage_1_search(search_query, client_filter)
         
         if stage_1_results:
-            # Found results in metadata - use them
             results = convert_stage_1_results(stage_1_results)
             total_results = len(results)
             search_stage_used = 1
             search_type = 'metadata'
         else:
-            # No results in metadata - automatically try deep search
             print("No Stage 1 matches - falling back to Stage 2")
             stage_2_results = search_engine.stage_2_search(search_query, 'all', client_filter)
             
@@ -767,10 +594,8 @@ def search_documents(request):
 
 @login_required
 def document_detail(request, document_id):
-    """Enhanced document detail view with metadata"""
-    document = get_object_or_404(Document, id=document_id)  # Fixed: Use Document
+    document = get_object_or_404(Document, id=document_id)
     
-    # Load metadata if available
     metadata_path = search_engine._get_metadata_path(document)
     metadata = {}
     
@@ -781,7 +606,6 @@ def document_detail(request, document_id):
         except Exception as e:
             print(f"Error loading metadata: {e}")
     
-    # Load OCR text preview
     ocr_path = search_engine._get_ocr_path(document)
     ocr_preview = ""
     
@@ -789,7 +613,6 @@ def document_detail(request, document_id):
         try:
             with open(ocr_path, 'r', encoding='utf-8') as f:
                 ocr_text = f.read()
-                # First 500 characters as preview
                 ocr_preview = ocr_text[:500] + ("..." if len(ocr_text) > 500 else "")
         except Exception as e:
             print(f"Error loading OCR text: {e}")
@@ -809,22 +632,16 @@ def document_detail(request, document_id):
 
 @login_required
 def documents_view(request):
-    """Document listing view"""
-    document = Document.objects.all()  # Fixed: Use Document
+    document = Document.objects.all()
     return render(request, 'documents/documents_view.html', {'document': document})
-
-# Password Change
-
-
 
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            # Don't update session auth hash since we're logging out
             messages.success(request, 'Password changed successfully! Please log in again.')
-            logout(request)  # Add this line to log the user out
+            logout(request)
             return redirect('login')
         else:
             for field, errors in form.errors.items():
@@ -834,11 +651,9 @@ def change_password(request):
         form = PasswordChangeForm(request.user)
     return render(request, 'auth/change_password.html', {'form': form, 'hide_sidebar': True})
 
-
 @require_GET
 @login_required
 def document_list_api(request):
-    """API endpoint to return all documents as JSON."""
     documents = Document.objects.all()
     serializer = DocumentListSerializer(documents, many=True)
     return JsonResponse(serializer.data, safe=False)

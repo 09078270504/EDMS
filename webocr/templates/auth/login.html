@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% block title %}Login - Archive System{% endblock %}
+{% load static %}
 
 {% block content %}
 <div class="fixed inset-0 flex items-center justify-center bg-white">
     <!-- Archive System name top-left -->
     <div class="absolute top-6 left-6 flex items-center">
         <a href="{% url 'base'%}"class="text-xl font-bold text-green-600 hover:text-green-800 transition-colors duration-200">
-        <i class="fa-solid fa-id-badge"></i>
+        <img src="{% static 'img/fowse.png' %}" class="h-8 inline-block" alt="Fowse Logo" />
             Fowse
         </a>
     </div>
