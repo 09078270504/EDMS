@@ -13,16 +13,24 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from .models import LoginAttempt, SecurityEvent, UserSession, SuspiciousActivity
-from database.models import Document
-from database.serializer import DocumentListSerializer
-from .security_utils import log_security_event, track_user_session, check_multiple_failed_logins
+# ===========================
+# PROJECT IMPORTS
+# ===========================
+from .models import LoginAttempt, SecurityEvent, UserSession, SuspiciousActivity, ChatConversation, ChatMessage  # Local models
+from database.models import Document  # Document model
+from database.serializer import DocumentListSerializer  # Serializer
+from .security_utils import log_security_event, track_user_session, check_multiple_failed_logins # For enhanced log in view
 
-import json
-import os
-import re
-from datetime import timedelta
+# ===========================
+# STANDARD LIBRARY IMPORTS
+# ===========================
+import json  # JSON handling
+import os  # File system
+import re  # Regex
+from datetime import timedelta  # Time delta
 
+
+# For team integrations
 @method_decorator(csrf_exempt, name='dispatch')
 class SecurityEventsAPI(View):
     def get(self, request):
@@ -473,8 +481,17 @@ Archive System Team
     return render(request, 'auth/forgot_password.html', {'form': form})
 
 @login_required
-def dashboard(request):
+def dashboard(request, conversation_id=None):
     total_documents = Document.objects.count()
+    
+    # Get messages for current conversation if specified
+    messages = []
+    if conversation_id:
+        try:
+            conversation = ChatConversation.objects.get(id=conversation_id, user=request.user)
+            messages = conversation.messages.all()
+        except ChatConversation.DoesNotExist:
+            pass
     
     stats = {
         'total_documents': total_documents,
@@ -483,6 +500,7 @@ def dashboard(request):
     context = {
         'user': request.user,
         'stats': stats,
+        'messages': messages,
     }
     return render(request, 'auth/dashboard.html', context)
 
@@ -657,3 +675,111 @@ def document_list_api(request):
     documents = Document.objects.all()
     serializer = DocumentListSerializer(documents, many=True)
     return JsonResponse(serializer.data, safe=False)
+
+
+# Chat-related views
+@login_required
+def chat_message(request):
+    """Handle chat messages and create/update conversations"""
+    if request.method == 'POST':
+        message_content = request.POST.get('message', '').strip()
+        conversation_id = request.POST.get('conversation_id', '')
+        
+        if not message_content:
+            return JsonResponse({'error': 'Message cannot be empty'}, status=400)
+        
+        # Get or create conversation
+        conversation = None
+        if conversation_id:
+            try:
+                conversation = ChatConversation.objects.get(id=conversation_id, user=request.user)
+            except ChatConversation.DoesNotExist:
+                pass
+        
+        if not conversation:
+            # Create new conversation with first message as title
+            title = message_content[:50] + '...' if len(message_content) > 50 else message_content
+            conversation = ChatConversation.objects.create(
+                user=request.user,
+                title=title
+            )
+        
+        # Save user message
+        user_message = ChatMessage.objects.create(
+            conversation=conversation,
+            message_type='user',
+            content=message_content
+        )
+        
+        # Here you would integrate with your search/AI logic
+        # For now, let's create simple, natural chat responses
+        responses = [
+            f"Thank you for your message about '{message_content}'. I'm here to help with any questions you might have.",
+            f"I understand you're asking about '{message_content}'. Could you provide more details so I can assist you better?",
+            f"That's an interesting point about '{message_content}'. What specific information are you looking for?",
+            f"I see you mentioned '{message_content}'. How can I help you with this topic?",
+            f"I'd be happy to help you with '{message_content}'. What would you like to know more about?",
+            f"Thanks for bringing up '{message_content}'. Is there something specific you'd like assistance with?"
+        ]
+        import random
+        response_content = random.choice(responses)
+        
+        assistant_message = ChatMessage.objects.create(
+            conversation=conversation,
+            message_type='assistant',
+            content=response_content
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'conversation_id': conversation.id,
+            'is_new_conversation': not bool(conversation_id),
+            'user_message': {
+                'content': user_message.content,
+                'timestamp': user_message.timestamp.isoformat()
+            },
+            'assistant_message': {
+                'content': assistant_message.content,
+                'timestamp': assistant_message.timestamp.isoformat()
+            }
+        })
+    
+    return JsonResponse({'error': 'Only POST method allowed'}, status=405)
+
+
+@login_required
+def delete_conversation(request, conversation_id):
+    """Delete a conversation"""
+    if request.method in ['POST', 'DELETE']:
+        try:
+            conversation = ChatConversation.objects.get(id=conversation_id, user=request.user)
+            conversation.delete()
+            return JsonResponse({'success': True})
+        except ChatConversation.DoesNotExist:
+            return JsonResponse({'error': 'Conversation not found'}, status=404)
+    
+    return JsonResponse({'error': 'Only POST/DELETE method allowed'}, status=405)
+
+@login_required
+def rename_conversation(request, conversation_id):
+    """Rename a conversation"""
+    if request.method == 'POST':
+        try:
+            import json
+            data = json.loads(request.body)
+            new_title = data.get('title', '').strip()
+            
+            if not new_title:
+                return JsonResponse({'error': 'Title cannot be empty'}, status=400)
+            
+            conversation = ChatConversation.objects.get(id=conversation_id, user=request.user)
+            conversation.title = new_title
+            conversation.save()
+            
+            return JsonResponse({'success': True, 'title': new_title})
+        except ChatConversation.DoesNotExist:
+            return JsonResponse({'error': 'Conversation not found'}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    
+    return JsonResponse({'error': 'Only POST method allowed'}, status=405)

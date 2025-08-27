@@ -7,7 +7,7 @@ from django.utils.html import format_html
 from django.db.models import Count
 from django.utils import timezone
 from datetime import timedelta
-from .models import LoginAttempt, SecurityEvent, UserSession, SuspiciousActivity
+from .models import LoginAttempt, SecurityEvent, UserSession, SuspiciousActivity, ChatConversation, ChatMessage
 
 # Register your models here.
 class CustomUserAdmin(UserAdmin):
@@ -125,3 +125,28 @@ class LoginAttemptAdmin(admin.ModelAdmin):
 admin.site.site_header = "WebOCR Security Administration"
 admin.site.site_title = "WebOCR Security Admin"
 admin.site.index_title = "Security Monitoring Dashboard"
+
+
+# Chat models admin
+@admin.register(ChatConversation)
+class ChatConversationAdmin(admin.ModelAdmin):
+    list_display = ['title', 'user', 'created_at', 'updated_at', 'message_count']
+    list_filter = ['created_at', 'updated_at']
+    search_fields = ['title', 'user__username']
+    readonly_fields = ['created_at', 'updated_at']
+    
+    def message_count(self, obj):
+        return obj.messages.count()
+    message_count.short_description = 'Messages'
+
+
+@admin.register(ChatMessage)
+class ChatMessageAdmin(admin.ModelAdmin):
+    list_display = ['conversation', 'message_type', 'content_preview', 'timestamp']
+    list_filter = ['message_type', 'timestamp']
+    search_fields = ['content', 'conversation__title']
+    readonly_fields = ['timestamp']
+    
+    def content_preview(self, obj):
+        return obj.content[:50] + '...' if len(obj.content) > 50 else obj.content
+    content_preview.short_description = 'Content'

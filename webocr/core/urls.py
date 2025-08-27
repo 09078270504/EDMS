@@ -13,7 +13,13 @@ urlpatterns = [
     path('forgot-password/', views.forgot_password_view, name='forgot_password'),
     path('logout/', views.logout_view, name='logout'),
     path('chat/', views.dashboard, name='dashboard'),
+    path('chat/<int:conversation_id>/', views.dashboard, name='dashboard_conversation'),
     path('change-password/', views.change_password, name='change_password'),
+    
+    # Chat URLs
+    path('chat/message/', views.chat_message, name='chat_message'),
+    path('chat/delete/<int:conversation_id>/', views.delete_conversation, name='delete_conversation'),
+    path('chat/rename/<int:conversation_id>/', views.rename_conversation, name='rename_conversation'),
     
     # Search URLs (Simplified)
     path('documents/', views.search_form, name='search_form'),                    # Search form
