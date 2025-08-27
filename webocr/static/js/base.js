@@ -150,3 +150,159 @@
 
   // No keyboard toggle (e.g., Ctrl+B) — keeps state strictly user-controlled via logo/arrow
 })();
+
+function deleteConversation(conversationId) {
+      if (confirm('Are you sure you want to delete this conversation?')) {
+        fetch(`/chat/delete/${conversationId}/`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload(); // Reload to update the sidebar
+          } else {
+            alert('Error deleting conversation');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error deleting conversation');
+        });
+      }
+    }
+let currentConversationId = null;
+    let currentConversationTitle = null;
+
+    // Get CSRF token
+    function getCSRFToken() {
+        return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    }
+
+    // Context menu functions
+    function showContextMenu(event, element) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        currentConversationId = element.dataset.conversationId;
+        currentConversationTitle = element.dataset.conversationTitle;
+        
+        console.log('Opening context menu for:', currentConversationId, currentConversationTitle);
+        
+        const contextMenu = document.getElementById('chatContextMenu');
+        contextMenu.classList.remove('hidden');
+        
+        // Position the context menu near the button that was clicked
+        const buttonRect = event.target.closest('button').getBoundingClientRect();
+        contextMenu.style.left = (buttonRect.right - contextMenu.offsetWidth) + 'px';
+        contextMenu.style.top = (buttonRect.bottom + 5) + 'px';
+        
+        // Hide context menu when clicking elsewhere
+        setTimeout(() => {
+            document.addEventListener('click', hideContextMenu);
+        }, 10);
+    }
+
+    function hideContextMenu() {
+        const contextMenu = document.getElementById('chatContextMenu');
+        contextMenu.classList.add('hidden');
+        document.removeEventListener('click', hideContextMenu);
+    }
+
+    // Rename functions
+    function renameChatItem() {
+        hideContextMenu();
+        document.getElementById('renameInput').value = currentConversationTitle;
+        document.getElementById('renameModal').classList.remove('hidden');
+    }
+
+    function cancelRename() {
+        document.getElementById('renameModal').classList.add('hidden');
+    }
+
+    function confirmRename() {
+        const newTitle = document.getElementById('renameInput').value.trim();
+        if (newTitle && newTitle !== currentConversationTitle) {
+            // Send rename request
+            fetch(`/chat/rename/${currentConversationId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken(),
+                },
+                body: JSON.stringify({ title: newTitle })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload(); // Refresh to show updated title
+                } else {
+                    alert('Error renaming conversation: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error renaming conversation');
+            });
+        }
+        document.getElementById('renameModal').classList.add('hidden');
+    }
+
+    // Delete functions
+    function deleteChatItem() {
+        console.log('Delete clicked for conversation:', currentConversationId);
+        hideContextMenu();
+        document.getElementById('deleteConfirmModal').classList.remove('hidden');
+    }
+
+    function cancelDelete() {
+        document.getElementById('deleteConfirmModal').classList.add('hidden');
+    }
+
+    function confirmDelete() {
+        console.log('Confirming delete for conversation:', currentConversationId);
+        if (!currentConversationId) {
+            alert('No conversation selected for deletion');
+            return;
+        }
+        
+        // Send delete request
+        fetch(`/chat/delete/${currentConversationId}/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': getCSRFToken(),
+            }
+        })
+        .then(response => {
+            console.log('Delete response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Delete response data:', data);
+            if (data.success) {
+                location.reload(); // Refresh to remove deleted item
+            } else {
+                alert('Error deleting conversation: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting conversation');
+        });
+        document.getElementById('deleteConfirmModal').classList.add('hidden');
+    }
+
+    // Legacy delete function (if still needed)
+    function deleteConversation(conversationId) {
+        currentConversationId = conversationId;
+        document.getElementById('deleteConfirmModal').classList.remove('hidden');
+    }
+
+    // Debug: Check if conversations are loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        const historyItems = document.querySelectorAll('.chat-history-item');
+        console.log('Found', historyItems.length, 'chat history items');
+    });

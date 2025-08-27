@@ -63,7 +63,7 @@ html, body { overflow-x: hidden; }
   height: 3rem;
   margin: .5rem auto;
   border-radius: 9999px;
-  border-bottom: 1;         
+  border-bottom: 1px solid #e5e7eb;         
   display: flex;
   align-items: center;
   justify-content: center;
@@ -217,3 +217,65 @@ html, body { overflow-x: hidden; }
   margin: 0;
   z-index: 60;
 }
+/* Hide chat history and menu buttons when sidebar is collapsed */
+#logo-sidebar.collapsed .chat-history-section,
+#logo-sidebar.collapsed .menu-button {
+  display: none !important;
+}
+
+/* Hide text labels when collapsed but show icons */
+#logo-sidebar.collapsed .item-label {
+  display: none;
+}
+
+/* Maintain flex layout when collapsed so user stays at bottom */
+#logo-sidebar.collapsed nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Add spacer when collapsed to push user section to bottom */
+#logo-sidebar.collapsed nav::after {
+  content: '';
+  flex: 1;
+}
+
+/* Hide tooltips when sidebar is expanded */
+#logo-sidebar:not(.collapsed) .item-tooltip {
+  display: none !important;
+}
+/* Chat history item styling */
+.chat-history-item:hover {
+  background-color: rgba(16, 185, 129, 0.05);
+  border-radius: 8px;
+}
+
+.chat-history-item.active {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-radius: 8px;
+}
+
+.chat-history-item a {
+  transition: all 0.2s ease;
+}
+
+.chat-history-item:hover a {
+  background-color: transparent !important;
+}
+
+/* Three-dot menu styling */
+.chat-menu-btn {
+  transition: all 0.2s ease;
+}
+
+.chat-menu-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Dropdown menu styling */
+[id^="chatMenu"] {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* =========================

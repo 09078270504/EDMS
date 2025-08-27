@@ -244,3 +244,163 @@
 
   document.addEventListener('DOMContentLoaded', () => new ChatInterface());
 })();
+// Handle chat form submissions
+document.addEventListener('DOMContentLoaded', function() {
+    const chatForm = document.getElementById('chatForm');
+    const chatFormActive = document.getElementById('chatFormActive');
+    
+    if (chatForm) {
+        chatForm.addEventListener('submit', handleChatSubmit);
+    }
+    
+    if (chatFormActive) {
+        chatFormActive.addEventListener('submit', function(e) {
+            handleChatSubmit(e);
+            // Clear the active input after sending
+            setTimeout(() => {
+                document.getElementById('messageInputActive').value = '';
+                document.getElementById('sendButtonActive').disabled = true;
+                document.getElementById('sendButtonActive').classList.add('bg-gray-300');
+                document.getElementById('sendButtonActive').classList.remove('bg-green-600');
+            }, 100);
+        });
+    }
+    
+    // Enable/disable send buttons based on input
+    const messageInput = document.getElementById('messageInput');
+    const messageInputActive = document.getElementById('messageInputActive');
+    const sendButton = document.getElementById('sendButton');
+    const sendButtonActive = document.getElementById('sendButtonActive');
+    
+    if (messageInput && sendButton) {
+        messageInput.addEventListener('input', function() {
+            sendButton.disabled = !this.value.trim();
+            sendButton.classList.toggle('bg-green-600', this.value.trim());
+            sendButton.classList.toggle('bg-gray-300', !this.value.trim());
+        });
+        
+        // Add Enter key functionality for initial input
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (this.value.trim()) {
+                    chatForm.dispatchEvent(new Event('submit'));
+                }
+            }
+        });
+    }
+    
+    if (messageInputActive && sendButtonActive) {
+        messageInputActive.addEventListener('input', function() {
+            sendButtonActive.disabled = !this.value.trim();
+            sendButtonActive.classList.toggle('bg-green-600', this.value.trim());
+            sendButtonActive.classList.toggle('bg-gray-300', !this.value.trim());
+        });
+        
+        // Add Enter key functionality for active chat input
+        messageInputActive.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (this.value.trim()) {
+                    chatFormActive.dispatchEvent(new Event('submit'));
+                }
+            }
+        });
+    }
+});
+
+function handleChatSubmit(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const messageContent = formData.get('message').trim();
+    
+    if (!messageContent) return;
+    
+    // If this is the initial form (greeting screen), transition to conversation view
+    const isInitialForm = e.target.id === 'chatForm';
+    
+    if (isInitialForm) {
+        // Hide greeting section and show conversation section
+        document.getElementById('greetingSection').style.display = 'none';
+        document.getElementById('conversationSection').classList.remove('hidden');
+        document.getElementById('fixedInputArea').classList.remove('hidden');
+        
+        // Add the user message to the conversation immediately
+        addMessageToChat('user', messageContent);
+        
+        // Clear the initial input
+        document.getElementById('messageInput').value = '';
+        document.getElementById('sendButton').disabled = true;
+        document.getElementById('sendButton').classList.add('bg-gray-300');
+                        document.getElementById('sendButton').classList.remove('bg-green-600');
+    }
+    
+    // Send message to server
+    fetch('/chat/message/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (isInitialForm) {
+                // For new conversation, add assistant response and update conversation ID
+                addMessageToChat('assistant', data.assistant_message.content);
+                document.querySelector('input[name="conversation_id"]').value = data.conversation_id;
+                
+                // Update the page URL without reload
+                window.history.pushState({}, '', `/chat/${data.conversation_id}/`);
+                
+                // If this is a new conversation, refresh the sidebar to show it
+                if (data.is_new_conversation) {
+                    updateSidebar(data.conversation_id);
+                }
+            } else {
+                // For existing conversation, just reload to show new messages
+                location.reload();
+            }
+        } else {
+            alert('Error sending message: ' + (data.error || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error sending message');
+    });
+}
+
+function addMessageToChat(messageType, content) {
+    const messagesList = document.getElementById('messagesList');
+    const messageContainer = document.createElement('div');
+    messageContainer.className = `message-container ${messageType}`;
+    
+    const currentTime = new Date().toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: false 
+    });
+    
+    messageContainer.innerHTML = `
+        <div class="message-bubble">
+            <div class="message-content">${content}</div>
+            <div class="message-time">${currentTime}</div>
+        </div>
+    `;
+    
+    messagesList.appendChild(messageContainer);
+    
+    // Scroll to bottom
+    messageContainer.scrollIntoView({ behavior: 'smooth' });
+}
+
+function updateSidebar(conversationId) {
+    // Reload the entire page to refresh the sidebar with new conversation
+    // In a more sophisticated implementation, you could make an AJAX call to update just the sidebar
+    setTimeout(() => {
+        location.reload();
+    }, 1000); // Give a small delay to ensure the conversation is saved
+}
