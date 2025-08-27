@@ -150,3 +150,31 @@ class ProcessedDocument(models.Model):
     
     def __str__(self):
         return f"{self.category.name}/{self.document_name}"
+
+
+class ChatConversation(models.Model):
+    """Chat conversation history"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)  # First prompt becomes title
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-updated_at']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.title[:50]}"
+
+
+class ChatMessage(models.Model):
+    """Individual chat messages"""
+    conversation = models.ForeignKey(ChatConversation, on_delete=models.CASCADE, related_name='messages')
+    message_type = models.CharField(max_length=10, choices=[('user', 'User'), ('assistant', 'Assistant')])
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['timestamp']
+    
+    def __str__(self):
+        return f"{self.conversation.title} - {self.message_type}: {self.content[:50]}"
