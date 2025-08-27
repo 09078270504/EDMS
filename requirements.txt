@@ -16,15 +16,24 @@ django-environ>=0.12.0
 django-csp>=4.0
 django-axes>=8.0.0
 
+# Machine Learning & Deep Learning
+torch>=2.0.0
+transformers>=4.30.0
+numpy>=1.24.0
+
+# Computer Vision & OCR
+easyocr>=1.7.0
+opencv-python>=4.8.0
+Pillow>=10.0.0
+
 # Document Processing Core
 openai>=1.40.0
 PyMuPDF>=1.23.0
-Pillow>=10.0.0
-pytz>=2023.3
-
-# Optional Document Processing
 pdf2image>=1.16.0
 python-magic>=0.4.0
+
+# Utilities
+pytz>=2023.3
 
 # Production (Optional)
 gunicorn>=21.2.0
