@@ -66,11 +66,76 @@ html { scroll-behavior: smooth; }
 /* (Optional) prevent horizontal scrolling just in case */
 html, body { overflow-x: hidden; }
 
-/* (Optional) if you want the messages list to never hide behind the input:
-   uncomment and ensure #messagesList exists and is the scroll container
-#messagesList{
-  max-height: calc(100vh - var(--input-h));
-  overflow-y: auto;
+.message-container.user {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
 }
-*/
 
+.message-container.assistant {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 24px;
+}
+
+.message-bubble {
+    max-width: 70%;
+    padding: 16px 20px;
+    border-radius: 20px;
+    position: relative;
+    word-wrap: break-word;
+}
+
+.message-container.user .message-bubble {
+    background-color: #11945f;
+    color: white;
+    border-bottom-right-radius: 6px;
+}
+
+.message-container.assistant .message-bubble {
+    background-color: #f3f3f4ff;
+    color: #374151;
+    border-bottom-left-radius: 6px;
+}
+
+.message-content {
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+.message-content ul {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.message-content li {
+    margin-bottom: 4px;
+}
+
+.message-time {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+/* Assistant message styling for structured content */
+.message-container.assistant .message-content h3 {
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #1F2937;
+}
+
+.message-container.assistant .message-content p {
+    margin-bottom: 8px;
+
+/* Conversation view padding */
+#conversationSection {
+    padding-top: 24px;
+    padding-bottom: 120px;
+}
+
+#messagesList {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+}
