@@ -154,6 +154,7 @@ html, body { overflow-x: hidden; }
   justify-content: center;
   align-items: center;
   border-top: 1px solid #e5e7eb;
+  
 }
 
 /* Make the user button box IDENTICAL to nav boxes */
