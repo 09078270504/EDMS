@@ -484,13 +484,20 @@ Archive System Team
 def dashboard(request, conversation_id=None):
     total_documents = Document.objects.count()
     
+    # Get all conversations for the current user
+    conversations = ChatConversation.objects.filter(user=request.user).order_by('-created_at')
+    print(f"DEBUG: Found {conversations.count()} conversations for user {request.user.username}")
+    
     # Get messages for current conversation if specified
     messages = []
+    current_conversation = None
     if conversation_id:
         try:
-            conversation = ChatConversation.objects.get(id=conversation_id, user=request.user)
-            messages = conversation.messages.all()
+            current_conversation = ChatConversation.objects.get(id=conversation_id, user=request.user)
+            messages = current_conversation.messages.all()
+            print(f"DEBUG: Found {messages.count()} messages for conversation {conversation_id}")
         except ChatConversation.DoesNotExist:
+            print(f"DEBUG: Conversation {conversation_id} not found")
             pass
     
     stats = {
@@ -501,6 +508,8 @@ def dashboard(request, conversation_id=None):
         'user': request.user,
         'stats': stats,
         'messages': messages,
+        'conversations': conversations,
+        'current_conversation': current_conversation,
     }
     return render(request, 'auth/dashboard.html', context)
 
