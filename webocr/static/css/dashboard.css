@@ -138,4 +138,30 @@ html, body { overflow-x: hidden; }
     margin: 0 auto;
     padding: 0 24px;
 }
+
+/* === Smooth screen transitions === */
+.fade-out-up {
+  animation: fadeOutUp 420ms ease forwards;
+}
+@keyframes fadeOutUp {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-16px); }
+}
+
+.fade-in-up {
+  animation: fadeInUp 460ms ease forwards;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Optional: prevent clicks while animating in */
+.appearing {
+  pointer-events: none;
+}
+.appearing.fade-in-up {
+  pointer-events: auto; /* restore at end via JS */
+}
+
 }

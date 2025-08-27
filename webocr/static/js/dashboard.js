@@ -404,3 +404,91 @@ function updateSidebar(conversationId) {
         location.reload();
     }, 1000); // Give a small delay to ensure the conversation is saved
 }
+
+function handleChatSubmit(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const messageContent = (formData.get('message') || '').trim();
+    if (!messageContent) return;
+
+    const isInitialForm = form.id === 'chatForm';
+
+    if (isInitialForm) {
+        const greeting = document.getElementById('greetingSection');
+        const convo = document.getElementById('conversationSection');
+        const fixed = document.getElementById('fixedInputArea');
+
+        // 1) Fade OUT the greeting
+        greeting.classList.add('fade-out-up');
+
+        const onFadeOutEnd = () => {
+            // Hide greeting after animation
+            greeting.style.display = 'none';
+            greeting.classList.remove('fade-out-up');
+            greeting.removeEventListener('animationend', onFadeOutEnd);
+
+            // 2) Reveal chat UI and fade IN
+            convo.classList.remove('hidden');
+            fixed.classList.remove('hidden');
+
+            // Start with a tiny visual guard to ensure layout is on
+            // before animating (avoids rare flicker)
+            requestAnimationFrame(() => {
+                convo.classList.add('appearing', 'fade-in-up');
+                fixed.classList.add('appearing', 'fade-in-up');
+
+                const cleanup = (el) => {
+                    el.classList.remove('appearing', 'fade-in-up');
+                };
+                // Remove classes after the fade-in completes
+                convo.addEventListener('animationend', () => cleanup(convo), { once: true });
+                fixed.addEventListener('animationend', () => cleanup(fixed), { once: true });
+            });
+
+            // Add the user's first message (feels instant)
+            addMessageToChat('user', messageContent);
+
+            // Reset input/button on the hero form
+            const msgInput = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendButton');
+            if (msgInput) msgInput.value = '';
+            if (sendBtn) {
+                sendBtn.disabled = true;
+                sendBtn.classList.add('bg-gray-300');
+                sendBtn.classList.remove('bg-green-600');
+            }
+        };
+
+        greeting.addEventListener('animationend', onFadeOutEnd, { once: true });
+    }
+
+    // Send to server as before
+    fetch('/chat/message/', {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-CSRFToken': formData.get('csrfmiddlewaretoken') },
+    })
+        .then((r) => r.json())
+        .then((data) => {
+            if (data.success) {
+                if (isInitialForm) {
+                    addMessageToChat('assistant', data.assistant_message.content);
+                    const hiddenConvoId = document.querySelector('input[name="conversation_id"]');
+                    if (hiddenConvoId) hiddenConvoId.value = data.conversation_id;
+
+                    window.history.pushState({}, '', `/chat/${data.conversation_id}/`);
+                    if (data.is_new_conversation) updateSidebar(data.conversation_id);
+                } else {
+                    location.reload();
+                }
+            } else {
+                alert('Error sending message: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            alert('Error sending message');
+        });
+}
