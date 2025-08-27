@@ -127,3 +127,6 @@ INFO 2025-08-26 10:22:06,276 security_utils 760 1856 login_success: User=lim123,
 INFO 2025-08-26 10:22:32,228 security_utils 760 1856 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-26 11:02:20,618 security_utils 1224 132 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-26 11:02:22,202 security_utils 1224 132 login_success: User=lim123, IP=127.0.0.1
+INFO 2025-08-26 11:09:46,252 security_utils 4928 11496 logout: User=lim123, IP=127.0.0.1
+INFO 2025-08-26 13:34:49,160 security_utils 9328 8524 login_success: User=lim123, IP=127.0.0.1
+INFO 2025-08-26 15:35:18,784 security_utils 12368 12060 login_success: User=lim123, IP=127.0.0.1

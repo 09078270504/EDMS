@@ -32,11 +32,9 @@
     {% endif %}
 
     {% if user.is_authenticated and not hide_sidebar %}
+    <div class="min-h-screen flex">
     <!-- Sidebar (only shows if logged in) -->
-    <aside
-      id="logo-sidebar"
-      class="fixed inset-y-0 left-0 z-40 bg-white shadow"
-      aria-label="Sidebar">
+    <aside id="logo-sidebar" class="fixed inset-y-0 left-0 z-40 bg-white shadow" aria-label="Sidebar">
 
       <div class="h-full flex flex-col">
         <!-- Brand + Collapse -->
@@ -99,7 +97,7 @@
     {% endif %}
 
     <!-- PAGE-SPECIFIC CONTENT -->
-    <div id="pageContent" class="container mx-auto mt-8 {% if hide_sidebar %}no-sidebar{% endif %}">
+    <div id="pageContent" class="flex-1 container mx-auto mt-8  {% if hide_sidebar %}no-sidebar{% endif %}">
       {% block content %}{% endblock %}
     </div>
 

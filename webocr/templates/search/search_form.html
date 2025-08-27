@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block title %}Document Search - Archive System{% endblock %}
 {% block page_title %}Document Search{% endblock %}
 {% load static %}
@@ -9,9 +10,7 @@
 <script src="{% static 'js/search_form.js' %}" defer></script>
 {% endblock %}
 {% block content %}
-<!-- NOTE: add id="pageContent" and overflow-x-hidden to ensure no LR scroll -->
-<div id="pageShell" class="min-h-screen">
-<div class="flex-auto overflow-x-hidden">
+<div class="relative max-w-4xl mx-auto px-4 py-10">
 
     <!-- Header -->
     <div id="pageHeader" class="text-center mb-10 transition-opacity duration-500 ease-out">
@@ -20,7 +19,7 @@
     </div>
 
     <!-- Search (centered, pill) -->
-    <div class="relative max-w-3xl mx-auto">
+    <div class="relative max-w-a mx-auto">
         <form id="searchForm" action="{% url 'search_documents' %}" method="GET" class="relative">
             <!-- left search icon (vertically centered) -->
             <div class="absolute inset-y-0 left-4 flex items-center">
@@ -73,7 +72,7 @@
     </div>
 
     <!-- View toggles -->
-    <div class="mx-auto max-w-6xl">
+    <div class="max-w-6xl mx-auto">
         <div class="mt-6 flex justify-end">
             <div class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1">
                 <!-- List view -->
@@ -90,9 +89,10 @@
         </div>
     </div>  
 
+    <!-- Results section - conditional based on view type -->
     {% if request.GET.view == 'grid' %}
         <!-- Grid view -->
-        <div class="mt-4 mx-auto max-w-6xl">
+        <div class="mt-4">
             {% if documents and documents|length > 0 %}
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {% for d in documents %}
@@ -129,7 +129,7 @@
         </div>
     {% else %}
         <!-- List view (table) -->
-        <div class="mt-4 mx-auto max-w-6xl bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+        <div class="mt-4 bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm">
                     <thead class="bg-gray-50 text-gray-600">
@@ -177,7 +177,7 @@
     {% endif %}
 
     <!-- Tips -->
-    <div class="mt-8 mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="rounded-xl bg-green-50 border border-green-100 p-6">
             <h3 class="text-green-900 font-semibold mb-2">How it works</h3>
             <p class="text-green-800 text-sm">
