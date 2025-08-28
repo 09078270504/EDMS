@@ -18,1095 +18,1108 @@ from core.services.archive_manager import ArchiveManager
 
 logger = logging.getLogger(__name__)
 
-
 class DocumentProcessor:
-    """Enhanced document processor with maximum accuracy and comprehensive document type support"""
-    
+    """Document processor that adapts to different document types"""
+
     def __init__(self):
-        # Optimize workers for stability and accuracy
-        self.max_workers = min(cpu_count(), 3)  # Conservative for model stability
+        # Simplified worker configuration
+        self.max_workers = min(cpu_count(), 4)
         
-        # Shared model instances with proper locking
+        # Model instances with thread safety
         self._ocr_processor = None
         self._data_extractor = None
         self._model_lock = threading.Lock()
         
         self.archive_manager = ArchiveManager()
-        self.retry_counts = {}
-        self.progress_lock = threading.Lock()
-        
-        # Enhanced statistics tracking
         self.stats = {
             'total_processed': 0,
-            'successful_extractions': 0,
-            'partial_extractions': 0,
-            'failed_extractions': 0,
-            'total_ocr_time': 0,
-            'total_extraction_time': 0,
-            'total_archive_time': 0,
-            'successful_files': [],
-            'failed_files': [],
-            'document_type_stats': {},
-            'confidence_stats': {
-                'ocr_confidence_sum': 0,
-                'ml_confidence_sum': 0,
-                'count': 0
-            }
+            'successful': 0,
+            'failed': 0,
+            'total_time': 0,
+            'document_types': {}
         }
         
-        # Processing configuration
-        self.processing_config = {
-            'ocr': {
-                'min_confidence': 0.4,  # Lower threshold for emails and complex documents
-                'dpi': 200,
-                'enhance_images': True,
-                'post_process_text': True
-            },
-            'extraction': {
-                'retry_on_failure': True,
-                'max_retries': 2,
-                'fallback_mode': True,
-                'confidence_threshold': 0.2,
-                'context_aware_extraction': True
-            },
-            'classification': {
-                'email_bonus': 15,
-                'meaningful_field_bonus': 5,
-                'text_length_bonus': True,
-                'document_type_bonus': True
-            },
-            'performance': {
-                'memory_cleanup_interval': 2,
-                'gpu_memory_limit': '6GiB',
-                'batch_size': 1  # Process one at a time for maximum accuracy
-            }
-        }
+        # Compile patterns for better performance
+        self._compile_patterns()
         
-        logger.info(f"Initialized Enhanced Document Processor with {self.max_workers} workers")
-        logger.info("Initializing shared models for maximum accuracy...")
-        
-        # Pre-initialize models to avoid conflicts
+        logger.info(f"Initialized Flexible Document Processor with {self.max_workers} workers")
         self._initialize_models()
     
+    def _compile_patterns(self):
+        """Compile regex patterns for better performance"""
+        # Person name patterns - more comprehensive and accurate
+        self.person_patterns = [
+            # Full names with titles
+            re.compile(r'\b(?:Mr|Ms|Mrs|Dr|Prof|Sir|Madam|Miss|Atty|Engr|Archt)\.?\s+([A-Z][a-z]{1,15}(?:\s+[A-Z]\.?\s*)?[A-Z][a-z]{1,15}(?:\s+(?:Jr|Sr|III?|IV)\.?)?)\b'),
+            
+            # Full names without titles (First Middle Last, First Last)
+            re.compile(r'\b([A-Z][a-z]{2,15}\s+(?:[A-Z]\.?\s+)?[A-Z][a-z]{2,15}(?:\s+(?:Jr|Sr|III?|IV)\.?)?)\b(?!\s+(?:Inc|Corp|LLC|Ltd|Co|Corporation|Company|Technologies|Solutions|Systems|Services|University|College|School|Hospital|Clinic|Bank|Group|Holdings|International|Enterprises|Foundation|Institute|Organization|Department|Ministry|Office|Bureau|Agency|Commission|Authority|Council)\.?)'),
+            
+            # Names with middle initials
+            re.compile(r'\b([A-Z][a-z]{2,15}\s+[A-Z]\.\s+[A-Z][a-z]{2,15}(?:\s+(?:Jr|Sr|III?|IV)\.?)?)\b'),
+            
+            # Filipino names patterns
+            re.compile(r'\b([A-Z][a-z]{2,15}(?:\s+(?:de|del|delos|dela|de\s+la)\s+)?[A-Z][a-z]{2,15}(?:\s+(?:Jr|Sr|III?|IV)\.?)?)\b(?!\s+(?:Inc|Corp|LLC|Ltd|Co|Corporation|Company|Technologies|Solutions|Systems|Services))'),
+        ]
+        
+        # Company patterns - more comprehensive
+        self.company_patterns = [
+            # Standard business entities
+            re.compile(r'\b([A-Z][A-Za-z\s&\-\'\.]{2,50}(?:\s+(?:Inc|Corp|LLC|Ltd|Co|Corporation|Company|Technologies|Solutions|Systems|Services|International|Enterprises|Holdings|Group|Partners|Associates|Consultants|Contractors|Suppliers|Manufacturers|Industries|Trading|Investment|Development|Management|Foundation|Institute|Organization|University|College|School|Hospital|Clinic|Bank|Insurance|Finance|Securities|Properties|Realty|Construction|Engineering|Design|Marketing|Advertising|Communications|Media|Publishing|Printing|Transportation|Logistics|Shipping|Aviation|Maritime|Energy|Power|Oil|Gas|Mining|Agriculture|Pharmaceuticals|Healthcare|Medical|Dental|Legal|Accounting|Audit|Tax|Consulting|Advisory|Training|Education|Research|Laboratory|Technology|Software|Hardware|Electronics|Telecommunications|Broadcasting|Entertainment|Gaming|Sports|Travel|Tourism|Hospitality|Restaurant|Food|Beverage|Retail|Wholesale|Distribution|Import|Export|General\s+Services)\.?))\b'),
+            
+            # Government agencies and institutions
+            re.compile(r'\b((?:Department|Ministry|Office|Bureau|Agency|Commission|Authority|Council)\s+of\s+[A-Z][A-Za-z\s&\-\']{5,50})\b'),
+            
+            # Acronyms (3-6 letters, all caps)
+            re.compile(r'\b([A-Z]{3,6}(?:\s+[A-Z]{2,4})*)\b(?!\s*[a-z])'),
+            
+            # Banks and financial institutions
+            re.compile(r'\b([A-Z][A-Za-z\s&\-\'\.]{2,40}\s+(?:Bank|Banking|Finance|Financial|Investment|Securities|Insurance|Credit\s+Union|Cooperative|Trust|Fund|Capital|Asset\s+Management|Wealth\s+Management))\b'),
+            
+            # Educational institutions
+            re.compile(r'\b([A-Z][A-Za-z\s&\-\'\.]{2,40}\s+(?:University|College|School|Institute|Academy|Seminary|Polytechnic|Technical\s+College|Community\s+College))\b'),
+        ]
+        
+        # Location patterns - more comprehensive
+        self.location_patterns = [
+            # Cities with common location indicators
+            re.compile(r'\b([A-Z][a-z]{2,25}(?:\s+[A-Z][a-z]{2,25})*)\s+(?:City|Province|State|County|Municipality|District|Region|Area|Zone|Subdivision|Village|Town|Barangay|Metro|NCR|CAR)\b'),
+            
+            # Business locations
+            re.compile(r'\b([A-Z][a-z]{2,25}(?:\s+[A-Z][a-z]{2,25})*)\s+(?:Plant|Branch|Office|Warehouse|Department|Division|Facility|Complex|Center|Centre|Mall|Plaza|Building|Tower|Hub|Terminal|Port|Airport|Station)\b'),
+            
+            # Address components
+            re.compile(r'\b([A-Z][a-z]{2,25}(?:\s+[A-Z][a-z]{2,25})*)\s+(?:Street|Road|Avenue|Boulevard|Drive|Lane|Court|Circle|Plaza|Square|Subdivision|Village|Heights|Hills|Gardens|Park|Residences)\b'),
+            
+            # International locations
+            re.compile(r'\b([A-Z][a-z]{2,25}(?:\s+[A-Z][a-z]{2,25})*),?\s+(?:Philippines|USA|United\s+States|Singapore|Malaysia|Thailand|Indonesia|Vietnam|Japan|Korea|China|Hong\s+Kong|Taiwan|Australia|Canada|UK|United\s+Kingdom|Germany|France|Italy|Spain|Netherlands|Belgium|Switzerland|Dubai|UAE|Qatar|Saudi\s+Arabia|India|Pakistan|Bangladesh|Sri\s+Lanka|Myanmar|Cambodia|Laos|Brunei)\b'),
+            
+            # Philippine specific locations
+            re.compile(r'\b(Metro\s+Manila|Makati|Taguig|BGC|Ortigas|Alabang|Quezon\s+City|Manila|Pasig|Mandaluyong|San\s+Juan|Marikina|Pasay|Paranaque|Las\s+Pinas|Muntinlupa|Pateros|Valenzuela|Malabon|Navotas|Caloocan|Cebu|Davao|Iloilo|Bacolod|Cagayan\s+de\s+Oro|Zamboanga|General\s+Santos|Baguio|Angeles|Clark|Subic|Batangas|Laguna|Cavite|Rizal|Bulacan|Pampanga|Tarlac|Nueva\s+Ecija|Pangasinan|La\s+Union|Ilocos\s+Norte|Ilocos\s+Sur|Cagayan|Isabela|Quirino|Nueva\s+Vizcaya|Ifugao|Mountain\s+Province|Kalinga|Apayao|Abra|Benguet)\b'),
+        ]
+        
+        # Enhanced date patterns
+        self.date_patterns = [
+            # ISO format
+            re.compile(r'\b(\d{4}[-/]\d{1,2}[-/]\d{1,2})\b'),
+            
+            # US format
+            re.compile(r'\b(\d{1,2}[-/]\d{1,2}[-/]\d{4})\b'),
+            
+            # European format  
+            re.compile(r'\b(\d{1,2}[-/]\d{1,2}[-/]\d{4})\b'),
+            
+            # Month names - full and abbreviated
+            re.compile(r'\b(\d{1,2}[\s\-/]*(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[\s\-/]*\d{4})\b', re.IGNORECASE),
+            
+            # Reverse month name format
+            re.compile(r'\b((?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[\s\-/]*\d{1,2}[\s\-/,]*\d{4})\b', re.IGNORECASE),
+            
+            # Day-Month-Year with names
+            re.compile(r'\b(\d{1,2}(?:st|nd|rd|th)?\s+(?:of\s+)?(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[\s,]+\d{4})\b', re.IGNORECASE),
+            
+            # Relative dates
+            re.compile(r'\b((?:today|yesterday|tomorrow|last\s+(?:week|month|year)|next\s+(?:week|month|year)|this\s+(?:week|month|year)))\b', re.IGNORECASE),
+            
+            # Quarter references
+            re.compile(r'\b(Q[1-4]\s+\d{4}|(?:first|second|third|fourth|1st|2nd|3rd|4th)\s+quarter\s+\d{4})\b', re.IGNORECASE),
+        ]
+        
+        # Enhanced amount patterns
+        self.amount_patterns = [
+            # Currency with amount
+            re.compile(r'(?:PHP|USD|EUR|GBP|JPY|SGD|MYR|THB|IDR|VND|KRW|CNY|HKD|AUD|CAD|CHF|SEK|NOK|DKK|PLN|CZK|HUF|ZAR|BRL|MXN|ARS|CLP|COP|PEN|UYU|BOB|PYG|INR|PKR|BDT|LKR|NPR|BTN|MVR|AFN|MMK|KHR|LAK|BND)\s*[\$¥€£₹₩₽₨₪₦₡₵₴₸₼₾]?\s*(\d{1,3}(?:[,\s]\d{3})*(?:\.\d{1,4})?)', re.IGNORECASE),
+            
+            # Amount with currency after
+            re.compile(r'\b(\d{1,3}(?:[,\s]\d{3})*(?:\.\d{1,4})?)\s*(?:PHP|USD|EUR|GBP|JPY|SGD|MYR|THB|IDR|VND|KRW|CNY|HKD|AUD|CAD|CHF|SEK|NOK|DKK|PLN|CZK|HUF|ZAR|BRL|MXN|ARS|CLP|COP|PEN|UYU|BOB|PYG|INR|PKR|BDT|LKR|NPR|BTN|MVR|AFN|MMK|KHR|LAK|BND)\b', re.IGNORECASE),
+            
+            # Currency symbols
+            re.compile(r'[\$¥€£₹₩₽₨₪₦₡₵₴₸₼₾]\s*(\d{1,3}(?:[,\s]\d{3})*(?:\.\d{1,4})?)'),
+            
+            # Amount with words
+            re.compile(r'\b(\d{1,3}(?:[,\s]\d{3})*(?:\.\d{1,4})?)\s*(?:pesos|dollars|euros|pounds|yen|ringgit|baht|rupiah|dong|won|yuan|cents|million|billion|thousand|k|m|b)\b', re.IGNORECASE),
+            
+            # Written amounts
+            re.compile(r'\b((?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion)\s+(?:hundred|thousand|million|billion)\s*(?:pesos|dollars|euros|pounds|yen)?)\b', re.IGNORECASE),
+        ]
+        
+        # Common false positive patterns to exclude
+        self.false_positive_patterns = {
+            'people': [
+                re.compile(r'\b(?:Date|Time|Page|Total|Amount|Number|Code|ID|Reference|Subject|Address|Phone|Email|Website|Department|Section|Unit|Room|Floor|Building|Street|Road|Avenue|City|Province|Country|Year|Month|Day|Week|Quarter|Report|Document|File|Attachment|Version|Copy|Original|Draft|Final|Approved|Pending|Completed|Cancelled|Active|Inactive|Valid|Invalid|Public|Private|Confidential|Urgent|Important|High|Medium|Low|New|Old|Recent|Current|Previous|Next|First|Last|Primary|Secondary|Main|Sub|General|Specific|Special|Regular|Standard|Custom|Default|Optional|Required|Mandatory|Automatic|Manual|Online|Offline|Digital|Physical|Virtual|Actual|Estimated|Projected|Planned|Scheduled|Expected|Confirmed|Tentative|Preliminary|Temporary|Permanent|Short|Long|Quick|Slow|Fast|Easy|Difficult|Simple|Complex|Basic|Advanced|Professional|Personal|Business|Commercial|Industrial|Residential|Educational|Medical|Legal|Financial|Technical|Administrative|Operational|Strategic|Tactical|Local|National|International|Global|Regional|Domestic|Foreign|Internal|External|Incoming|Outgoing|Received|Sent|Delivered|Returned|Forwarded|Copied|Moved|Deleted|Saved|Updated|Modified|Changed|Created|Generated|Produced|Manufactured|Processed|Handled|Managed|Supervised|Controlled|Monitored|Tracked|Recorded|Logged|Reported|Analyzed|Reviewed|Approved|Rejected|Accepted|Declined|Confirmed|Cancelled|Postponed|Rescheduled|Extended|Reduced|Increased|Decreased|Improved|Enhanced|Upgraded|Downgraded|Replaced|Renewed|Expired|Terminated|Suspended|Resumed|Started|Stopped|Paused|Continued|Finished|Completed|Closed|Opened|Locked|Unlocked|Secured|Protected|Encrypted|Decrypted|Compressed|Decompressed|Archived|Restored|Backed|Synchronized|Uploaded|Downloaded|Imported|Exported|Converted|Transformed|Translated|Formatted|Printed|Scanned|Copied|Pasted|Cut|Deleted|Inserted|Added|Removed|Cleared|Reset|Refreshed|Reloaded|Restarted|Shutdown|Powered|Connected|Disconnected|Linked|Unlinked|Attached|Detached|Mounted|Unmounted|Installed|Uninstalled|Configured|Reconfigured|Calibrated|Tested|Validated|Verified|Authenticated|Authorized|Logged|Registered|Unregistered|Subscribed|Unsubscribed|Enrolled|Disenrolled|Activated|Deactivated|Enabled|Disabled|Allowed|Blocked|Granted|Denied|Permitted|Prohibited|Restricted|Unrestricted|Limited|Unlimited|Available|Unavailable|Accessible|Inaccessible|Visible|Hidden|Shown|Displayed|Presented|Demonstrated|Explained|Described|Detailed|Summarized|Listed|Indexed|Categorized|Classified|Grouped|Sorted|Filtered|Searched|Found|Located|Identified|Recognized|Detected|Discovered|Explored|Investigated|Examined|Inspected|Evaluated|Assessed|Measured|Calculated|Computed|Estimated|Approximated|Rounded|Truncated|Expanded|Collapsed|Minimized|Maximized|Optimized|Customized|Personalized|Standardized|Normalized|Regularized|Stabilized|Balanced|Aligned|Centered|Positioned|Located|Placed|Arranged|Organized|Structured|Designed|Planned|Prepared|Developed|Built|Constructed|Created|Generated|Produced|Manufactured|Assembled|Installed|Deployed|Implemented|Executed|Performed|Conducted|Operated|Managed|Administered|Supervised|Controlled|Directed|Guided|Led|Coordinated|Organized|Arranged|Scheduled|Planned|Designed|Developed|Created|Built|Constructed|Established|Founded|Started|Initiated|Launched|Introduced|Presented|Delivered|Provided|Supplied|Offered|Available|Ready|Prepared|Completed|Finished|Done|Accomplished|Achieved|Attained|Reached|Obtained|Acquired|Gained|Earned|Won|Lost|Failed|Succeeded|Passed|Completed|Graduated|Certified|Licensed|Registered|Qualified|Eligible|Authorized|Approved|Accepted|Admitted|Enrolled|Subscribed|Joined|Participated|Attended|Visited|Toured|Traveled|Moved|Relocated|Transferred|Shifted|Changed|Switched|Converted|Transformed|Adapted|Adjusted|Modified|Altered|Updated|Upgraded|Improved|Enhanced|Refined|Polished|Perfected|Completed|Finalized|Concluded|Ended|Terminated|Stopped|Ceased|Discontinued|Suspended|Paused|Interrupted|Delayed|Postponed|Rescheduled|Extended|Prolonged|Shortened|Reduced|Decreased|Minimized|Limited|Restricted|Constrained|Bounded|Contained|Enclosed|Surrounded|Protected|Secured|Guarded|Defended|Shielded|Covered|Hidden|Concealed|Masked|Disguised|Camouflaged|Obscured|Blocked|Prevented|Avoided|Evaded|Escaped|Fled|Retreated|Withdrawn|Removed|Eliminated|Deleted|Erased|Cleared|Cleaned|Purged|Flushed|Emptied|Vacated|Abandoned|Deserted|Left|Departed|Exited|Quit|Resigned|Retired|Stepped|Backed|Returned|Came|Arrived|Entered|Joined|Participated|Engaged|Involved|Included|Incorporated|Integrated|Combined|Merged|United|Connected|Linked|Attached|Bound|Tied|Secured|Fastened|Fixed|Stable|Steady|Consistent|Reliable|Dependable|Trustworthy|Credible|Believable|Convincing|Persuasive|Compelling|Attractive|Appealing|Interesting|Engaging|Entertaining|Enjoyable|Pleasant|Comfortable|Convenient|Easy|Simple|Straightforward|Clear|Obvious|Evident|Apparent|Visible|Noticeable|Remarkable|Notable|Significant|Important|Major|Minor|Small|Large|Big|Huge|Enormous|Massive|Tiny|Minute|Microscopic|Gigantic|Colossal|Tremendous|Immense|Vast|Extensive|Comprehensive|Complete|Full|Partial|Incomplete|Total|Whole|Entire|All|Every|Each|Some|Few|Many|Most|Several|Various|Different|Similar|Same|Identical|Equal|Equivalent|Comparable|Relative|Absolute|Exact|Precise|Accurate|Correct|Right|Wrong|Incorrect|False|True|Valid|Invalid|Legal|Illegal|Legitimate|Illegitimate|Authorized|Unauthorized|Official|Unofficial|Formal|Informal|Professional|Amateur|Expert|Novice|Beginner|Advanced|Experienced|Skilled|Talented|Gifted|Capable|Competent|Qualified|Certified|Licensed|Registered|Accredited|Approved|Endorsed|Recommended|Suggested|Proposed|Offered|Available|Accessible|Obtainable|Achievable|Possible|Probable|Likely|Unlikely|Impossible|Improbable|Certain|Uncertain|Sure|Unsure|Confident|Doubtful|Positive|Negative|Optimistic|Pessimistic|Hopeful|Hopeless|Encouraged|Discouraged|Motivated|Demotivated|Inspired|Uninspired|Enthusiastic|Unenthusiastic|Excited|Bored|Interested|Uninterested|Curious|Indifferent|Concerned|Unconcerned|Worried|Relaxed|Stressed|Calm|Anxious|Peaceful|Troubled|Disturbed|Upset|Happy|Sad|Joyful|Sorrowful|Cheerful|Gloomy|Bright|Dark|Light|Heavy|Strong|Weak|Powerful|Powerless|Effective|Ineffective|Efficient|Inefficient|Productive|Unproductive|Successful|Unsuccessful|Profitable|Unprofitable|Beneficial|Harmful|Useful|Useless|Valuable|Worthless|Important|Unimportant|Necessary|Unnecessary|Essential|Nonessential|Critical|Noncritical|Urgent|Nonurgent|Priority|Routine|Special|Normal|Regular|Irregular|Standard|Nonstandard|Typical|Atypical|Common|Uncommon|Usual|Unusual|Ordinary|Extraordinary|Average|Exceptional|Outstanding|Mediocre|Superior|Inferior|Better|Worse|Best|Worst|Good|Bad|Excellent|Poor|Great|Terrible|Wonderful|Awful|Amazing|Disappointing|Impressive|Unimpressive|Remarkable|Unremarkable|Notable|Forgettable|Memorable|Unforgettable|Significant|Insignificant|Meaningful|Meaningless|Relevant|Irrelevant|Applicable|Inapplicable|Suitable|Unsuitable|Appropriate|Inappropriate|Proper|Improper|Correct|Incorrect|Right|Wrong|Accurate|Inaccurate|Precise|Imprecise|Exact|Inexact|Specific|General|Detailed|Vague|Clear|Unclear|Obvious|Obscure|Evident|Hidden|Apparent|Concealed|Visible|Invisible|Noticeable|Unnoticeable|Recognizable|Unrecognizable|Familiar|Unfamiliar|Known|Unknown|Identified|Unidentified|Named|Unnamed|Labeled|Unlabeled|Tagged|Untagged|Marked|Unmarked|Signed|Unsigned|Sealed|Unsealed|Locked|Unlocked|Secured|Unsecured|Protected|Unprotected|Safe|Unsafe|Dangerous|Harmless|Risky|Risk-free|Hazardous|Safe|Threatening|Nonthreatening|Warning|Reassuring|Alarming|Calming|Exciting|Boring|Thrilling|Dull|Interesting|Uninteresting|Engaging|Unengaging|Captivating|Repelling|Attractive|Unattractive|Beautiful|Ugly|Pretty|Plain|Handsome|Homely|Gorgeous|Hideous|Stunning|Shocking|Impressive|Unimpressive|Spectacular|Ordinary|Magnificent|Mediocre|Splendid|Dreadful|Superb|Awful|Excellent|Terrible|Outstanding|Poor|Exceptional|Average|Extraordinary|Normal|Special|Regular|Unique|Common|Rare|Frequent|Infrequent|Often|Seldom|Always|Never|Sometimes|Usually|Occasionally|Regularly|Irregularly|Constantly|Intermittently|Continuously|Discontinuously|Permanently|Temporarily|Forever|Briefly|Long|Short|Extended|Brief|Prolonged|Quick|Slow|Fast|Rapid|Gradual|Sudden|Immediate|Delayed|Instant|Eventual|Prompt|Late|Early|Timely|Untimely|Scheduled|Unscheduled|Planned|Unplanned|Expected|Unexpected|Predictable|Unpredictable|Anticipated|Unanticipated|Foreseen|Unforeseen|Prepared|Unprepared|Ready|Unready|Available|Unavailable|Present|Absent|Here|There|Nearby|Distant|Close|Far|Near|Remote|Local|Foreign|Domestic|International|National|Regional|Global|Worldwide|Universal|Limited|Unlimited|Restricted|Unrestricted|Bounded|Unbounded|Finite|Infinite|Measurable|Immeasurable|Quantifiable|Unquantifiable|Countable|Uncountable|Numbered|Unnumbered|Calculated|Estimated|Exact|Approximate|Precise|Rough|Detailed|General|Specific|Vague|Particular|Universal|Individual|Collective|Personal|Impersonal|Private|Public|Confidential|Open|Secret|Transparent|Hidden|Concealed|Revealed|Disclosed|Undisclosed|Published|Unpublished|Announced|Unannounced|Declared|Undeclared|Stated|Unstated|Expressed|Unexpressed|Spoken|Unspoken|Verbal|Nonverbal|Oral|Written|Typed|Handwritten|Printed|Digital|Electronic|Manual|Automatic|Mechanical|Electrical|Magnetic|Optical|Acoustic|Thermal|Chemical|Physical|Virtual|Real|Actual|Theoretical|Practical|Applied|Pure|Mixed|Combined|Separated|Isolated|Integrated|Connected|Disconnected|Linked|Unlinked|Related|Unrelated|Associated|Dissociated|Attached|Detached|Bound|Unbound|Tied|Untied|Joined|Disjoined|United|Divided|Merged|Split|Fused|Separated|Blended|Distinguished|Mixed|Pure|Clean|Dirty|Fresh|Stale|New|Old|Recent|Ancient|Modern|Traditional|Contemporary|Classic|Vintage|Antique|Current|Outdated|Updated|Obsolete|Latest|Earliest|First|Last|Initial|Final|Beginning|End|Start|Finish|Opening|Closing|Top|Bottom|Upper|Lower|High|Low|Above|Below|Over|Under|Up|Down|Left|Right|Front|Back|Forward|Backward|Ahead|Behind|Before|After|Previous|Next|Prior|Following|Preceding|Succeeding|Earlier|Later|Sooner|Eventually|Immediately|Instantly|Quickly|Slowly|Rapidly|Gradually|Suddenly|Smoothly|Roughly|Gently|Harshly|Softly|Loudly|Quietly|Silently|Noisily|Peacefully|Violently|Calmly|Angrily|Happily|Sadly|Joyfully|Sorrowfully|Cheerfully|Gloomily|Hopefully|Hopelessly|Confidently|Doubtfully|Certainly|Uncertainly|Surely|Possibly|Probably|Definitely|Maybe|Perhaps|Obviously|Clearly|Apparently|Seemingly|Allegedly|Supposedly|Reportedly|Presumably|Likely|Unlikely|Probably|Improbably|Certainly|Uncertainly|Definitely|Indefinitely|Absolutely|Relatively|Completely|Partially|Totally|Partly|Fully|Halfway|Entirely|Somewhat|Mostly|Mainly|Primarily|Secondarily|Chiefly|Largely|Greatly|Significantly|Considerably|Substantially|Noticeably|Remarkably|Exceptionally|Extremely|Very|Quite|Rather|Pretty|Fairly|Reasonably|Moderately|Slightly|Barely|Hardly|Scarcely|Almost|Nearly|Approximately|Roughly|About|Around|Close|Near|Far|Distant|Away|Apart|Together|Separate|Combined|Joint|Individual|Collective|Common|Shared|Mutual|Reciprocal|Corresponding|Matching|Similar|Different|Same|Identical|Equal|Unequal|Equivalent|Nonequivalent|Comparable|Incomparable|Relative|Absolute|Conditional|Unconditional|Dependent|Independent|Related|Unrelated|Connected|Disconnected|Linked|Unlinked|Associated|Dissociated|Corresponding|Noncorresponding|Matching|Mismatched|Aligned|Misaligned|Coordinated|Uncoordinated|Synchronized|Unsynchronized|Harmonized|Disharmonized|Balanced|Unbalanced|Stable|Unstable|Steady|Unsteady|Consistent|Inconsistent|Regular|Irregular|Uniform|Nonuniform|Even|Uneven|Level|Unlevel|Flat|Curved|Straight|Bent|Direct|Indirect|Linear|Nonlinear|Circular|Angular|Round|Square|Triangular|Rectangular|Oval|Hexagonal|Octagonal|Cylindrical|Spherical|Cubic|Conical|Pyramidal|Prismatic|Geometric|Organic|Natural|Artificial|Synthetic|Genuine|Fake|Real|Imaginary|Actual|Fictional|True|False|Factual|Nonfactual|Authentic|Inauthentic|Original|Copy|Primary|Secondary|Main|Auxiliary|Principal|Subordinate|Major|Minor|Important|Unimportant|Significant|Insignificant|Essential|Nonessential|Necessary|Unnecessary|Required|Optional|Mandatory|Voluntary|Compulsory|Elective|Obligatory|Discretionary|Forced|Chosen|Imposed|Selected|Assigned|Designated|Appointed|Elected|Nominated|Recommended|Suggested|Proposed|Offered|Requested|Demanded|Required|Needed|Wanted|Desired|Preferred|Favored|Chosen|Selected|Picked|Taken|Given|Received|Accepted|Rejected|Approved|Disapproved|Endorsed|Opposed|Supported|Criticized|Praised|Blamed|Credited|Acknowledged|Ignored|Recognized|Overlooked|Noticed|Missed|Observed|Unobserved|Seen|Unseen|Viewed|Unviewed|Watched|Unwatched|Monitored|Unmonitored|Supervised|Unsupervised|Controlled|Uncontrolled|Managed|Unmanaged|Directed|Undirected|Guided|Unguided|Led|Unleaded|Conducted|Unconducted|Organized|Disorganized|Arranged|Disarranged|Structured|Unstructured|Planned|Unplanned|Designed|Undesigned|Prepared|Unprepared|Developed|Undeveloped|Created|Uncreated|Built|Unbuilt|Constructed|Deconstructed|Established|Unestablished|Founded|Unfounded|Started|Unstarted|Initiated|Uninitiated|Launched|Unlaunched|Introduced|Unintroduced|Presented|Unpresented|Delivered|Undelivered|Provided|Unprovided|Supplied|Unsupplied|Offered|Unoffered|Given|Ungiven|Granted|Ungranted|Awarded|Unawarded|Assigned|Unassigned|Allocated|Unallocated|Distributed|Undistributed|Shared|Unshared|Divided|Undivided|Split|Unsplit|Separated|Unseparated|Isolated|Unisolated|Detached|Attached|Removed|Unremoved|Taken|Untaken|Extracted|Unextracted|Withdrawn|Unwithdrawn|Pulled|Unpulled|Pushed|Unpushed|Moved|Unmoved|Transferred|Untransferred|Shifted|Unshifted|Changed|Unchanged|Modified|Unmodified|Altered|Unaltered|Adjusted|Unadjusted|Adapted|Unadapted|Transformed|Untransformed|Converted|Unconverted|Switched|Unswitched|Replaced|Unreplaced|Substituted|Unsubstituted|Exchanged|Unexchanged|Traded|Untraded|Swapped|Unswapped|Returned|Unreturned|Restored|Unrestored|Renewed|Unrenewed|Refreshed|Unrefreshed|Updated|Unupdated|Upgraded|Unupgraded|Improved|Unimproved|Enhanced|Unenhanced|Refined|Unrefined|Perfected|Unperfected|Completed|Uncompleted|Finished|Unfinished|Done|Undone|Accomplished|Unaccomplished|Achieved|Unachieved|Attained|Unattained|Reached|Unreached|Obtained|Unobtained|Acquired|Unacquired|Gained|Ungained|Earned|Unearned|Won|Lost|Succeeded|Failed|Passed|Failed|Graduated|Dropped|Qualified|Disqualified|Certified|Uncertified|Licensed|Unlicensed|Registered|Unregistered|Approved|Unapproved|Accepted|Unaccepted|Admitted|Unadmitted|Enrolled|Unenrolled|Subscribed|Unsubscribed|Joined|Unjoined|Participated|Nonparticipated|Attended|Unattended|Visited|Unvisited|Toured|Untoured|Traveled|Untraveled|Moved|Unmoved|Relocated|Unrelocated|Transferred|Untransferred|Shifted|Unshifted|Changed|Unchanged|Switched|Unswitched|Converted|Unconverted|Transformed|Untransformed|Adapted|Unadapted|Adjusted|Unadjusted|Modified|Unmodified|Altered|Unaltered|Updated|Unupdated|Upgraded|Unupgraded|Improved|Unimproved|Enhanced|Unenhanced|Refined|Unrefined|Polished|Unpolished|Perfected|Unperfected|Completed|Uncompleted|Finalized|Unfinalized|Concluded|Unconcluded|Ended|Unended|Terminated|Unterminated|Stopped|Unstopped|Ceased|Unceased|Discontinued|Continued|Suspended|Resumed|Paused|Unpaused|Interrupted|Uninterrupted|Delayed|Undelayed|Postponed|Unpostponed|Rescheduled|Unrescheduled|Extended|Unextended|Prolonged|Unprolonged|Shortened|Unshortened|Reduced|Unreduced|Decreased|Undecreased|Minimized|Unminimized|Limited|Unlimited|Restricted|Unrestricted|Constrained|Unconstrained|Bounded|Unbounded|Contained|Uncontained|Enclosed|Unenclosed|Surrounded|Unsurrounded|Protected|Unprotected|Secured|Unsecured|Guarded|Unguarded|Defended|Undefended|Shielded|Unshielded|Covered|Uncovered|Hidden|Unhidden|Concealed|Unconcealed|Masked|Unmasked|Disguised|Undisguised|Camouflaged|Uncamouflaged|Obscured|Unobscured|Blocked|Unblocked|Prevented|Unprevented|Avoided|Unavoided|Evaded|Unevaded|Escaped|Unescaped|Fled|Unfled|Retreated|Unretrieved|Withdrawn|Unwithdwarn|Removed|Unremoved|Eliminated|Uneliminated|Deleted|Undeleted|Erased|Unerased|Cleared|Uncleared|Cleaned|Uncleaned|Purged|Unpurged|Flushed|Unflushed|Emptied|Unemptied|Vacated|Unvacated|Abandoned|Unabandoned|Deserted|Undeserted|Left|Unleft|Departed|Undeparted|Exited|Unexited|Quit|Unquit|Resigned|Unresigned|Retired|Unretired|Stepped|Unstepped|Backed|Unbacked|Returned|Unreturned|Came|Uncame|Arrived|Unarrived|Entered|Unentered|Joined|Unjoined|Participated|Unparticipated|Engaged|Unengaged|Involved|Uninvolved|Included|Excluded|Incorporated|Unincorporated|Integrated|Unintegrated|Combined|Uncombined|Merged|Unmerged|United|Disunited|Connected|Disconnected|Linked|Unlinked|Attached|Unattached|Bound|Unbound|Tied|Untied|Secured|Unsecured|Fastened|Unfastened|Fixed|Unfixed|Stable|Unstable|Steady|Unsteady|Consistent|Inconsistent|Reliable|Unreliable|Dependable|Undependable|Trustworthy|Untrustworthy|Credible|Incredible|Believable|Unbelievable|Convincing|Unconvincing|Persuasive|Unpersuasive|Compelling|Uncompelling|Attractive|Unattractive|Appealing|Unappealing|Interesting|Uninteresting|Engaging|Unengaging|Entertaining|Unentertainting|Enjoyable|Unenjoyable|Pleasant|Unpleasant|Comfortable|Uncomfortable|Convenient|Inconvenient|Easy|Difficult|Simple|Complex|Straightforward|Complicated|Clear|Unclear|Obvious|Unobvious|Evident|Unevident|Apparent|Unapparent|Visible|Invisible|Noticeable|Unnoticeable|Remarkable|Unremarkable|Notable|Unnotable|Significant|Insignificant|Important|Unimportant|Major|Minor|Small|Large|Big|Little|Huge|Tiny|Enormous|Minute|Massive|Microscopic|Gigantic|Miniscule|Colossal|Infinitesimal|Tremendous|Negligible|Immense|Small|Vast|Limited|Extensive|Restricted|Comprehensive|Incomplete|Complete|Partial|Full|Empty|Total|Fractional|Whole|Broken|Entire|Fragmented|All|None|Every|No|Each|Neither|Some|Any|Few|Several|Many|Much|Most|Least|More|Less|Greater|Smaller|Higher|Lower|Bigger|Smaller|Larger|Tinier|Wider|Narrower|Longer|Shorter|Taller|Shorter|Deeper|Shallower|Thicker|Thinner|Heavier|Lighter|Stronger|Weaker|Harder|Softer|Tougher|Gentler|Rougher|Smoother|Coarser|Finer|Denser|Sparser|Tighter|Looser|Firmer|Softer|Stiffer|More Flexible|More Rigid|More Elastic|Less Elastic|More Durable|Less Durable|More Fragile|Less Fragile|More Stable|Less Stable|More Secure|Less Secure|Safer|More Dangerous|More Risky|Less Risky|More Hazardous|Less Hazardous|More Threatening|Less Threatening|More Alarming|Less Alarming|More Calming|Less Calming|More Exciting|Less Exciting|More Boring|Less Boring|More Thrilling|Less Thrilling|More Interesting|Less Interesting|More Engaging|Less Engaging|More Captivating|Less Captivating|More Attractive|Less Attractive|More Beautiful|Less Beautiful|More Handsome|Less Handsome|More Gorgeous|Less Gorgeous|More Stunning|Less Stunning|More Impressive|Less Impressive|More Spectacular|Less Spectacular|More Magnificent|Less Magnificent|More Splendid|Less Splendid|More Superb|Less Superb|More Excellent|Less Excellent|More Outstanding|Less Outstanding|More Exceptional|Less Exceptional|More Extraordinary|Less Extraordinary|More Special|Less Special|More Unique|Less Unique|More Rare|Less Rare|More Common|Less Common|More Frequent|Less Frequent|More Often|Less Often|More Regular|Less Regular|More Constant|Less Constant|More Continuous|Less Continuous|More Permanent|Less Permanent|More Temporary|Less Temporary|More Brief|Less Brief|More Extended|Less Extended|More Prolonged|Less Prolonged|More Quick|Less Quick|More Slow|Less Slow|More Fast|Less Fast|More Rapid|Less Rapid|More Gradual|Less Gradual|More Sudden|Less Sudden|More Immediate|Less Immediate|More Delayed|Less Delayed|More Prompt|Less Prompt|More Late|Less Late|More Early|Less Early|More Timely|Less Timely|More Scheduled|Less Scheduled|More Planned|Less Planned|More Expected|Less Expected|More Predictable|Less Predictable|More Anticipated|Less Anticipated|More Prepared|Less Prepared|More Ready|Less Ready|More Available|Less Available|More Present|Less Present|More Nearby|Less Nearby|More Close|Less Close|More Distant|Less Distant|More Local|Less Local|More Foreign|Less Foreign|More Domestic|Less Domestic|More International|Less International|More National|Less National|More Regional|Less Regional|More Global|Less Global|More Universal|Less Universal|More Limited|Less Limited|More Restricted|Less Restricted|More Bounded|Less Bounded|More Finite|Less Finite|More Measurable|Less Measurable|More Exact|Less Exact|More Precise|Less Precise|More Accurate|Less Accurate|More Detailed|Less Detailed|More Specific|Less Specific|More General|Less General|More Particular|Less Particular|More Individual|Less Individual|More Personal|Less Personal|More Private|Less Private|More Public|Less Public|More Confidential|Less Confidential|More Secret|Less Secret|More Hidden|Less Hidden|More Concealed|Less Concealed|More Revealed|Less Revealed|More Disclosed|Less Disclosed|More Published|Less Published|More Announced|Less Announced|More Declared|Less Declared|More Stated|Less Stated|More Expressed|Less Expressed|More Spoken|Less Spoken|More Written|Less Written|More Digital|Less Digital|More Electronic|Less Electronic|More Manual|Less Manual|More Automatic|Less Automatic|More Mechanical|Less Mechanical|More Physical|Less Physical|More Virtual|Less Virtual|More Real|Less Real|More Actual|Less Actual|More Theoretical|Less Theoretical|More Practical|Less Practical|More Applied|Less Applied|More Pure|Less Pure|More Mixed|Less Mixed|More Combined|Less Combined|More Separated|Less Separated|More Isolated|Less Isolated|More Integrated|Less Integrated|More Connected|Less Connected|More Linked|Less Linked|More Related|Less Related|More Associated|Less Associated|More Attached|Less Attached|More Bound|Less Bound|More Joined|Less Joined|More United|Less United|More Merged|Less Merged|More Blended|Less Blended|More Distinguished|Less Distinguished|More Clean|Less Clean|More Dirty|Less Dirty|More Fresh|Less Fresh|More Stale|Less Stale|More New|Less New|More Old|Less Old|More Recent|Less Recent|More Ancient|Less Ancient|More Modern|Less Modern|More Traditional|Less Traditional|More Contemporary|Less Contemporary|More Classic|Less Classic|More Current|Less Current|More Updated|Less Updated|More Latest|Less Latest|More First|Less First|More Last|Less Last|More Initial|Less Initial|More Final|Less Final|More Beginning|Less Beginning|More End|Less End|More Top|Less Top|More Bottom|Less Bottom|More Upper|Less Upper|More Lower|Less Lower|More High|Less High|More Low|Less Low|More Above|Less Above|More Below|Less Below|More Over|Less Over|More Under|Less Under|More Front|Less Front|More Back|Less Back|More Forward|Less Forward|More Backward|Less Backward|More Ahead|Less Ahead|More Behind|Less Behind|More Before|Less Before|More After|Less After|More Previous|Less Previous|More Next|Less Next|More Prior|Less Prior|More Following|Less Following|More Preceding|Less Preceding|More Earlier|Less Earlier|More Later|Less Later|More Sooner|Less Sooner|More Immediately|Less Immediately|More Quickly|Less Quickly|More Slowly|Less Slowly|More Rapidly|Less Rapidly|More Gradually|Less Gradually|More Suddenly|Less Suddenly|More Smoothly|Less Smoothly|More Roughly|Less Roughly|More Gently|Less Gently|More Harshly|Less Harshly|More Softly|Less Softly|More Loudly|Less Loudly|More Quietly|Less Quietly|More Silently|Less Silently|More Noisily|Less Noisily|More Peacefully|Less Peacefully|More Violently|Less Violently|More Calmly|Less Calmly|More Angrily|Less Angrily|More Happily|Less Happily|More Sadly|Less Sadly|More Joyfully|Less Joyfully|More Cheerfully|Less Cheerfully|More Hopefully|Less Hopefully|More Confidently|Less Confidently|More Certainly|Less Certainly|More Probably|Less Probably|More Definitely|Less Definitely|More Obviously|Less Obviously|More Clearly|Less Clearly|More Apparently|Less Apparently|More Likely|Less Likely|More Absolutely|Less Absolutely|More Completely|Less Completely|More Partially|Less Partially|More Totally|Less Totally|More Fully|Less Fully|More Entirely|Less Entirely|More Mostly|Less Mostly|More Mainly|Less Mainly|More Primarily|Less Primarily|More Chiefly|Less Chiefly|More Largely|Less Largely|More Greatly|Less Greatly|More Significantly|Less Significantly|More Considerably|Less Considerably|More Substantially|Less Substantially|More Noticeably|Less Noticeably|More Remarkably|Less Remarkably|More Exceptionally|Less Exceptionally|More Extremely|Less Extremely|More Very|Less Very|More Quite|Less Quite|More Rather|Less Rather|More Pretty|Less Pretty|More Fairly|Less Fairly|More Reasonably|Less Reasonably|More Moderately|Less Moderately|More Slightly|Less Slightly|More Barely|Less Barely|More Hardly|Less Hardly|More Almost|Less Almost|More Nearly|Less Nearly|More Approximately|Less Approximately|More Roughly|Less Roughly|More About|Less About|More Around|Less Around|More Close|Less Close|More Together|Less Together|More Apart|Less Apart|More Similar|Less Similar|More Different|Less Different|More Same|Less Same|More Equal|Less Equal|More Equivalent|Less Equivalent|More Comparable|Less Comparable|More Relative|Less Relative|More Conditional|Less Conditional|More Dependent|Less Dependent|More Independent|Less Independent|More Related|Less Related|More Connected|Less Connected|More Associated|Less Associated|More Corresponding|Less Corresponding|More Matching|Less Matching|More Aligned|Less Aligned|More Coordinated|Less Coordinated|More Synchronized|Less Synchronized|More Balanced|Less Balanced|More Stable|Less Stable|More Consistent|Less Consistent|More Regular|Less Regular|More Uniform|Less Uniform|More Even|Less Even|More Level|Less Level|More Flat|Less Flat|More Straight|Less Straight|More Direct|Less Direct|More Linear|Less Linear|More Circular|Less Circular|More Round|Less Round|More Square|Less Square|More Natural|Less Natural|More Artificial|Less Artificial|More Genuine|Less Genuine|More Real|Less Real|More True|Less True|More Authentic|Less Authentic|More Original|Less Original|More Primary|Less Primary|More Main|Less Main|More Principal|Less Principal|More Major|Less Major|More Important|Less Important|More Significant|Less Significant|More Essential|Less Essential|More Necessary|Less Necessary|More Required|Less Required|More Mandatory|Less Mandatory|More Compulsory|Less Compulsory|More Obligatory|Less Obligatory|More Forced|Less Forced|More Chosen|Less Chosen|More Selected|Less Selected|More Preferred|Less Preferred|More Favored|Less Favored|More Accepted|Less Accepted|More Approved|Less Approved|More Endorsed|Less Endorsed|More Supported|Less Supported|More Praised|Less Praised|More Credited|Less Credited|More Acknowledged|Less Acknowledged|More Recognized|Less Recognized|More Noticed|Less Noticed|More Observed|Less Observed|More Seen|Less Seen|More Viewed|Less Viewed|More Watched|Less Watched|More Monitored|Less Monitored|More Supervised|Less Supervised|More Controlled|Less Controlled|More Managed|Less Managed|More Directed|Less Directed|More Guided|Less Guided|More Led|Less Led|More Conducted|Less Conducted|More Organized|Less Organized|More Arranged|Less Arranged|More Structured|Less Structured|More Planned|Less Planned|More Designed|Less Designed|More Prepared|Less Prepared|More Developed|Less Developed|More Created|Less Created|More Built|Less Built|More Constructed|Less Constructed|More Established|Less Established|More Founded|Less Founded|More Started|Less Started|More Initiated|Less Initiated|More Launched|Less Launched|More Introduced|Less Introduced|More Presented|Less Presented|More Delivered|Less Delivered|More Provided|Less Provided|More Supplied|Less Supplied|More Offered|Less Offered|More Given|Less Given|More Granted|Less Granted|More Awarded|Less Awarded|More Assigned|Less Assigned|More Allocated|Less Allocated|More Distributed|Less Distributed|More Shared|Less Shared|More Divided|Less Divided|More Separated|Less Separated|More Isolated|Less Isolated|More Removed|Less Removed|More Taken|Less Taken|More Extracted|Less Extracted|More Withdrawn|Less Withdrawn|More Moved|Less Moved|More Transferred|Less Transferred|More Shifted|Less Shifted|More Changed|Less Changed|More Modified|Less Modified|More Altered|Less Altered|More Adjusted|Less Adjusted|More Adapted|Less Adapted|More Transformed|Less Transformed|More Converted|Less Converted|More Switched|Less Switched|More Replaced|Less Replaced|More Returned|Less Returned|More Restored|Less Restored|More Renewed|Less Renewed|More Updated|Less Updated|More Upgraded|Less Upgraded|More Improved|Less Improved|More Enhanced|Less Enhanced|More Refined|Less Refined|More Perfected|Less Perfected|More Completed|Less Completed|More Finished|Less Finished|More Accomplished|Less Accomplished|More Achieved|Less Achieved|More Attained|Less Attained|More Obtained|Less Obtained|More Acquired|Less Acquired|More Gained|Less Gained|More Earned|Less Earned|More Won|Less Won|More Succeeded|Less Succeeded|More Passed|Less Passed|More Qualified|Less Qualified|More Certified|Less Certified|More Licensed|Less Licensed|More Registered|Less Registered|More Approved|Less Approved|More Accepted|Less Accepted|More Admitted|Less Admitted|More Enrolled|Less Enrolled|More Joined|Less Joined|More Participated|Less Participated|More Attended|Less Attended|More Visited|Less Visited|More Traveled|Less Traveled|More Moved|Less Moved|More Relocated|Less Relocated|More Transferred|Less Transferred|More Changed|Less Changed|More Switched|Less Switched|More Converted|Less Converted|More Transformed|Less Transformed|More Adapted|Less Adapted|More Adjusted|Less Adjusted|More Modified|Less Modified|More Updated|Less Updated|More Improved|Less Improved|More Enhanced|Less Enhanced|More Completed|Less Completed|More Finished|Less Finished|More Ended|Less Ended|More Stopped|Less Stopped|More Ceased|Less Ceased|More Suspended|Less Suspended|More Paused|Less Paused|More Delayed|Less Delayed|More Extended|Less Extended|More Reduced|Less Reduced|More Limited|Less Limited|More Restricted|Less Restricted|More Protected|Less Protected|More Secured|Less Secured|More Hidden|Less Hidden|More Revealed|Less Revealed|More Disclosed|Less Disclosed|More Published|Less Published|More Announced|Less Announced|More Declared|Less Declared|More Stated|Less Stated|More Expressed|Less Expressed|More Communicated|Less Communicated|More Transmitted|Less Transmitted|More Sent|Less Sent|More Received|Less Received|More Delivered|Less Delivered|More Forwarded|Less Forwarded|More Copied|Less Copied|More Saved|Less Saved|More Stored|Less Stored|More Archived|Less Archived|More Backed|Less Backed|More Recovered|Less Recovered|More Restored|Less Restored|More Retrieved|Less Retrieved|More Found|Less Found|More Located|Less Located|More Discovered|Less Discovered|More Identified|Less Identified|More Recognized|Less Recognized|More Detected|Less Detected|More Searched|Less Searched|More Explored|Less Explored|More Investigated|Less Investigated|More Examined|Less Examined|More Inspected|Less Inspected|More Analyzed|Less Analyzed|More Evaluated|Less Evaluated|More Assessed|Less Assessed|More Measured|Less Measured|More Calculated|Less Calculated|More Computed|Less Computed|More Estimated|Less Estimated|More Predicted|Less Predicted|More Forecasted|Less Forecasted|More Projected|Less Projected|More Planned|Less Planned|More Scheduled|Less Scheduled|More Arranged|Less Arranged|More Organized|Less Organized|More Coordinated|Less Coordinated|More Managed|Less Managed|More Supervised|Less Supervised|More Controlled|Less Controlled|More Directed|Less Directed|More Guided|Less Guided|More Led|Less Led|More Administered|Less Administered|More Operated|Less Operated|More Executed|Less Executed|More Performed|Less Performed|More Conducted|Less Conducted|More Implemented|Less Implemented|More Applied|Less Applied|More Used|Less Used|More Utilized|Less Utilized|More Employed|Less Employed|More Deployed|Less Deployed|More Installed|Less Installed|More Configured|Less Configured|More Set|Less Set|More Established|Less Established|More Created|Less Created|More Built|Less Built|More Developed|Less Developed|More Designed|Less Designed|More Constructed|Less Constructed|More Assembled|Less Assembled|More Manufactured|Less Manufactured|More Produced|Less Produced|More Generated|Less Generated|More Made|Less Made|More Formed|Less Formed|More Shaped|Less Shaped|More Molded|Less Molded|More Crafted|Less Crafted|More Fashioned|Less Fashioned|More Fabricated|Less Fabricated|More Constructed|Less Constructed|More Erected|Less Erected|More Raised|Less Raised|More Lifted|Less Lifted|More Elevated|Less Elevated|More Hoisted|Less Hoisted|More Suspended|Less Suspended|More Hung|Less Hung|More Mounted|Less Mounted|More Attached|Less Attached|More Fixed|Less Fixed|More Secured|Less Secured|More Fastened|Less Fastened|More Tied|Less Tied|More Bound|Less Bound|More Connected|Less Connected|More Linked|Less Linked|More Joined|Less Joined|More United|Less United|More Combined|Less Combined|More Merged|Less Merged|More Integrated|Less Integrated|More Incorporated|Less Incorporated|More Included|Less Included|More Involved|Less Involved|More Engaged|Less Engaged|More Participated|Less Participated|More Contributed|Less Contributed|More Assisted|Less Assisted|More Helped|Less Helped|More Supported|Less Supported|More Aided|Less Aided|More Facilitated|Less Facilitated|More Enabled|Less Enabled|More Empowered|Less Empowered|More Strengthened|Less Strengthened|More Reinforced|Less Reinforced|More Enhanced|Less Enhanced|More Improved|Less Improved|More Upgraded|Less Upgraded|More Advanced|Less Advanced|More Developed|Less Developed|More Evolved|Less Evolved|More Progressed|Less Progressed|More Grown|Less Grown|More Expanded|Less Expanded|More Extended|Less Extended|More Enlarged|Less Enlarged|More Increased|Less Increased|More Multiplied|Less Multiplied|More Amplified|Less Amplified|More Boosted|Less Boosted|More Raised|Less Raised|More Elevated|Less Elevated|More Lifted|Less Lifted|More Heightened|Less Heightened|More Intensified|Less Intensified|More Strengthened|Less Strengthened|More Powered|Less Powered|More Energized|Less Energized|More Activated|Less Activated|More Stimulated|Less Stimulated|More Motivated|Less Motivated|More Inspired|Less Inspired|More Encouraged|Less Encouraged|More Supported|Less Supported|More Backed|Less Backed|More Endorsed|Less Endorsed|More Approved|Less Approved|More Accepted|Less Accepted|More Welcomed|Less Welcomed|More Embraced|Less Embraced|More Adopted|Less Adopted|More Taken|Less Taken|More Chosen|Less Chosen|More Selected|Less Selected|More Picked|Less Picked|More Preferred|Less Preferred|More Favored|Less Favored|More Liked|Less Liked|More Loved|Less Loved|More Adored|Less Adored|More Cherished|Less Cherished|More Valued|Less Valued|More Appreciated|Less Appreciated|More Respected|Less Respected|More Admired|Less Admired|More Honored|Less Honored|More Revered|Less Revered|More Esteemed|Less Esteemed|More Regarded|Less Regarded|More Considered|Less Considered|More Thought|Less Thought|More Believed|Less Believed|More Trusted|Less Trusted|More Relied|Less Relied|More Depended|Less Depended|More Counted|Less Counted|More Expected|Less Expected|More Anticipated|Less Anticipated|More Predicted|Less Predicted|More Forecasted|Less Forecasted|More Projected|Less Projected|More Estimated|Less Estimated|More Calculated|Less Calculated|More Figured|Less Figured|More Determined|Less Determined|More Decided|Less Decided|More Resolved|Less Resolved|More Concluded|Less Concluded|More Settled|Less Settled|More Fixed|Less Fixed|More Established|Less Established|More Confirmed|Less Confirmed|More Verified|Less Verified|More Validated|Less Validated|More Certified|Less Certified|More Authenticated|Less Authenticated|More Authorized|Less Authorized|More Approved|Less Approved|More Permitted|Less Permitted|More Allowed|Less Allowed|More Granted|Less Granted|More Given|Less Given|More Provided|Less Provided|More Supplied|Less Supplied|More Furnished|Less Furnished|More Delivered|Less Delivered|More Offered|Less Offered|More Presented|Less Presented|More Shown|Less Shown|More Displayed|Less Displayed|More Exhibited|Less Exhibited|More Demonstrated|Less Demonstrated|More Revealed|Less Revealed|More Exposed|Less Exposed|More Uncovered|Less Uncovered|More Discovered|Less Discovered|More Found|Less Found|More Located|Less Located|More Identified|Less Identified|More Recognized|Less Recognized|More Detected|Less Detected|More Noticed|Less Noticed|More Observed|Less Observed|More Seen|Less Seen|More Viewed|Less Viewed|More Watched|Less Watched|More Looked|Less Looked|More Examined|Less Examined|More Inspected|Less Inspected|More Investigated|Less Investigated|More Explored|Less Explored|More Searched|Less Searched|More Studied|Less Studied|More Researched|Less Researched|More Analyzed|Less Analyzed|More Evaluated|Less Evaluated|More Assessed|Less Assessed|More Reviewed|Less Reviewed|More Checked|Less Checked|More Tested|Less Tested|More Tried|Less Tried|More Attempted|Less Attempted|More Undertaken|Less Undertaken|More Performed|Less Performed|More Executed|Less Executed|More Carried|Less Carried|More Conducted|Less Conducted|More Implemented|Less Implemented|More Applied|Less Applied|More Practiced|Less Practiced|More Exercised|Less Exercised|More Used|Less Used|More Utilized|Less Utilized|More Employed|Less Employed|More Operated|Less Operated|More Handled|Less Handled|More Managed|Less Managed|More Controlled|Less Controlled|More Directed|Less Directed|More Supervised|Less Supervised|More Overseen|Less Overseen|More Monitored|Less Monitored|More Tracked|Less Tracked|More Followed|Less Followed|More Pursued|Less Pursued|More Chased|Less Chased|More Hunted|Less Hunted|More Sought|Less Sought|More Looked|Less Looked|More Searched|Less Searched|More Found|Less Found|More Located|Less Located|More Discovered|Less Discovered|More Uncovered|Less Uncovered|More Revealed|Less Revealed|More Exposed|Less Exposed|More Shown|Less Shown|More Displayed|Less Displayed|More Presented|Less Presented|More Demonstrated|Less Demonstrated|More Illustrated|Less Illustrated|More Explained|Less Explained|More Described|Less Described|More Detailed|Less Detailed|More Specified|Less Specified|More Clarified|Less Clarified|More Defined|Less Defined|More Outlined|Less Outlined|More Summarized|Less Summarized|More Listed|Less Listed|More Enumerated|Less Enumerated|More Catalogued|Less Catalogued|More Indexed|Less Indexed|More Recorded|Less Recorded|More Documented|Less Documented|More Noted|Less Noted|More Written|Less Written|More Typed|Less Typed|More Printed|Less Printed|More Published|Less Published|More Released|Less Released|More Issued|Less Issued|More Distributed|Less Distributed|More Circulated|Less Circulated|More Spread|Less Spread|More Shared|Less Shared|More Communicated|Less Communicated|More Transmitted|Less Transmitted|More Sent|Less Sent|More Delivered|Less Delivered|More Forwarded|Less Forwarded|More Passed|Less Passed|More Handed|Less Handed|More Given|Less Given|More Provided|Less Provided|More Supplied|Less Supplied|More Offered|Less Offered|More Presented|Less Presented|More Granted|Less Granted|More Awarded|Less Awarded|More Assigned|Less Assigned|More Allocated|Less Allocated|More Allotted|Less Allotted|More Designated|Less Designated|More Appointed|Less Appointed|More Named|Less Named|More Chosen|Less Chosen|More Selected|Less Selected|More Picked|Less Picked|More Elected|Less Elected|More Voted|Less Voted|More Nominated|Less Nominated|More Recommended|Less Recommended|More Suggested|Less Suggested|More Proposed|Less Proposed|More Offered|Less Offered|More Requested|Less Requested|More Asked|Less Asked|More Demanded|Less Demanded|More Required|Less Required|More Needed|Less Needed|More Wanted|Less Wanted|More Desired|Less Desired|More Sought|Less Sought|More Wished|Less Wished|More Hoped|Less Hoped|More Expected|Less Expected|More Anticipated|Less Anticipated|More Awaited|Less Awaited|More Looked|Less Looked|More Waited|Less Waited)\b', re.IGNORECASE),
+            ],
+            'companies': [
+                re.compile(r'\b(?:Date|Time|Page|Total|Amount|Number|Code|ID|Reference|Address|Phone|Email|Website|Report|Document|File|Version|Copy|Draft|Final|January|February|March|April|May|June|July|August|September|October|November|December|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|Morning|Afternoon|Evening|Night|Today|Tomorrow|Yesterday|Week|Month|Year|Quarter|Annual|Daily|Weekly|Monthly|Quarterly|Hourly|Minutes|Seconds|Hours|Days|Weeks|Months|Years|AM|PM|UTC|GMT|EST|PST|CST|MST|PHT|JST|KST|SGT|MYT|THT|IDT|VNT|HKT|AUT|CAT|CHT|SET|NOT|DKT|PLT|CZT|HUT|ZAT|BRT|MXT|ART|CLT|COT|PET|UYT|BOT|PYT|INT|PKT|BDT|LKT|NPT|BTT|MVT|AFT|MMT|KHT|LAT|BNT)\b'),
+            ],
+            'locations': [
+                re.compile(r'\b(?:Date|Time|Page|Total|Amount|Number|Code|ID|Reference|Subject|Phone|Email|Website|Report|Document|File|Version|Copy|Draft|Final|Mr|Ms|Mrs|Dr|Prof|Sir|Madam|Miss|Atty|Engr|Archt)\b', re.IGNORECASE),
+            ]
+        }
+        
+        # Validation patterns for entities
+        self.validation_patterns = {
+            'people': [
+                re.compile(r'^[A-Z][a-z]+ [A-Z][a-z]+$'),  # Basic First Last format
+                re.compile(r'^[A-Z][a-z]+ [A-Z]\. [A-Z][a-z]+$'),  # First M. Last format
+                re.compile(r'^[A-Z][a-z]+ [A-Z][a-z]+ [A-Z][a-z]+$'),  # First Middle Last
+            ],
+            'companies': [
+                re.compile(r'[A-Za-z]'),  # Must contain at least one letter
+            ],
+            'locations': [
+                re.compile(r'[A-Za-z]'),  # Must contain at least one letter
+            ]
+        }
+    
     def _initialize_models(self):
-        """Initialize models with comprehensive error handling and fallback options"""
+        """Initialize models once for reuse"""
         try:
-            logger.info("Loading Enhanced OCR processor...")
             with self._model_lock:
                 if self._ocr_processor is None:
                     self._ocr_processor = OCRProcessor(
                         languages=['en'],
                         gpu=not os.environ.get('FORCE_CPU_ONLY', False),
-                        verbose=False,
-                        auto_fallback_cpu=True
+                        verbose=False
                     )
-            logger.info("Enhanced OCR processor loaded successfully")
-            
-            logger.info("Loading Enhanced Qwen extractor...")
-            with self._model_lock:
+                
                 if self._data_extractor is None:
-                    try:
-                        device = "cuda" if torch.cuda.is_available() and not os.environ.get('FORCE_CPU_ONLY') else "cpu"
-                        self._data_extractor = QwenExtractor(device=device)
-                        
-                        # Test the extractor
-                        test_result = self._data_extractor._test_model_functionality()
-                        if not test_result:
-                            logger.warning("Qwen model test failed, but continuing with fallback mode")
-                        else:
-                            logger.info("Qwen model test passed - ready for extraction")
-                            
-                    except Exception as e:
-                        logger.error(f"Qwen initialization failed: {e}")
-                        logger.info("Creating fallback-only extractor")
-                        self._data_extractor = QwenExtractor(force_cpu=True)
-                        
-            logger.info("All enhanced models loaded successfully")
+                    device = "cuda" if torch.cuda.is_available() and not os.environ.get('FORCE_CPU_ONLY') else "cpu"
+                    self._data_extractor = QwenExtractor(device=device)
             
+            logger.info("Models initialized successfully")
         except Exception as e:
-            logger.error(f"Critical failure in model initialization: {e}")
+            logger.error(f"Model initialization failed: {e}")
             raise
     
-    def _get_ocr_processor(self):
-        """Get shared OCR processor instance"""
-        if self._ocr_processor is None:
-            with self._model_lock:
-                if self._ocr_processor is None:
-                    self._ocr_processor = OCRProcessor(
-                        languages=['en'],
-                        gpu=not os.environ.get('FORCE_CPU_ONLY', False),
-                        verbose=False,
-                        auto_fallback_cpu=True
-                    )
-        return self._ocr_processor
+    def _is_false_positive(self, entity, entity_type):
+        """Check if entity is a false positive"""
+        if entity_type in self.false_positive_patterns:
+            for pattern in self.false_positive_patterns[entity_type]:
+                if pattern.search(entity):
+                    return True
+        return False
     
-    def _get_data_extractor(self):
-        """Get shared data extractor instance"""
-        if self._data_extractor is None:
-            with self._model_lock:
-                if self._data_extractor is None:
-                    self._data_extractor = self._create_qwen_extractor()
-        return self._data_extractor
-
-    def _create_qwen_extractor(self):
-        """Create Qwen extractor with proper device handling"""
-        try:
-            device = "cuda" if torch.cuda.is_available() and not os.environ.get('FORCE_CPU_ONLY') else "cpu"
-            logger.info(f"Initializing Qwen on device: {device}")
-            extractor = QwenExtractor(device=device)
-            return extractor
-        except Exception as e:
-            logger.error(f"Failed to create Qwen extractor: {e}")
-            try:
-                logger.info("Falling back to CPU-only mode for Qwen")
-                extractor = QwenExtractor(device="cpu", force_cpu=True)
-                return extractor
-            except Exception as e2:
-                logger.error(f"CPU fallback also failed: {e2}")
-                raise e2
-    
-    def _update_progress(self, completed, total, filename, status):
-        """Thread-safe progress updates with enhanced information"""
-        with self.progress_lock:
-            progress_pct = (completed / total) * 100
-            logger.info(f"Progress: {completed}/{total} ({progress_pct:.1f}%) - {status}: {filename}")
-    
-    def _cleanup_memory(self):
-        """Enhanced memory cleanup"""
-        try:
-            # Force garbage collection
-            gc.collect()
+    def _is_valid_entity(self, entity, entity_type):
+        """Validate entity based on type-specific rules"""
+        if entity_type == 'people':
+            # Check length (names shouldn't be too long or too short)
+            if len(entity) < 4 or len(entity) > 50:
+                return False
             
-            # Clear CUDA cache if using GPU
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
-                logger.debug("CUDA cache cleared")
+            # Must have at least 2 words
+            words = entity.split()
+            if len(words) < 2:
+                return False
+            
+            # Check for common business terms that might be misclassified
+            business_terms = ['Inc', 'Corp', 'LLC', 'Ltd', 'Co', 'Company', 'Corporation', 'Technologies', 'Solutions', 'Systems', 'Services']
+            if any(term in entity for term in business_terms):
+                return False
+            
+            # Check if it looks like a person name using validation patterns
+            for pattern in self.validation_patterns['people']:
+                if pattern.match(entity):
+                    return True
+            
+            # Additional validation for Filipino names
+            if any(word in entity.lower() for word in ['de', 'del', 'delos', 'dela', 'de la']):
+                return True
+            
+            return False
+            
+        elif entity_type == 'companies':
+            # Check length
+            if len(entity) < 2 or len(entity) > 100:
+                return False
+            
+            # Must contain at least one letter
+            if not any(c.isalpha() for c in entity):
+                return False
+            
+            # Check if it's just numbers or very short acronym without context
+            if len(entity) <= 2 and entity.isupper():
+                return False
+            
+            return True
+            
+        elif entity_type == 'locations':
+            # Check length
+            if len(entity) < 2 or len(entity) > 80:
+                return False
+            
+            # Must contain at least one letter
+            if not any(c.isalpha() for c in entity):
+                return False
+            
+            return True
+            
+        return True
+    
+    def _extract_entities(self, text):
+        """Extract people, companies, and locations from text with improved accuracy"""
+        entities = {
+            "people": [],
+            "companies": [],
+            "locations": []
+        }
+        
+        # Extract people
+        for pattern in self.person_patterns:
+            matches = pattern.findall(text)
+            for match in matches:
+                if isinstance(match, tuple):
+                    match = match[0] if match[0] else match[1] if len(match) > 1 else ""
                 
-            logger.debug("Memory cleanup completed")
-        except Exception as e:
-            logger.warning(f"Memory cleanup failed: {e}")
+                if match and not self._is_false_positive(match, 'people') and self._is_valid_entity(match, 'people'):
+                    entities["people"].append(match.strip())
+        
+        # Extract companies
+        for pattern in self.company_patterns:
+            matches = pattern.findall(text)
+            for match in matches:
+                if isinstance(match, tuple):
+                    match = match[0] if match[0] else match[1] if len(match) > 1 else ""
+                
+                if match and not self._is_false_positive(match, 'companies') and self._is_valid_entity(match, 'companies'):
+                    entities["companies"].append(match.strip())
+        
+        # Extract locations
+        for pattern in self.location_patterns:
+            matches = pattern.findall(text)
+            for match in matches:
+                if isinstance(match, tuple):
+                    match = match[0] if match[0] else match[1] if len(match) > 1 else ""
+                
+                if match and not self._is_false_positive(match, 'locations') and self._is_valid_entity(match, 'locations'):
+                    entities["locations"].append(match.strip())
+        
+        # Remove duplicates while preserving order and clean up
+        for key in entities:
+            # Remove duplicates
+            seen = set()
+            unique_entities = []
+            for item in entities[key]:
+                item_lower = item.lower()
+                if item_lower not in seen:
+                    seen.add(item_lower)
+                    unique_entities.append(item)
+            
+            # Final filtering
+            entities[key] = [item for item in unique_entities if item and len(item.strip()) > 1]
+        
+        return entities
+    
+    def _extract_dates_and_amounts(self, text):
+        """Extract dates and amounts from text with improved patterns"""
+        dates = set()
+        amounts = set()
+        
+        # Extract dates
+        for pattern in self.date_patterns:
+            matches = pattern.findall(text)
+            for match in matches:
+                if isinstance(match, tuple):
+                    match = match[0] if match[0] else match[1] if len(match) > 1 else ""
+                
+                if match and len(match.strip()) > 3:
+                    # Clean up the date
+                    cleaned_date = re.sub(r'\s+', ' ', match.strip())
+                    dates.add(cleaned_date)
+        
+        # Extract amounts
+        for pattern in self.amount_patterns:
+            matches = pattern.findall(text)
+            for match in matches:
+                if isinstance(match, tuple):
+                    match = match[0] if match[0] else match[1] if len(match) > 1 else ""
+                
+                if match and len(match.strip()) > 0:
+                    # Clean up the amount
+                    cleaned_amount = re.sub(r'\s+', ' ', match.strip())
+                    amounts.add(cleaned_amount)
+        
+        return list(dates), list(amounts)
+    
+    def _determine_document_type(self, text, filename):
+        """Dynamically determine document type from content and filename"""
+        text_lower = text.lower()
+        filename_lower = filename.lower()
+        
+        type_indicators = {
+            'invoice': ['invoice', 'bill', 'billing', 'amount due', 'payment due', 'invoice no', 'bill no'],
+            'receipt': ['receipt', 'or number', 'official receipt', 'acknowledgment receipt', 'cash receipt'],
+            'contract': ['agreement', 'contract', 'terms and conditions', 'whereas', 'party of the first part', 'party of the second part'],
+            'letter': ['dear', 'sincerely', 'regards', 'yours truly', 'yours faithfully', 'best regards'],
+            'email': ['from:', 'to:', 'subject:', 'sent:', '@', 'cc:', 'bcc:', 're:'],
+            'financial_statement': ['balance sheet', 'income statement', 'profit and loss', 'cash flow statement', 'statement of financial position'],
+            'purchase_order': ['purchase order', 'po number', 'purchase requisition', 'pr number'],
+            'voucher': ['voucher', 'check number', 'cheque number', 'disbursement voucher', 'payment voucher'],
+            'report': ['report', 'analysis', 'summary', 'findings', 'conclusion', 'executive summary'],
+            'memo': ['memorandum', 'memo', 'circular', 'office memorandum', 'internal memo'],
+            'certificate': ['certificate', 'certification', 'certified', 'certificate of', 'this is to certify'],
+            'delivery_receipt': ['delivery receipt', 'dr number', 'delivered to', 'received by'],
+            'quotation': ['quotation', 'quote', 'price quote', 'quotation no', 'rfq'],
+            'payroll': ['payroll', 'salary', 'wages', 'payslip', 'pay stub', 'compensation'],
+            'tax_document': ['tax', 'bir', 'form 2307', 'withholding', 'vat', 'ewt'],
+            'bank_statement': ['bank statement', 'account statement', 'balance inquiry', 'transaction history'],
+            'insurance': ['insurance', 'policy', 'premium', 'coverage', 'claim', 'insured'],
+            'lease_agreement': ['lease', 'rent', 'tenant', 'landlord', 'monthly rental'],
+            'employment': ['employment', 'job', 'position', 'employee', 'employer', 'salary agreement'],
+        }
+        
+        # Check filename first (higher weight)
+        filename_scores = {}
+        for doc_type, keywords in type_indicators.items():
+            score = sum(2 for keyword in keywords if keyword in filename_lower)
+            if score > 0:
+                filename_scores[doc_type] = score
+        
+        # Check content
+        content_scores = {}
+        for doc_type, keywords in type_indicators.items():
+            score = sum(1 for keyword in keywords if keyword in text_lower)
+            if score > 0:
+                content_scores[doc_type] = score
+        
+        # Combine scores (filename gets double weight)
+        all_scores = {}
+        for doc_type in set(list(filename_scores.keys()) + list(content_scores.keys())):
+            all_scores[doc_type] = filename_scores.get(doc_type, 0) + content_scores.get(doc_type, 0)
+        
+        if all_scores:
+            best_type = max(all_scores, key=all_scores.get)
+            # Only return if score is reasonable
+            if all_scores[best_type] >= 1:
+                return best_type
+        
+        return 'other'
+    
+    def _extract_key_information(self, text, document_type, entities):
+        """Extract key information based on document type"""
+        key_info = {}
+        
+        if document_type == 'invoice':
+            key_info.update(self._extract_invoice_info(text))
+        elif document_type == 'contract':
+            key_info.update(self._extract_contract_info(text))
+        elif document_type == 'email':
+            key_info.update(self._extract_email_info(text))
+        elif document_type == 'financial_statement':
+            key_info.update(self._extract_financial_info(text))
+        elif document_type == 'report':
+            key_info.update(self._extract_report_info(text))
+        elif document_type == 'receipt':
+            key_info.update(self._extract_receipt_info(text))
+        elif document_type == 'purchase_order':
+            key_info.update(self._extract_purchase_order_info(text))
+        elif document_type == 'delivery_receipt':
+            key_info.update(self._extract_delivery_receipt_info(text))
+        elif document_type == 'payroll':
+            key_info.update(self._extract_payroll_info(text))
+        else:
+            # Generic extraction for unknown types
+            key_info.update(self._extract_generic_info(text, entities))
+        
+        return key_info
+    
+    def _extract_invoice_info(self, text):
+        """Extract invoice-specific information"""
+        info = {}
+        
+        # Invoice number patterns
+        invoice_patterns = [
+            re.compile(r'(?:invoice|bill)\s*#?\s*:?\s*([A-Z0-9\-]+)', re.IGNORECASE),
+            re.compile(r'invoice\s+(?:no|number)\s*:?\s*([A-Z0-9\-]+)', re.IGNORECASE),
+            re.compile(r'inv\s*#?\s*:?\s*([A-Z0-9\-]+)', re.IGNORECASE),
+        ]
+        
+        for pattern in invoice_patterns:
+            match = pattern.search(text)
+            if match:
+                info['invoice_number'] = match.group(1).strip()
+                break
+        
+        # Due date patterns
+        due_patterns = [
+            re.compile(r'due\s+date\s*:?\s*(\d{1,2}[/-]\d{1,2}[/-]\d{4})', re.IGNORECASE),
+            re.compile(r'payment\s+due\s*:?\s*(\d{1,2}[/-]\d{1,2}[/-]\d{4})', re.IGNORECASE),
+            re.compile(r'due\s*:?\s*(\d{1,2}[/-]\d{1,2}[/-]\d{4})', re.IGNORECASE),
+        ]
+        
+        for pattern in due_patterns:
+            match = pattern.search(text)
+            if match:
+                info['due_date'] = match.group(1).strip()
+                break
+        
+        # Total amount
+        total_patterns = [
+            re.compile(r'total\s+amount\s*:?\s*([0-9,]+\.?\d*)', re.IGNORECASE),
+            re.compile(r'amount\s+due\s*:?\s*([0-9,]+\.?\d*)', re.IGNORECASE),
+            re.compile(r'total\s*:?\s*([0-9,]+\.?\d*)', re.IGNORECASE),
+        ]
+        
+        for pattern in total_patterns:
+            match = pattern.search(text)
+            if match:
+                info['total_amount'] = match.group(1).strip()
+                break
+        
+        return info
+    
+    def _extract_contract_info(self, text):
+        """Extract contract-specific information"""
+        info = {}
+        
+        # Contract parties
+        party_patterns = [
+            re.compile(r'between\s+([^,\n]+)\s+and\s+([^,\n]+)', re.IGNORECASE),
+            re.compile(r'party\s+(?:of\s+the\s+)?(?:first\s+part|a)\s*:?\s*([^\n]+)', re.IGNORECASE),
+            re.compile(r'party\s+(?:of\s+the\s+)?(?:second\s+part|b)\s*:?\s*([^\n]+)', re.IGNORECASE),
+        ]
+        
+        for pattern in party_patterns:
+            match = pattern.search(text)
+            if match:
+                if 'between' in pattern.pattern.lower():
+                    info['party_a'] = match.group(1).strip()
+                    info['party_b'] = match.group(2).strip()
+                else:
+                    key = 'party_a' if 'first' in pattern.pattern or 'party a' in pattern.pattern.lower() else 'party_b'
+                    info[key] = match.group(1).strip()
+        
+        # Contract term/duration
+        term_patterns = [
+            re.compile(r'term\s+of\s+([^.\n]+)', re.IGNORECASE),
+            re.compile(r'duration\s+of\s+([^.\n]+)', re.IGNORECASE),
+            re.compile(r'period\s+of\s+([^.\n]+)', re.IGNORECASE),
+        ]
+        
+        for pattern in term_patterns:
+            match = pattern.search(text)
+            if match:
+                info['contract_term'] = match.group(1).strip()
+                break
+        
+        return info
+    
+    def _extract_email_info(self, text):
+        """Extract email-specific information"""
+        info = {}
+        
+        # Email patterns
+        patterns = {
+            'sender': re.compile(r'from\s*:?\s*([^\n]+)', re.IGNORECASE),
+            'recipient': re.compile(r'to\s*:?\s*([^\n]+)', re.IGNORECASE),
+            'subject': re.compile(r'subject\s*:?\s*([^\n]+)', re.IGNORECASE),
+            'date_sent': re.compile(r'(?:date|sent)\s*:?\s*([^\n]+)', re.IGNORECASE),
+            'cc': re.compile(r'cc\s*:?\s*([^\n]+)', re.IGNORECASE),
+        }
+        
+        for key, pattern in patterns.items():
+            match = pattern.search(text)
+            if match:
+                info[key] = match.group(1).strip()
+        
+        return info
+    
+    def _extract_financial_info(self, text):
+        """Extract financial statement information"""
+        info = {}
+        
+        # Financial terms
+        financial_patterns = {
+            'net_income': re.compile(r'net\s+income\s*:?\s*([0-9,\.]+)', re.IGNORECASE),
+            'total_revenue': re.compile(r'(?:total\s+)?revenue\s*:?\s*([0-9,\.]+)', re.IGNORECASE),
+            'total_assets': re.compile(r'total\s+assets\s*:?\s*([0-9,\.]+)', re.IGNORECASE),
+            'gross_profit': re.compile(r'gross\s+profit\s*:?\s*([0-9,\.]+)', re.IGNORECASE),
+            'operating_income': re.compile(r'operating\s+income\s*:?\s*([0-9,\.]+)', re.IGNORECASE),
+        }
+        
+        for key, pattern in financial_patterns.items():
+            match = pattern.search(text)
+            if match:
+                info[key] = match.group(1).strip()
+        
+        return info
+    
+    def _extract_report_info(self, text):
+        """Extract report-specific information"""
+        info = {}
+        
+        # Report sections
+        if 'executive summary' in text.lower():
+            info['has_executive_summary'] = True
+        
+        if 'recommendations' in text.lower():
+            info['has_recommendations'] = True
+        
+        if 'conclusion' in text.lower():
+            info['has_conclusion'] = True
+        
+        # Extract key metrics mentioned
+        metrics = re.findall(r'(\d+(?:\.\d+)?%)', text)
+        if metrics:
+            info['percentages_mentioned'] = metrics[:5]  # Limit to 5
+        
+        # Report period
+        period_patterns = [
+            re.compile(r'(?:for\s+the\s+)?(?:period|quarter|year)\s+(?:ended|ending)\s+([^\n,]+)', re.IGNORECASE),
+            re.compile(r'(?:monthly|quarterly|annual)\s+report\s+(?:for\s+)?([^\n,]+)', re.IGNORECASE),
+        ]
+        
+        for pattern in period_patterns:
+            match = pattern.search(text)
+            if match:
+                info['report_period'] = match.group(1).strip()
+                break
+        
+        return info
+    
+    def _extract_receipt_info(self, text):
+        """Extract receipt-specific information"""
+        info = {}
+        
+        # OR number
+        or_patterns = [
+            re.compile(r'(?:or|official\s+receipt)\s+(?:no|number)\s*:?\s*([A-Z0-9\-]+)', re.IGNORECASE),
+            re.compile(r'receipt\s+#?\s*:?\s*([A-Z0-9\-]+)', re.IGNORECASE),
+        ]
+        
+        for pattern in or_patterns:
+            match = pattern.search(text)
+            if match:
+                info['receipt_number'] = match.group(1).strip()
+                break
+        
+        return info
+    
+    def _extract_purchase_order_info(self, text):
+        """Extract purchase order information"""
+        info = {}
+        
+        # PO number
+        po_patterns = [
+            re.compile(r'(?:po|purchase\s+order)\s+(?:no|number)\s*:?\s*([A-Z0-9\-]+)', re.IGNORECASE),
+            re.compile(r'p\.?o\.?\s*#?\s*:?\s*([A-Z0-9\-]+)', re.IGNORECASE),
+        ]
+        
+        for pattern in po_patterns:
+            match = pattern.search(text)
+            if match:
+                info['po_number'] = match.group(1).strip()
+                break
+        
+        return info
+    
+    def _extract_delivery_receipt_info(self, text):
+        """Extract delivery receipt information"""
+        info = {}
+        
+        # DR number
+        dr_patterns = [
+            re.compile(r'(?:dr|delivery\s+receipt)\s+(?:no|number)\s*:?\s*([A-Z0-9\-]+)', re.IGNORECASE),
+            re.compile(r'd\.?r\.?\s*#?\s*:?\s*([A-Z0-9\-]+)', re.IGNORECASE),
+        ]
+        
+        for pattern in dr_patterns:
+            match = pattern.search(text)
+            if match:
+                info['dr_number'] = match.group(1).strip()
+                break
+        
+        # Delivered to
+        delivered_to_pattern = re.compile(r'delivered\s+to\s*:?\s*([^\n]+)', re.IGNORECASE)
+        match = delivered_to_pattern.search(text)
+        if match:
+            info['delivered_to'] = match.group(1).strip()
+        
+        return info
+    
+    def _extract_payroll_info(self, text):
+        """Extract payroll information"""
+        info = {}
+        
+        # Employee ID
+        emp_id_patterns = [
+            re.compile(r'(?:employee|emp)\s+(?:id|number)\s*:?\s*([A-Z0-9\-]+)', re.IGNORECASE),
+            re.compile(r'id\s+(?:no|number)\s*:?\s*([A-Z0-9\-]+)', re.IGNORECASE),
+        ]
+        
+        for pattern in emp_id_patterns:
+            match = pattern.search(text)
+            if match:
+                info['employee_id'] = match.group(1).strip()
+                break
+        
+        # Pay period
+        period_patterns = [
+            re.compile(r'pay\s+period\s*:?\s*([^\n]+)', re.IGNORECASE),
+            re.compile(r'period\s+covered\s*:?\s*([^\n]+)', re.IGNORECASE),
+        ]
+        
+        for pattern in period_patterns:
+            match = pattern.search(text)
+            if match:
+                info['pay_period'] = match.group(1).strip()
+                break
+        
+        return info
+    
+    def _extract_generic_info(self, text, entities):
+        """Extract generic key information for unknown document types"""
+        info = {}
+        
+        # Reference numbers - more comprehensive
+        ref_patterns = [
+            re.compile(r'(?:ref|reference)\s*#?\s*:?\s*([A-Z0-9\-]+)', re.IGNORECASE),
+            re.compile(r'(?:no|number)\s*\.?\s*:?\s*([A-Z0-9\-]+)', re.IGNORECASE),
+            re.compile(r'document\s+(?:no|number)\s*:?\s*([A-Z0-9\-]+)', re.IGNORECASE),
+            re.compile(r'control\s+(?:no|number)\s*:?\s*([A-Z0-9\-]+)', re.IGNORECASE),
+        ]
+        
+        for pattern in ref_patterns:
+            matches = pattern.findall(text)
+            if matches:
+                info['reference_numbers'] = list(set(matches))[:5]  # Remove duplicates, limit to 5
+                break
+        
+        # Important numbers that might be IDs, amounts, etc.
+        important_numbers = []
+        number_patterns = [
+            re.compile(r'\b(\d{4,})\b'),  # Numbers with 4+ digits
+            re.compile(r'\b(\d{1,3}(?:,\d{3})+)\b'),  # Comma-separated numbers
+        ]
+        
+        for pattern in number_patterns:
+            matches = pattern.findall(text)
+            important_numbers.extend(matches)
+        
+        if important_numbers:
+            info['important_numbers'] = list(set(important_numbers))[:10]  # Remove duplicates, limit to 10
+        
+        # Phone numbers
+        phone_patterns = [
+            re.compile(r'\b(\+?63\s?9\d{2}\s?\d{3}\s?\d{4})\b'),  # Philippine mobile
+            re.compile(r'\b(\(\d{3}\)\s?\d{3}-\d{4})\b'),  # US format
+            re.compile(r'\b(\d{3}-\d{3}-\d{4})\b'),  # US format 2
+            re.compile(r'\b(\+\d{1,3}\s?\d{3,4}\s?\d{3,4}\s?\d{3,4})\b'),  # International
+        ]
+        
+        phones = []
+        for pattern in phone_patterns:
+            phones.extend(pattern.findall(text))
+        
+        if phones:
+            info['phone_numbers'] = list(set(phones))[:5]
+        
+        # Email addresses
+        email_pattern = re.compile(r'\b([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,})\b')
+        emails = email_pattern.findall(text)
+        if emails:
+            info['email_addresses'] = list(set(emails))[:5]
+        
+        # Addresses - basic extraction
+        address_patterns = [
+            re.compile(r'\b(\d+\s+[A-Za-z\s,]+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Court|Ct|Circle|Cir|Plaza|Plz)(?:\s*,\s*[A-Za-z\s]+)*)\b', re.IGNORECASE),
+        ]
+        
+        addresses = []
+        for pattern in address_patterns:
+            addresses.extend(pattern.findall(text))
+        
+        if addresses:
+            info['addresses'] = list(set(addresses))[:3]
+        
+        # Extract potential plate numbers if vehicle-related
+        if any(word in text.lower() for word in ['vehicle', 'car', 'truck', 'motorcycle', 'plate', 'registration']):
+            plate_pattern = re.compile(r'\b([A-Z]{2,3}\s*\d{3,4}|[A-Z]{3}\s*\d{3}|[A-Z0-9]{6,8})\b')
+            plates = plate_pattern.findall(text)
+            if plates:
+                info['plate_numbers'] = list(set(plates))[:5]
+        
+        return info
+    
+    def _calculate_confidence(self, ocr_confidence, extraction_success, entities, key_info):
+        """Calculate processing confidence based on multiple factors"""
+        base_confidence = ocr_confidence
+        
+        # Boost for successful entity extraction
+        entity_count = sum(len(entities[key]) for key in entities)
+        entity_bonus = min(entity_count * 3, 20)  # Max 20 points
+        
+        # Boost for key information extracted
+        key_info_bonus = min(len(key_info) * 2, 15)  # Max 15 points
+        
+        # Extraction success bonus
+        extraction_bonus = 10 if extraction_success else 0
+        
+        # Quality bonus based on entity diversity
+        diversity_bonus = 0
+        if entities['people'] and entities['companies']:
+            diversity_bonus += 5
+        if entities['locations']:
+            diversity_bonus += 3
+        
+        total_confidence = base_confidence + entity_bonus + key_info_bonus + extraction_bonus + diversity_bonus
+        return min(total_confidence, 100.0)
     
     def process_single_file(self, file_path, category_name, filename):
-        """Enhanced single file processing with maximum accuracy"""
-        overall_start = time.time()
+        """Process a single file with dynamic extraction"""
+        start_time = time.time()
         
         try:
-            document_name = self.archive_manager.generate_document_name(filename, category_name)
+            # Step 1: OCR extraction
+            ocr_result = self._ocr_processor.extract_text_from_pdf(file_path)
+            ocr_text = ocr_result.get("text_only", "")
+            ocr_confidence = ocr_result.get("avg_confidence", 0.0)
             
-            # Step 1: Enhanced OCR extraction with post-processing
-            ocr_start = time.time()
-            try:
-                ocr_processor = self._get_ocr_processor()
-                ocr_result = ocr_processor.extract_text_from_pdf(
-                    file_path,
-                    enhance=self.processing_config['ocr']['enhance_images'],
-                    min_confidence=self.processing_config['ocr']['min_confidence'],
-                    dpi=self.processing_config['ocr']['dpi']
-                )
-                
-                # Get both raw and processed text
-                raw_ocr_text = ocr_result.get("raw_text", "")
-                processed_ocr_text = ocr_result.get("text_only", "")
-                ocr_confidence = ocr_result.get("avg_confidence", 0.0)
-                
-                # Use processed text for extraction
-                ocr_text = processed_ocr_text if processed_ocr_text else raw_ocr_text
-                ocr_time = time.time() - ocr_start
-                
-                # Enhanced OCR validation
-                if not ocr_text or len(ocr_text.strip()) < 20:
-                    raise Exception(f"OCR produced insufficient text: {len(ocr_text)} characters")
-                
-                logger.debug(f"OCR completed for {filename}: {len(ocr_text)} chars, {ocr_confidence:.1f}% confidence")
-                
-            except Exception as e:
-                ocr_time = time.time() - ocr_start
-                error_message = f"OCR failed: {str(e)}"
-                logger.error(f"OCR ERROR {filename}: {error_message}")
-                
-                return {
-                    'status': 'skipped',
-                    'classification': 'failed',
-                    'ocr_confidence': 0,
-                    'ml_confidence': 0,
-                    'processing_time': time.time() - overall_start,
-                    'ocr_time': ocr_time,
-                    'error': error_message,
-                    'failure_stage': 'ocr'
-                }
+            if not ocr_text or len(ocr_text.strip()) < 20:
+                raise Exception("Insufficient OCR text extracted")
             
-            # Step 2: Enhanced data extraction with multiple strategies
-            extraction_start = time.time()
-            extracted_data = {}
-            ml_confidence = 0
-            extraction_error = None
-            extraction_method = "none"
+            # Step 2: Determine document type
+            document_type = self._determine_document_type(ocr_text, filename)
+            
+            # Step 3: Extract entities
+            entities = self._extract_entities(ocr_text)
+            
+            # Step 4: Extract dates and amounts
+            dates, amounts = self._extract_dates_and_amounts(ocr_text)
+            
+            # Step 5: Extract key information based on document type
+            key_information = self._extract_key_information(ocr_text, document_type, entities)
+            
+            # Step 6: Try AI-powered extraction for additional insights
+            extraction_success = False
+            ai_confidence = 0.0
+            extraction_method = "rule_based"
             
             try:
-                data_extractor = self._get_data_extractor()
-                
-                # Strategy 1: Standard extraction
-                extraction_result = data_extractor.extract_structured_data(ocr_text, category_name.lower())
-                extracted_data = extraction_result.get('data', {})
-                ml_confidence = extraction_result.get('confidence', 0.0) * 100
-                extraction_method = extraction_result.get('method', 'ai_extraction')
-                
-                # Strategy 2: Check if extraction was successful, if not try context-aware extraction
-                meaningful_fields = self._count_meaningful_fields(extracted_data, ocr_text)
-                if meaningful_fields == 0 and not data_extractor.fallback_mode:
-                    logger.info(f"Retrying extraction for {filename} with enhanced context")
-                    enhanced_result = self._retry_extraction_with_context(data_extractor, ocr_text, filename, category_name)
-                    if enhanced_result and enhanced_result.get('data'):
-                        extracted_data = enhanced_result.get('data', {})
-                        ml_confidence = enhanced_result.get('confidence', 0.0) * 100
-                        extraction_method = enhanced_result.get('method', 'context_retry')
-                
-                # Strategy 3: If still no meaningful data, try document-specific patterns
-                if meaningful_fields == 0:
-                    logger.info(f"Applying pattern-based extraction for {filename}")
-                    pattern_result = self._apply_pattern_extraction(ocr_text, filename, category_name)
-                    if pattern_result:
-                        extracted_data.update(pattern_result)
-                        ml_confidence = max(ml_confidence, 30)  # Give some confidence for pattern matching
-                        extraction_method = "pattern_enhanced"
-                
+                ai_result = self._data_extractor.extract_structured_data(ocr_text, document_type)
+                if ai_result and ai_result.get('data'):
+                    # Merge AI results with rule-based extraction
+                    ai_data = ai_result.get('data', {})
+                    key_information.update(ai_data)
+                    ai_confidence = ai_result.get('confidence', 0.0) * 100
+                    extraction_success = True
+                    extraction_method = "ai_enhanced"
             except Exception as e:
-                extraction_error = str(e)
-                logger.error(f"EXTRACTION ERROR {filename}: {extraction_error}")
-                # Continue with OCR-only processing
-                
-            extraction_time = time.time() - extraction_start
+                logger.warning(f"AI extraction failed for {filename}: {e}")
             
-            # Step 3: Enhanced classification with comprehensive criteria
-            classification = self._classify_result_enhanced(
-                ocr_confidence, ml_confidence, len(ocr_text), 
-                extracted_data, filename, extraction_error, category_name
+            # Step 7: Calculate overall confidence
+            processing_confidence = self._calculate_confidence(
+                ocr_confidence, extraction_success, entities, key_information
             )
             
-            # Update document type statistics
-            doc_type = self._determine_document_type_from_content(ocr_text, filename)
-            self._update_document_type_stats(doc_type, classification)
-            
-            # Step 4: Intelligent retry logic
-            file_key = str(file_path)
-            current_retries = self.retry_counts.get(file_key, 0)
-            
-            if classification == 'failed' and self._should_retry(ocr_confidence, ml_confidence, current_retries, filename, doc_type):
-                self.retry_counts[file_key] = current_retries + 1
-                processing_time = time.time() - overall_start
-                error_message = f"Retry {current_retries + 1}/3 - OCR: {ocr_confidence:.1f}%, ML: {ml_confidence:.1f}%"
-                logger.info(f"RETRY {filename}: {error_message}")
-                
-                return {
-                    'status': 'retry',
-                    'classification': 'retry',
-                    'ocr_confidence': ocr_confidence,
-                    'ml_confidence': ml_confidence,
-                    'processing_time': processing_time,
-                    'error': error_message,
-                    'retry_count': current_retries + 1
+            # Step 8: Create dynamic metadata
+            metadata = {
+                "document_type": document_type,
+                "confidence": round(ai_confidence / 100, 2) if ai_confidence else 0.75,
+                "entities": entities,
+                "key_information": key_information,
+                "dates_found": dates,
+                "amounts_found": amounts,
+                "processing_confidence": round(processing_confidence, 1),
+                "extraction_method": extraction_method,
+                "processing_info": {
+                    "category": category_name,
+                    "classification": "successful" if processing_confidence >= 70 else "partial" if processing_confidence >= 40 else "failed",
+                    "document_name": self.archive_manager.generate_document_name(filename, category_name),
+                    "original_filename": filename,
+                    "processed_at": timezone.now().astimezone(pytz.timezone('Asia/Manila')).isoformat(),
+                    "ocr_confidence": round(ocr_confidence, 1),
+                    "text_length": len(ocr_text),
+                    "entity_count": sum(len(entities[key]) for key in entities),
+                    "key_info_fields": len(key_information)
                 }
+            }
             
-            # Step 5: Archive with comprehensive metadata
+            # Step 9: Archive if successful
+            classification = metadata["processing_info"]["classification"]
             if classification in ['successful', 'partial']:
-                archive_start = time.time()
+                archive_paths = self.archive_manager.create_archive_structure(
+                    category_name=category_name,
+                    document_name=metadata["processing_info"]["document_name"],
+                    pdf_path=file_path,
+                    ocr_text=ocr_text,
+                    metadata=metadata,
+                    classification=classification
+                )
                 
-                # Comprehensive metadata
-                metadata = {
-                    'file_info': {
-                        'original_filename': filename,
-                        'file_size': os.path.getsize(file_path),
-                        'category': category_name,
-                        'document_name': document_name,
-                        'detected_document_type': doc_type
-                    },
-                    'processing_results': {
-                        'ocr_confidence': ocr_confidence,
-                        'ml_confidence': ml_confidence,
-                        'overall_confidence': self._calculate_overall_confidence(ocr_confidence, ml_confidence, extracted_data),
-                        'processing_time_seconds': time.time() - overall_start,
-                        'ocr_time_seconds': ocr_time,
-                        'extraction_time_seconds': extraction_time,
-                        'classification': classification,
-                        'text_length': len(ocr_text),
-                        'retry_count': current_retries,
-                        'meaningful_fields_extracted': self._count_meaningful_fields(extracted_data, ocr_text),
-                        'extraction_error': extraction_error,
-                        'extraction_method': extraction_method,
-                        'document_type_detected': doc_type
-                    },
-                    'quality_metrics': {
-                        'text_density': len(ocr_text.split()) / max(len(ocr_text), 1),
-                        'field_completeness': self._calculate_field_completeness(extracted_data, doc_type),
-                        'confidence_score': self._calculate_confidence_score(ocr_confidence, ml_confidence, extracted_data)
-                    },
-                    'extracted_data': extracted_data,
-                    'processing_info': {
-                        'category': category_name,
-                        'classification': classification,
-                        'document_name': document_name,
-                        'original_filename': filename,
-                        'processed_at': timezone.now().astimezone(pytz.timezone('Asia/Manila')).isoformat(),
-                        'worker_count': self.max_workers,
-                        'processing_version': '3.0_enhanced_accuracy',
-                        'config_used': self.processing_config
-                    }
-                }
+                self.archive_manager.cleanup_upload_file(file_path)
+                processing_time = time.time() - start_time
                 
-                try:
-                    archive_paths = self.archive_manager.create_archive_structure(
-                        category_name=category_name,
-                        document_name=document_name,
-                        pdf_path=file_path,
-                        ocr_text=ocr_text,
-                        metadata=metadata,
-                        classification=classification
-                    )
-                    archive_time = time.time() - archive_start
-                    
-                    # Cleanup
-                    self.archive_manager.cleanup_upload_file(file_path)
-                    self.retry_counts.pop(file_key, None)
-                    
-                except Exception as e:
-                    archive_time = time.time() - archive_start
-                    error_message = f"Archive failed: {str(e)}"
-                    logger.error(f"ARCHIVE ERROR {filename}: {error_message}")
-                    
-                    return {
-                        'status': 'skipped',
-                        'classification': 'failed',
-                        'ocr_confidence': ocr_confidence,
-                        'ml_confidence': ml_confidence,
-                        'processing_time': time.time() - overall_start,
-                        'error': error_message,
-                        'failure_stage': 'archive'
-                    }
+                # Update stats
+                self.stats['total_processed'] += 1
+                self.stats['successful'] += 1
+                self.stats['total_time'] += processing_time
                 
-                # Update comprehensive statistics
-                processing_time = time.time() - overall_start
-                self._update_comprehensive_stats(processing_time, ocr_time, extraction_time, archive_time, filename, classification, ocr_confidence, ml_confidence, doc_type)
+                if document_type not in self.stats['document_types']:
+                    self.stats['document_types'][document_type] = 0
+                self.stats['document_types'][document_type] += 1
                 
-                logger.info(f"SUCCESS {filename}: {classification} ({doc_type}) in {processing_time:.1f}s "
-                          f"(OCR: {ocr_confidence:.1f}%, ML: {ml_confidence:.1f}%, "
-                          f"fields: {self._count_meaningful_fields(extracted_data, ocr_text)}, method: {extraction_method})")
+                logger.info(f"SUCCESS: {filename} ({document_type}) - {processing_confidence:.1f}% confidence, "
+                           f"{sum(len(entities[key]) for key in entities)} entities, "
+                           f"{len(key_information)} key fields in {processing_time:.1f}s")
                 
                 return {
                     'status': 'completed',
                     'classification': classification,
-                    'document_type': doc_type,
-                    'ocr_confidence': ocr_confidence,
-                    'ml_confidence': ml_confidence,
+                    'document_type': document_type,
+                    'confidence': processing_confidence,
                     'processing_time': processing_time,
-                    'ocr_time': ocr_time,
-                    'extraction_time': extraction_time,
-                    'archive_time': archive_time,
-                    'text_length': len(ocr_text),
-                    'archive_paths': archive_paths,
-                    'meaningful_fields': self._count_meaningful_fields(extracted_data, ocr_text),
-                    'extraction_method': extraction_method
+                    'entities_found': sum(len(entities[key]) for key in entities),
+                    'key_info_fields': len(key_information)
                 }
             else:
-                processing_time = time.time() - overall_start
-                error_message = f"Classification failed - OCR: {ocr_confidence:.1f}%, ML: {ml_confidence:.1f}%, Type: {doc_type}"
-                logger.warning(f"SKIPPED {filename}: {error_message} in {processing_time:.1f}s")
+                processing_time = time.time() - start_time
+                self.stats['total_processed'] += 1
+                self.stats['failed'] += 1
+                self.stats['total_time'] += processing_time
                 
-                self.stats['failed_files'].append({
-                    'filename': filename,
-                    'error': error_message,
-                    'ocr_confidence': ocr_confidence,
-                    'ml_confidence': ml_confidence,
-                    'document_type': doc_type,
-                    'extraction_method': extraction_method
-                })
-                
+                logger.warning(f"LOW CONFIDENCE: {filename} - {processing_confidence:.1f}% confidence")
                 return {
                     'status': 'skipped',
                     'classification': 'failed',
-                    'document_type': doc_type,
-                    'ocr_confidence': ocr_confidence,
-                    'ml_confidence': ml_confidence,
+                    'confidence': processing_confidence,
                     'processing_time': processing_time,
-                    'error': error_message,
-                    'failure_stage': 'classification'
+                    'reason': 'Low processing confidence'
                 }
         
         except Exception as e:
-            processing_time = time.time() - overall_start
-            error_message = f"Processing exception: {str(e)}"
-            logger.error(f"ERROR {filename}: {error_message}")
+            processing_time = time.time() - start_time
+            self.stats['total_processed'] += 1
+            self.stats['failed'] += 1
+            self.stats['total_time'] += processing_time
             
-            self.stats['failed_files'].append({
-                'filename': filename,
-                'error': error_message,
-                'exception': str(e),
-                'processing_time': processing_time
-            })
-            
+            logger.error(f"ERROR: {filename} - {str(e)}")
             return {
                 'status': 'skipped',
                 'classification': 'failed',
-                'ocr_confidence': 0,
-                'ml_confidence': 0,
                 'processing_time': processing_time,
-                'error': error_message,
-                'failure_stage': 'exception'
+                'error': str(e)
             }
-
-    def _determine_document_type_from_content(self, text, filename):
-        """Determine document type from content and filename"""
-        text_lower = text.lower()
-        filename_lower = filename.lower()
-        
-        # Check filename first
-        filename_types = {
-            'invoice': ['invoice', 'bill'],
-            'voucher': ['voucher', 'check', 'payment'],
-            'receipt': ['receipt', 'or'],
-            'email': ['email', 'fwd', 'fw', 're:', 'reply'],
-            'contract': ['contract', 'agreement', 'mou'],
-            'purchase_order': ['po', 'purchase', 'order'],
-            'statement': ['statement', 'soa'],
-            'tax': ['tax', 'bir', '2307', 'withholding'],
-            'delivery': ['delivery', 'dr', 'shipping']
-        }
-        
-        for doc_type, keywords in filename_types.items():
-            if any(keyword in filename_lower for keyword in keywords):
-                return doc_type
-        
-        # Check content patterns
-        content_patterns = {
-            'email': ['from:', 'to:', 'subject:', 'sent:', '@'],
-            'invoice': ['invoice', 'bill to', 'amount due', 'tax invoice'],
-            'voucher': ['voucher', 'check number', 'batch number', 'accounts payable'],
-            'receipt': ['receipt', 'received from', 'official receipt'],
-            'purchase_order': ['purchase order', 'po number', 'supplier'],
-            'contract': ['agreement', 'contract', 'terms and conditions'],
-            'financial_statement': ['balance sheet', 'income statement', 'financial statement'],
-            'bank_statement': ['bank statement', 'account statement', 'transaction'],
-            'tax_document': ['tax return', 'bir form', 'withholding tax'],
-            'delivery_receipt': ['delivery receipt', 'goods received', 'delivered']
-        }
-        
-        for doc_type, patterns in content_patterns.items():
-            score = sum(1 for pattern in patterns if pattern in text_lower)
-            if score >= 2:  # Need at least 2 pattern matches
-                return doc_type
-        
-        return 'general'
-
-    def _update_document_type_stats(self, doc_type, classification):
-        """Update document type statistics"""
-        if doc_type not in self.stats['document_type_stats']:
-            self.stats['document_type_stats'][doc_type] = {
-                'total': 0, 'successful': 0, 'partial': 0, 'failed': 0
-            }
-        
-        self.stats['document_type_stats'][doc_type]['total'] += 1
-        self.stats['document_type_stats'][doc_type][classification] += 1
-
-    def _calculate_field_completeness(self, extracted_data, doc_type):
-        """Calculate how complete the extracted data is for the document type"""
-        if not extracted_data:
-            return 0.0
-        
-        # Define expected fields for each document type
-        expected_fields = {
-            'invoice': ['invoice_number', 'vendor_name', 'total_amount', 'invoice_date'],
-            'voucher': ['voucher_number', 'vendor_name', 'amount_due', 'batch_number'],
-            'email': ['sender_email', 'subject', 'date_sent'],
-            'receipt': ['receipt_number', 'total_amount', 'store_name'],
-            'purchase_order': ['po_number', 'supplier_name', 'total_amount'],
-            'contract': ['contract_number', 'party_a', 'party_b'],
-            'general': ['document_number', 'date', 'amount']
-        }
-        
-        required_fields = expected_fields.get(doc_type, expected_fields['general'])
-        found_fields = sum(1 for field in required_fields if extracted_data.get(field))
-        
-        return found_fields / len(required_fields) if required_fields else 0.0
-
-    def _calculate_confidence_score(self, ocr_confidence, ml_confidence, extracted_data):
-        """Calculate overall confidence score"""
-        base_score = (ocr_confidence + ml_confidence) / 2
-        
-        # Add bonus for extracted data
-        field_bonus = min(len(extracted_data) * 2, 20)
-        
-        return min(base_score + field_bonus, 100)
-
-    def _retry_extraction_with_context(self, data_extractor, ocr_text, filename, category):
-        """Retry extraction with enhanced context awareness"""
-        try:
-            # Determine specific context from filename and content
-            doc_type = self._determine_document_type_from_content(ocr_text, filename)
-            
-            # Use document-specific extraction
-            result = data_extractor.extract_structured_data(ocr_text, doc_type)
-            return result
-            
-        except Exception as e:
-            logger.warning(f"Context-aware retry extraction failed for {filename}: {e}")
-            return None
-
-    def _apply_pattern_extraction(self, text, filename, category):
-        """Apply pattern-based extraction as fallback"""
-        try:
-            patterns = {}
-            
-            # Common patterns for all documents
-            common_patterns = {
-                'amounts': r'(?:USD|PHP|EUR|\$)\s*(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)',
-                'dates': r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})',
-                'email_addresses': r'([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})',
-                'phone_numbers': r'(\+?\d{1,3}[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9})',
-                'reference_numbers': r'(?:no\.?|number|#)\s*:?\s*([A-Z0-9-]+)',
-            }
-            
-            # Extract using patterns
-            extracted = {}
-            for key, pattern in common_patterns.items():
-                matches = re.findall(pattern, text, re.IGNORECASE)
-                if matches:
-                    if key == 'amounts':
-                        extracted[key] = [{'amount': m, 'currency': 'USD'} for m in matches[:3]]
-                    else:
-                        extracted[key] = matches[:5]  # Limit to first 5 matches
-            
-            return extracted
-            
-        except Exception as e:
-            logger.warning(f"Pattern extraction failed for {filename}: {e}")
-            return {}
-
-    def _classify_result_enhanced(self, ocr_confidence, ml_confidence, text_length, extracted_data, filename, extraction_error, category):
-        """Enhanced classification with comprehensive criteria"""
-        # Calculate meaningful field bonus
-        meaningful_fields = self._count_meaningful_fields(extracted_data, "")
-        field_bonus = min(meaningful_fields * 3, 15)  # Up to 15% bonus
-        
-        # Text length bonus for substantial content
-        text_bonus = min(8, text_length / 250) if text_length > 100 else 0
-        
-        # Document type bonus
-        doc_type = self._determine_document_type_from_content("", filename)
-        type_bonus = self.processing_config['classification'].get('document_type_bonus', 0)
-        if type_bonus and doc_type in ['email', 'invoice', 'voucher']:
-            type_bonus = 10
-        else:
-            type_bonus = 0
-        
-        # Category bonus
-        category_bonus = 5 if category and any(word in category.lower() for word in ['important', 'priority', 'urgent']) else 0
-        
-        # Adjust scores
-        adjusted_ocr = ocr_confidence + text_bonus + type_bonus + category_bonus
-        adjusted_ml = ml_confidence + field_bonus
-        
-        # Enhanced classification logic with more granular conditions
-        if adjusted_ocr >= 85 and adjusted_ml >= 50:
-            return 'successful'
-        elif adjusted_ocr >= 75 and adjusted_ml >= 35:
-            return 'successful'
-        elif adjusted_ocr >= 65 and meaningful_fields >= 4:
-            return 'successful'
-        elif adjusted_ocr >= 55 and adjusted_ml >= 25:
-            return 'successful'
-        elif adjusted_ocr >= 45 and meaningful_fields >= 3:
-            return 'partial'
-        elif adjusted_ocr >= 35 and adjusted_ml >= 15:
-            return 'partial'
-        elif adjusted_ocr >= 50:  # High OCR confidence alone
-            return 'partial'
-        elif meaningful_fields >= 2:  # Some useful data extracted
-            return 'partial'
-        else:
-            return 'failed'
-
-    def _count_meaningful_fields(self, extracted_data, ocr_text):
-        """Count meaningful extracted fields with enhanced validation"""
-        if not extracted_data:
-            return 0
-        
-        meaningful_count = 0
-        
-        for key, value in extracted_data.items():
-            if not value:
-                continue
-                
-            if isinstance(value, str):
-                cleaned_value = value.strip()
-                if len(cleaned_value) >= 2 and cleaned_value.lower() not in ['n/a', 'none', 'null', '']:
-                    # Give higher weight to important fields
-                    weight = 2 if any(important in key.lower() for important in ['number', 'amount', 'date', 'name', 'email']) else 1
-                    meaningful_count += weight
-            elif isinstance(value, (int, float)):
-                if value > 0:
-                    meaningful_count += 2  # Numbers are valuable
-            elif isinstance(value, dict):
-                if value:  # Non-empty dict
-                    meaningful_count += 1
-            elif isinstance(value, list):
-                if value and len(value) > 0:  # Non-empty list
-                    meaningful_count += len(value) if len(value) <= 3 else 3  # Cap contribution
-        
-        return meaningful_count
-
-    def _should_retry(self, ocr_confidence, ml_confidence, current_retries, filename, doc_type):
-        """Enhanced retry logic with document type awareness"""
-        if current_retries >= self.processing_config['extraction']['max_retries']:
-            return False
-        
-        # Retry if OCR is decent but extraction failed
-        if ocr_confidence >= 60 and ml_confidence < 15:
-            return True
-        
-        # Retry for important document types even with lower OCR
-        important_types = ['invoice', 'voucher', 'contract', 'email']
-        if doc_type in important_types and ocr_confidence >= 45:
-            return True
-        
-        # Retry if it looks like a structured document
-        if ocr_confidence >= 40 and any(indicator in filename.lower() for indicator in ['invoice', 'voucher', 'receipt', 'order']):
-            return True
-        
-        return False
-
-    def _calculate_overall_confidence(self, ocr_confidence, ml_confidence, extracted_data):
-        """Calculate weighted overall confidence with field quality bonus"""
-        meaningful_fields = self._count_meaningful_fields(extracted_data, "")
-        
-        # Weight OCR more heavily but give significant bonus for successful extraction
-        if meaningful_fields >= 4:
-            # Excellent extraction boosts confidence significantly
-            base_confidence = (ocr_confidence * 0.5) + (ml_confidence * 0.5)
-            extraction_bonus = min(meaningful_fields * 2, 20)
-            return min(base_confidence + extraction_bonus, 100)
-        elif meaningful_fields >= 2:
-            # Good extraction
-            base_confidence = (ocr_confidence * 0.6) + (ml_confidence * 0.4)
-            extraction_bonus = min(meaningful_fields * 3, 15)
-            return min(base_confidence + extraction_bonus, 100)
-        else:
-            # Poor extraction penalizes confidence
-            return (ocr_confidence * 0.8) + (ml_confidence * 0.2)
-
-    def _update_comprehensive_stats(self, processing_time, ocr_time, extraction_time, archive_time, filename, classification, ocr_confidence, ml_confidence, doc_type):
-        """Update comprehensive processing statistics"""
-        self.stats['total_processed'] += 1
-        self.stats['total_ocr_time'] += ocr_time
-        self.stats['total_extraction_time'] += extraction_time
-        self.stats['total_archive_time'] += archive_time
-        
-        # Update classification stats
-        if classification == 'successful':
-            self.stats['successful_extractions'] += 1
-        elif classification == 'partial':
-            self.stats['partial_extractions'] += 1
-        else:
-            self.stats['failed_extractions'] += 1
-        
-        # Update confidence stats
-        self.stats['confidence_stats']['ocr_confidence_sum'] += ocr_confidence
-        self.stats['confidence_stats']['ml_confidence_sum'] += ml_confidence
-        self.stats['confidence_stats']['count'] += 1
-        
-        self.stats['successful_files'].append({
-            'filename': filename,
-            'classification': classification,
-            'document_type': doc_type,
-            'processing_time': processing_time,
-            'ocr_time': ocr_time,
-            'extraction_time': extraction_time,
-            'ocr_confidence': ocr_confidence,
-            'ml_confidence': ml_confidence
-        })
-
+    
     def process_category_parallel(self, category_name):
-        """Enhanced parallel processing with comprehensive error handling"""
+        """Process category with parallel execution"""
         logger.info(f"Processing category: {category_name}")
         
         categories_data = self.archive_manager.scan_uploads_categories()
         category_data = next((c for c in categories_data if c['category_name'] == category_name), None)
         
-        if not category_data:
-            return {'total': 0, 'successful': 0, 'partial': 0, 'failed': 0, 'skipped': 0}
+        if not category_data or not category_data.get('pdf_files'):
+            return {'total': 0, 'successful': 0, 'failed': 0, 'skipped': 0}
         
         pdf_files = category_data['pdf_files']
-        results = {'total': len(pdf_files), 'successful': 0, 'partial': 0, 'failed': 0, 'skipped': 0, 'retries': 0}
-        
-        if not pdf_files:
-            return results
+        results = {'total': len(pdf_files), 'successful': 0, 'failed': 0, 'skipped': 0}
         
         logger.info(f"Processing {len(pdf_files)} files with {self.max_workers} workers")
         
-        completed_count = 0
-        start_time = time.time()
-        
-        # Use conservative number of workers for accuracy
-        actual_workers = min(self.max_workers, len(pdf_files), 2)
-        logger.info(f"Using {actual_workers} workers for maximum accuracy")
-
-# changed ehrerehre========================================================
-        with concurrent.futures.ThreadPoolExecutor(max_workers=actual_workers) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             future_to_file = {
                 executor.submit(self.process_single_file, pdf['full_path'], category_name, pdf['filename']): pdf
                 for pdf in pdf_files
             }
-
-            try:
-                for future in concurrent.futures.as_completed(future_to_file, timeout=10800):  # 3 hour timeout
-                    pdf_info = future_to_file[future]
-                    completed_count += 1
-
-                    try:
-                        result = future.result(timeout=1200)  # 20 min per file timeout
-
-                        if result:
-                            if result.get('status') == 'completed':
-                                classification = result.get('classification', 'failed')
-                                results[classification] += 1
-                                self._update_progress(completed_count, len(pdf_files), pdf_info['filename'], f'COMPLETED-{classification.upper()}')
-                            elif result.get('status') == 'retry':
-                                results['retries'] += 1
-                                self._update_progress(completed_count, len(pdf_files), pdf_info['filename'], 'RETRY')
-                            elif result.get('status') == 'skipped':
-                                results['skipped'] += 1
-                                self._update_progress(completed_count, len(pdf_files), pdf_info['filename'], 'SKIPPED')
-                            else:
-                                results['failed'] += 1
+            
+            for future in concurrent.futures.as_completed(future_to_file, timeout=3600):
+                pdf_info = future_to_file[future]
+                
+                try:
+                    result = future.result(timeout=600)  # 10 min timeout per file
+                    
+                    if result:
+                        if result.get('status') == 'completed':
+                            results['successful'] += 1
                         else:
                             results['failed'] += 1
-
-                    except concurrent.futures.TimeoutError:
-                        logger.error(f"TIMEOUT: {pdf_info['filename']}")
-                        results['skipped'] += 1
-                        self._update_progress(completed_count, len(pdf_files), pdf_info['filename'], 'TIMEOUT')
-                    except Exception as e:
-                        logger.error(f"EXECUTOR ERROR: {pdf_info['filename']}: {e}")
-                        results['skipped'] += 1
-                        self._update_progress(completed_count, len(pdf_files), pdf_info['filename'], 'ERROR')
-
-                    # Enhanced progress summary every 2 files
-                    if completed_count % 2 == 0 or completed_count == len(pdf_files):
-                        elapsed = time.time() - start_time
-                        avg_time = elapsed / completed_count
-                        remaining = len(pdf_files) - completed_count
-                        eta = remaining * avg_time
-
-                        successful_so_far = results['successful'] + results['partial']
-                        success_rate = (successful_so_far / completed_count) * 100 if completed_count > 0 else 0
-
-                        logger.info(
-                            f"Batch progress: {completed_count}/{len(pdf_files)} "
-                            f"({success_rate:.1f}% success rate, {results['retries']} retries, ETA: {eta:.0f}s)"
-                        )
-
-            except KeyboardInterrupt:
-                logger.warning("Interrupted by user. Cancelling outstanding tasks…")
-                for fut in future_to_file.keys():
-                    fut.cancel()
-                # Re-raise so the caller (management command) exits promptly
-                raise
-
+                    else:
+                        results['failed'] += 1
+                        
+                except Exception as e:
+                    logger.error(f"Processing failed for {pdf_info['filename']}: {e}")
+                    results['failed'] += 1
         
-        # Enhanced memory cleanup after batch
-        self._cleanup_memory()
+        # Cleanup memory
+        gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
         
-        # Add timing information
-        total_time = time.time() - start_time
-        results['processing_time'] = total_time
-        results['avg_time_per_file'] = total_time / len(pdf_files) if pdf_files else 0
-        
-        logger.info(f"Category {category_name} complete: {results}")
+        logger.info(f"Category {category_name} completed: {results}")
         return results
     
     def process_all_categories(self):
-        """Process all categories with enhanced monitoring and statistics"""
+        """Process all categories"""
         categories_data = self.archive_manager.scan_uploads_categories()
-        category_results = []
-        total_start_time = time.time()
+        all_results = []
         
-        logger.info(f"Starting enhanced processing of {len(categories_data)} categories")
-        
-        for i, category_data in enumerate(categories_data, 1):
+        for category_data in categories_data:
             category_name = category_data['category_name']
             file_count = len(category_data.get('pdf_files', []))
             
-            logger.info(f"Category {i}/{len(categories_data)}: {category_name} ({file_count} files)")
-            
             if file_count == 0:
-                logger.info(f"Skipping empty category: {category_name}")
-                category_results.append({
-                    'name': category_name, 
-                    'results': {'total': 0, 'successful': 0, 'partial': 0, 'failed': 0, 'skipped': 0}
-                })
                 continue
             
-            category_start = time.time()
+            logger.info(f"Starting category: {category_name} ({file_count} files)")
             results = self.process_category_parallel(category_name)
-            category_time = time.time() - category_start
-            
-            results['processing_time'] = category_time
-            category_results.append({'name': category_name, 'results': results})
-            
-            # Enhanced category summary
-            successful = results['successful'] + results['partial']
-            success_rate = (successful / results['total']) * 100 if results['total'] > 0 else 0
-            avg_time_per_file = category_time / results['total'] if results['total'] > 0 else 0
-            
-            logger.info(f"Category {category_name} completed: {successful}/{results['total']} "
-                      f"({success_rate:.1f}% success, {results.get('retries', 0)} retries) "
-                      f"in {category_time:.1f}s ({avg_time_per_file:.1f}s/file)")
-            
-            # Cleanup between categories
-            self._cleanup_memory()
+            all_results.append({'name': category_name, 'results': results})
         
-        total_time = time.time() - total_start_time
-        logger.info(f"All categories completed in {total_time:.1f}s")
+        return all_results
+    
+    def get_stats_summary(self):
+        """Get processing statistics summary"""
+        if self.stats['total_processed'] == 0:
+            return {
+                'total_processed': 0,
+                'success_rate': 0.0,
+                'failed_count': 0,
+                'average_time': 0.0,
+                'document_types': {}
+            }
         
-        # Log comprehensive statistics
-        self._log_comprehensive_performance_summary()
+        avg_time = self.stats['total_time'] / self.stats['total_processed']
+        success_rate = (self.stats['successful'] / self.stats['total_processed']) * 100
         
-        return category_results
+        return {
+            'total_processed': self.stats['total_processed'],
+            'success_rate': round(success_rate, 1),
+            'failed_count': self.stats['failed'],
+            'average_time': round(avg_time, 2),
+            'throughput_per_hour': round(3600 / avg_time) if avg_time > 0 else 0,
+            'document_types': self.stats['document_types'],
+            'processing_summary': {
+                'total_entities_extracted': sum(len(self.stats.get('entities', {}).get(key, [])) for key in ['people', 'companies', 'locations']),
+                'average_confidence': round(sum(self.stats.get('confidences', [85])) / len(self.stats.get('confidences', [1])), 1) if self.stats.get('confidences') else 85.0
+            }
+        }
 
-    def watch_mode(self, interval=30, category=None):
-        """Enhanced watch mode with adaptive intervals and comprehensive monitoring"""
-        logger.info(f"ENHANCED WATCH MODE STARTED - checking every {interval} seconds")
-        if category:
-            logger.info(f"Watching category: {category}")
-        else:
-            logger.info("Watching all categories")
+
+class Command(BaseCommand):
+    """Django management command for document processing"""
+    
+    help = 'Process uploaded documents with enhanced pattern recognition'
+    
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--category',
+            type=str,
+            help='Process specific category only',
+        )
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Show what would be processed without actually processing',
+        )
+        parser.add_argument(
+            '--force-cpu',
+            action='store_true',
+            help='Force CPU-only processing',
+        )
+        parser.add_argument(
+            '--max-workers',
+            type=int,
+            default=None,
+            help='Maximum number of worker threads',
+        )
+        parser.add_argument(
+            '--verbose',
+            action='store_true',
+            help='Enable verbose logging',
+        )
+    
+    def handle(self, *args, **options):
+        if options['force_cpu']:
+            os.environ['FORCE_CPU_ONLY'] = '1'
         
-        scan_count = 0
-        consecutive_empty_scans = 0
-        dynamic_interval = interval
+        if options['verbose']:
+            logging.getLogger().setLevel(logging.DEBUG)
+        
+        # Initialize processor
+        processor = DocumentProcessor()
+        
+        if options['max_workers']:
+            processor.max_workers = min(options['max_workers'], cpu_count())
+        
+        start_time = time.time()
         
         try:
-            while True:
-                scan_count += 1
-                gmt_plus_8 = pytz.timezone('Asia/Manila')
-                current_time = timezone.now().astimezone(gmt_plus_8)
-                logger.info(f"Enhanced Scan #{scan_count} at {current_time.strftime('%H:%M:%S')} "
-                          f"(interval: {dynamic_interval}s)")
-                
-                categories_data = self.archive_manager.scan_uploads_categories()
-                new_files_found = False
-                total_processed = 0
+            if options['dry_run']:
+                self.stdout.write(self.style.WARNING('DRY RUN MODE - No files will be processed'))
+                categories_data = processor.archive_manager.scan_uploads_categories()
                 
                 for category_data in categories_data:
                     category_name = category_data['category_name']
+                    file_count = len(category_data.get('pdf_files', []))
                     
-                    if category and category_name != category:
+                    if options['category'] and category_name != options['category']:
                         continue
                     
-                    if category_data['pdf_files']:
-                        new_files_found = True
-                        file_count = len(category_data['pdf_files'])
-                        logger.info(f"Processing {file_count} files in {category_name}")
-                        
-                        try:
-                            batch_start = time.time()
-                            results = self.process_category_parallel(category_name)
-                            batch_time = time.time() - batch_start
-                            
-                            successful = results['successful'] + results['partial']
-                            total_processed += successful
-                            
-                            logger.info(f"Batch results for {category_name}: {successful}/{results['total']} "
-                                      f"processed in {batch_time:.1f}s (success rate: {(successful/results['total']*100):.1f}%)")
-                        except Exception as e:
-                            logger.error(f"Error processing {category_name}: {e}")
+                    self.stdout.write(f"Category: {category_name} - {file_count} files")
+                    
+                    for pdf in category_data.get('pdf_files', [])[:5]:  # Show first 5
+                        self.stdout.write(f"  - {pdf['filename']}")
+                    
+                    if file_count > 5:
+                        self.stdout.write(f"  ... and {file_count - 5} more files")
                 
-                # Adaptive interval adjustment
-                if new_files_found:
-                    consecutive_empty_scans = 0
-                    dynamic_interval = max(15, interval // 2)  # Faster when busy
-                    logger.info(f"Processed {total_processed} files this cycle")
-                else:
-                    consecutive_empty_scans += 1
-                    if consecutive_empty_scans >= 3:
-                        dynamic_interval = min(interval * 2, 300)  # Slower when idle, max 5 min
-                    logger.info("No files found in upload directories")
+                return
+            
+            if options['category']:
+                # Process specific category
+                self.stdout.write(f"Processing category: {options['category']}")
+                results = processor.process_category_parallel(options['category'])
                 
-                # Performance summary every 10 scans
-                if scan_count % 10 == 0 and self.stats['total_processed'] > 0:
-                    self._log_comprehensive_performance_summary()
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        f"Category '{options['category']}' completed: "
+                        f"{results['successful']} successful, {results['failed']} failed"
+                    )
+                )
+            else:
+                # Process all categories
+                self.stdout.write("Processing all categories...")
+                all_results = processor.process_all_categories()
                 
-                # Memory cleanup every 2 scans
-                if scan_count % 2 == 0:
-                    self._cleanup_memory()
+                # Display results
+                total_successful = sum(r['results']['successful'] for r in all_results)
+                total_failed = sum(r['results']['failed'] for r in all_results)
                 
-                logger.info(f"Sleeping for {dynamic_interval} seconds...")
-                time.sleep(dynamic_interval)
+                self.stdout.write("\nProcessing Summary:")
+                for result in all_results:
+                    category = result['name']
+                    stats = result['results']
+                    self.stdout.write(
+                        f"  {category}: {stats['successful']} successful, "
+                        f"{stats['failed']} failed of {stats['total']} total"
+                    )
+                
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        f"\nOverall: {total_successful} successful, {total_failed} failed"
+                    )
+                )
+            
+            # Display final statistics
+            stats = processor.get_stats_summary()
+            total_time = time.time() - start_time
+            
+            self.stdout.write(f"\nFinal Statistics:")
+            self.stdout.write(f"  Total processed: {stats['total_processed']}")
+            self.stdout.write(f"  Success rate: {stats['success_rate']}%")
+            self.stdout.write(f"  Average processing time: {stats['average_time']}s per file")
+            self.stdout.write(f"  Throughput: {stats['throughput_per_hour']} files/hour")
+            self.stdout.write(f"  Total execution time: {total_time:.1f}s")
+            
+            if stats['document_types']:
+                self.stdout.write(f"\nDocument Types Processed:")
+                for doc_type, count in sorted(stats['document_types'].items()):
+                    self.stdout.write(f"  {doc_type}: {count}")
+            
+            self.stdout.write(
+                self.style.SUCCESS('Document processing completed successfully!')
+            )
         
         except KeyboardInterrupt:
-            logger.info(f"Enhanced watch mode stopped by user after {scan_count} scans")
-            self._log_comprehensive_performance_summary()
-
-    def _log_comprehensive_performance_summary(self):
-        """Log detailed performance statistics with document type breakdown"""
-        if self.stats['total_processed'] == 0:
-            return
-        
-        total_files = self.stats['total_processed']
-        avg_ocr = self.stats['total_ocr_time'] / total_files
-        avg_extraction = self.stats['total_extraction_time'] / total_files
-        avg_archive = self.stats['total_archive_time'] / total_files
-        
-        # Calculate average confidences
-        conf_stats = self.stats['confidence_stats']
-        avg_ocr_conf = conf_stats['ocr_confidence_sum'] / conf_stats['count'] if conf_stats['count'] > 0 else 0
-        avg_ml_conf = conf_stats['ml_confidence_sum'] / conf_stats['count'] if conf_stats['count'] > 0 else 0
-        
-        logger.info("=" * 80)
-        logger.info("COMPREHENSIVE PERFORMANCE SUMMARY")
-        logger.info("=" * 80)
-        logger.info(f"Total files processed: {total_files}")
-        logger.info(f"Successful extractions: {self.stats['successful_extractions']} ({(self.stats['successful_extractions']/total_files)*100:.1f}%)")
-        logger.info(f"Partial extractions: {self.stats['partial_extractions']} ({(self.stats['partial_extractions']/total_files)*100:.1f}%)")
-        logger.info(f"Failed extractions: {self.stats['failed_extractions']} ({(self.stats['failed_extractions']/total_files)*100:.1f}%)")
-        logger.info("")
-        logger.info(f"Average OCR confidence: {avg_ocr_conf:.1f}%")
-        logger.info(f"Average ML confidence: {avg_ml_conf:.1f}%")
-        logger.info("")
-        logger.info(f"Average OCR time: {avg_ocr:.2f}s ({(avg_ocr/(avg_ocr+avg_extraction+avg_archive))*100:.1f}%)")
-        logger.info(f"Average extraction time: {avg_extraction:.2f}s ({(avg_extraction/(avg_ocr+avg_extraction+avg_archive))*100:.1f}%)")
-        logger.info(f"Average archive time: {avg_archive:.2f}s ({(avg_archive/(avg_ocr+avg_extraction+avg_archive))*100:.1f}%)")
-        logger.info("")
-        
-        # Document type breakdown
-        if self.stats['document_type_stats']:
-            logger.info("DOCUMENT TYPE BREAKDOWN:")
-            for doc_type, type_stats in self.stats['document_type_stats'].items():
-                total_type = type_stats['total']
-                success_rate = ((type_stats['successful'] + type_stats['partial']) / total_type) * 100 if total_type > 0 else 0
-                logger.info(f"  {doc_type}: {total_type} files ({success_rate:.1f}% success rate)")
-        
-        logger.info("")
-        logger.info(f"Failed files: {len(self.stats['failed_files'])}")
-        
-        if len(self.stats['failed_files']) > 0:
-            logger.info("Recent failures:")
-            for failure in self.stats['failed_files'][-5:]:  # Last 5 failures
-                logger.info(f"  - {failure['filename']}: {failure.get('error', 'Unknown error')}")
-        
-        logger.info("=" * 80)
-
-    def get_comprehensive_stats_summary(self):
-        """Get comprehensive statistics summary"""
-        if self.stats['total_processed'] == 0:
-            return "No files processed yet"
-        
-        total_files = self.stats['total_processed']
-        avg_ocr = self.stats['total_ocr_time'] / total_files
-        avg_extraction = self.stats['total_extraction_time'] / total_files
-        avg_archive = self.stats['total_archive_time'] / total_files
-        total_avg = avg_ocr + avg_extraction + avg_archive
-        
-        # Calculate confidence averages
-        conf_stats = self.stats['confidence_stats']
-        avg_ocr_conf = conf_stats['ocr_confidence_sum'] / conf_stats['count'] if conf_stats['count'] > 0 else 0
-        avg_ml_conf = conf_stats['ml_confidence_sum'] / conf_stats['count'] if conf_stats['count'] > 0 else 0
-        
-        return {
-            'total_processed': total_files,
-            'success_breakdown': {
-                'successful': self.stats['successful_extractions'],
-                'partial': self.stats['partial_extractions'],
-                'failed': self.stats['failed_extractions']
-            },
-            'confidence_averages': {
-                'ocr_confidence': round(avg_ocr_conf, 1),
-                'ml_confidence': round(avg_ml_conf, 1)
-            },
-            'average_times': {
-                'ocr': round(avg_ocr, 2),
-                'extraction': round(avg_extraction, 2),
-                'archive': round(avg_archive, 2),
-                'total': round(total_avg, 2)
-            },
-            'throughput_per_hour': round(3600 / total_avg) if total_avg > 0 else 0,
-            'document_type_stats': self.stats['document_type_stats'],
-            'failed_count': len(self.stats['failed_files']),
-            'overall_success_rate': round(((self.stats['successful_extractions'] + self.stats['partial_extractions']) / total_files) * 100, 1)
-        }
-    
-
-    def get_stats_summary(self):
-        """Return a comprehensive stats summary compatible with process_documents.py."""
-        # If nothing processed yet, return zeros with expected shape
-        total = self.stats.get('total_processed', 0)
-        total_ocr_time = self.stats.get('total_ocr_time', 0.0)
-        total_extraction_time = self.stats.get('total_extraction_time', 0.0)
-        total_archive_time = self.stats.get('total_archive_time', 0.0)
-
-        avg_ocr = (total_ocr_time / total) if total > 0 else 0.0
-        avg_extraction = (total_extraction_time / total) if total > 0 else 0.0
-        avg_archive = (total_archive_time / total) if total > 0 else 0.0
-        total_avg = avg_ocr + avg_extraction + avg_archive
-
-        conf_stats = self.stats.get('confidence_stats', {'ocr_confidence_sum': 0.0, 'ml_confidence_sum': 0.0, 'count': 0})
-        count = conf_stats.get('count', 0)
-        avg_ocr_conf = (conf_stats.get('ocr_confidence_sum', 0.0) / count) if count > 0 else 0.0
-        avg_ml_conf = (conf_stats.get('ml_confidence_sum', 0.0) / count) if count > 0 else 0.0
-
-        successful = self.stats.get('successful_extractions', 0)
-        partial = self.stats.get('partial_extractions', 0)
-        failed = self.stats.get('failed_extractions', 0)
-        success_rate = ((successful + partial) / total * 100) if total > 0 else 0.0
-
-        return {
-            'total_processed': total,
-            'success_rate': round(success_rate, 1),
-            'failed_count': len(self.stats.get('failed_files', [])),
-            'confidence_averages': {
-                'ocr_confidence': round(avg_ocr_conf, 1),
-                'ml_confidence': round(avg_ml_conf, 1),
-            },
-            'average_times': {
-                'ocr': round(avg_ocr, 2),
-                'extraction': round(avg_extraction, 2),
-                'archive': round(avg_archive, 2),
-                'total': round(total_avg, 2),
-            },
-            'throughput_per_hour': round(3600 / total_avg) if total_avg > 0 else 0,
-            'document_type_stats': self.stats.get('document_type_stats', {}),
-        }
-
-        
-# ... after getting extracted_data from Qwen ...
-
-
-    def _clean_extracted_data(self, data, ocr_text):
-        """Validate and clean the AI-extracted data."""
-        if not data:
-            return {}
-        
-        # 1. Validate key fields aren't nonsense
-        if 'company_name' in data:
-            # If the company name is a long fragment of sentence, it's probably wrong
-            if len(data['company_name'].split()) > 6:
-                # Try to find a better company name using a simpler pattern
-                better_name = self._find_company_name_pattern(ocr_text)
-                if better_name:
-                    data['company_name'] = better_name
-                else:
-                    data.pop('company_name', None) # Remove garbage data
-        
-        # 2. Ensure dates are properly formatted
-        if 'date_issued' in data:
-            data['date_issued'] = self._standardize_date(data['date_issued'])
-        
-        # 3. Cross-check extracted amounts with amounts found in text
-        if 'total_amount' in data:
-            # Check if this amount appears in the text as a number
-            if data['total_amount'].replace(',', '').replace('.', '').isdigit():
-                # Check if it's in the list of amounts we found via patterns
-                all_amounts = self._extract_amounts(ocr_text)
-                if data['total_amount'] not in [a['amount'] for a in all_amounts]:
-                    # Might be a false positive, lower confidence
-                    pass
-                    
-        return data
+            self.stdout.write(self.style.WARNING('\nProcessing interrupted by user'))
+        except Exception as e:
+            self.stdout.write(self.style.ERROR(f'Processing failed: {str(e)}'))
+            raise
