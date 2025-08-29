@@ -5,10 +5,10 @@
 {% block content %}
 <div class="fixed inset-0 flex items-center justify-center bg-white">
     <!-- Archive System name top-left -->
-    <div class="absolute top-6 left-6 flex items-center">
-        <a href="{% url 'base'%}"class="text-xl font-bold text-green-600 hover:text-green-800 transition-colors duration-200">
-        <img src="{% static 'img/fowse.png' %}" class="h-10 inline-block" alt="Fowse Logo" />
-            Fowse
+    <div class="absolute top-3 left-9 flex items-center space-x-2">
+        <a href="{% url 'base' %}" class="flex items-center space-x-2 hover:text-green-800 transition-colors duration-200">
+            <img src="{% static 'img/fowse.png' %}" class="h-10" alt="Fowse Logo" />
+            <span class="text-xl font-bold text-green-600">Fowse</span>
         </a>
     </div>
 

@@ -9,31 +9,107 @@
   {% load static %}
   {% csrf_token %}
   <meta name="csrf-token" content="{{ csrf_token }}">
-  <script src="{% static 'js/base.js' %}" defer></script>
-  {% block scripts %}{% endblock %}
   {% block styles %}{% endblock %}
   <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
 </head>
-<body class="bg-gray-50">
+<body class="bg-white">
     {% if not user.is_authenticated %}
-    <!-- Navbar (only shows if NOT logged in) -->
-    <nav class="bg-white text-green-600 p-4">
+    <!-- Navbar -->
+    <nav class="bg-white text-green-600 p-4 z-10 w-full top-0 left-0">
       <div class="container mx-auto flex justify-between items-center">
         <div class="flex items-center space-x-2">
           <img src="{% static 'img/fowse.png' %}" class="h-10 inline-block" alt="Fowse Logo" />
-          <h1 class="text-xl font-bold text-green-600">
-            Fowse
-          </h1>
-        </div>
-
-        <div class="flex items-center space-x-4">
-          <a href="{% url 'login' %}" id="loginNavBtn"
-            class="ml-4 hover:bg-green-700 hover:text-white px-3 py-2 rounded-md cursor-pointer transition-colors duration-200">
-            Login
-          </a>
+          <h1 class="text-xl font-bold text-green-600">Fowse</h1>
         </div>
       </div>
     </nav>
+    <!-- Scrollable Content -->
+      <!-- Hero Section -->
+      <section
+        class="relative flex items-center justify-center"
+        style="
+          background-color: white;
+          background-image: url('{% static 'img/background_fowse.png' %}');
+          background-size: auto;
+          background-position: center top;
+          background-repeat: no-repeat;
+          height: calc(100vh - 64px);
+        "
+      >
+        <!-- Hero card -->
+        <div class="absolute text-center max-w-5xl bg-white">
+          <h1 class="text-6xl font-semibold text-black mb-4 whitespace-nowrap text-center">
+            All Your Docs, One Smart Search
+          </h1>
+          <p class="text-gray-600 mb-8 text-lg leading-relaxed max-w-xl mx-auto">
+            <span class="font-bold text-black">Built for seamless internal use,</span>
+            <span class="font-semibold text-black"> Fowse</span>
+            enables you to instantly locate, verify, and manage documents with AI precision.
+          </p>
+          <a href="{% url 'login' %}"
+            class="px-16 py-3 bg-green-600 text-white rounded-full font-semibold 
+                    shadow-sm hover:bg-green-700 transition"
+            style="box-shadow: 0 2px 4px rgba(0,0,0,0.25);">
+            Log in
+          </a>
+        </div>
+      </section>
+        <!-- Features Section -->
+        <!-- Left Column (Text) -->
+          <div class="flex items-start justify-center border-b py-16 pt-4">
+            <div class="w-full md:w-1/2 px-4 flex flex-col items-center justify-center text-center mx-auto">
+              <h2 class="text-4xl font-semibold text-gray-800 mb-4">
+                Discover what makes <span class="text-green-600">Fowse</span> the easiest way to
+                <span class="text-green-600">manage</span> your documents.
+              </h2>
+                 <div class="inline-flex items-center bg-white rounded-full p-1 mt-6 border border-gray-300">
+                      <button id="chatButton" class="px-8 py-3 text-white bg-green-600 rounded-full font-semibold transition-all duration-300">
+                          Chat
+                      </button>
+                      <button id="searchButton" class="px-8 py-3 text-gray-600 bg-transparent rounded-full font-semibold transition-all duration-300">
+                          Search
+                      </button>
+                </div>
+            </div>
+          </div>
+
+        <div class="flex">
+          <div class="w-1/2 p-8 border-r px-8">
+            <ul class="list-disc pl-6 text-black text-left">
+            <h1 class="text-black mb-8 text-lg text-left text-2xl font-semibold">
+            Context-aware document chat
+            </h1>
+            <li><span class="font-bold">Document Chat:</span> Chat directly with your documents to quickly extract key details, summaries, and explanations.</li>
+            <li><span class="font-bold">Context-aware assistance:</span> RaFile Chat understands the context of your files, letting you refine queries and surface exactly the information you need.</li>
+            <li><span class="font-bold">Flexible interaction:</span> Whether you want quick summaries, detailed insights, or step-by-step explanations, RaFile Chat adapts to your workflow for smarter document collaboration.</li>
+            </ul>
+          </div>
+          
+
+        <!-- Right Column (Image Placeholder) -->
+          <div class="m-auto">
+            <!-- Content Container for the panels (Chat/Search) -->
+            <div id="contentPanel" class="mt-6">
+              <!-- Default (Chat Panel) -->
+              <div id="chatPanel" class="flex justify-center">
+                <img src="{% static 'img/chat_placeholder.png' %}" alt="Chat Panel" class="w-full h-auto rounded-lg shadow-lg">
+              </div>
+            <!-- Default (Search Panel) - Initially hidden -->
+              <div id="searchPanel" class="flex justify-center hidden">
+                <img src="{% static 'img/search_placeholder.png' %}" alt="Search Panel" class="w-full h-auto rounded-lg shadow-lg">
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      <!-- Another Section -->
+      <div class="py-16 bg-gray-100">
+        <h2 class="text-4xl text-center font-semibold text-gray-800">Section Title</h2>
+        <p class="text-center mt-4 text-gray-600">Another piece of content for the page.</p>
+      </div>
+      <!-- More sections can be added here -->
+
     {% endif %}
 
     {% if user.is_authenticated and not hide_sidebar %}
@@ -177,4 +253,9 @@
     <div id="pageContent" class="flex-1 container mx-auto mt-8 {% if hide_sidebar %}no-sidebar{% endif %}">
       {% block content %}{% endblock %}
     </div>
+
+    <!-- JavaScript at the end for better performance -->
+    <script src="{% static 'js/base.js' %}"></script>
+    {% block scripts %}{% endblock %}
 </body>
+</html>
