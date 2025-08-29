@@ -1,71 +1,4 @@
-/* Custom font */
-.font-custom-verdana { 
-  font-family: Verdana, sans-serif; 
-}
-
-/* Smooth animations */
-.fade-in { animation: fadeIn 0.8s ease-out; }
-.slide-up { animation: slideUp 0.5s ease-out; }
-.message-appear { animation: messageAppear 0.4s ease-out; }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(50px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes messageAppear {
-  from { opacity: 0; transform: translateY(20px) scale(0.95); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* Typing indicator */
-.typing-indicator { animation: pulse 1.5s ease-in-out infinite; }
-.typing-dots span { animation: typingDots 1.4s infinite; }
-.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes typingDots {
-  0%, 60%, 100% { opacity: 0.4; transform: translateY(0); }
-  30%           { opacity: 1;   transform: translateY(-4px); }
-}
-
-/* Header fade based on scroll position */
-.header-fade { transition: opacity 0.3s ease-out, transform 0.3s ease-out; }
-
-/* Auto-resize textarea helper */
-.auto-resize { field-sizing: content; }
-
-/* Smooth page scrolling */
-html { scroll-behavior: smooth; }
-
-/* --- Sidebar-aware layout for the chat panel --- */
-
-/* Default (mobile / no sidebar offset) */
-:root{
-  --sidebar-offset: 0;      /* updated by <html> class from base.js */
-  --input-h: 72px;          /* optional: approx fixed input height */
-}
-
-/* Desktop: offset equals sidebar width (class is toggled by base.js) */
-@media (min-width: 640px){
-  html.sidebar-collapsed { --sidebar-offset: 4rem; }   /* skinny bar */
-  html:not(.sidebar-collapsed) { --sidebar-offset: 16rem; } /* full bar */
-}
-
-/* Make the fixed input respect the sidebar */
-#fixedInputArea{
-  left: var(--sidebar-offset);
-  right: 0;
-}
-
-/* (Optional) prevent horizontal scrolling just in case */
-html, body { overflow-x: hidden; }
-
+/* === General Message Styling === */
 .message-container.user {
     display: flex;
     justify-content: flex-end;
@@ -84,6 +17,7 @@ html, body { overflow-x: hidden; }
     border-radius: 20px;
     position: relative;
     word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .message-container.user .message-bubble {
@@ -103,31 +37,67 @@ html, body { overflow-x: hidden; }
     line-height: 1.5;
 }
 
-.message-content ul {
-    margin: 8px 0;
-    padding-left: 20px;
-}
-
-.message-content li {
-    margin-bottom: 4px;
-}
-
 .message-time {
     font-size: 0.75rem;
     opacity: 0.7;
+    text-align: right;
 }
 
-/* Assistant message styling for structured content */
-.message-container.assistant .message-content h3 {
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: #1F2937;
+/* === Chat Input Area Styling === */
+#fixedInputArea {
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.95);
+    left: 16rem; 
+    right: 0;
+    transition: left 0.15s ease-in-out;
 }
 
-.message-container.assistant .message-content p {
-    margin-bottom: 8px;
+html.sidebar-collapsed #fixedInputArea {
+    left: 4rem; 
+}
 
-/* Conversation view padding */
+@media (max-width: 768px) {
+    #fixedInputArea {
+        left: 0;
+    }
+}
+
+#chatForm .flex.items-center,
+#chatFormActive .flex.items-end {
+    border: 1px solid #e5e7eb; 
+    transition: border-color 0.15s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+#chatForm .flex.items-center.input-focused,
+#chatFormActive .flex.items-end.input-focused {
+    border-color: #11945f; /* Green border color */
+    box-shadow: 0 0 0 3px rgba(17, 148, 95, 0.2); /* subtle glow */
+}
+
+/* Auto-resizing textarea with smooth transition */
+#messageInputActive {
+    transition: height 0.2s ease-out;
+}
+
+/* Custom green scrollbar */
+#messageInputActive {
+    scrollbar-width: thin;
+    scrollbar-color: #11945f transparent; /* For Firefox */
+}
+#messageInputActive::-webkit-scrollbar {
+    width: 8px;
+}
+#messageInputActive::-webkit-scrollbar-track {
+    background: transparent;
+}
+#messageInputActive::-webkit-scrollbar-thumb {
+    background-color: #11945f;
+    border-radius: 10px;
+    border: 2px solid #f1f1f1;
+}
+
+
+/* === Conversation & Message Animations === */
 #conversationSection {
     padding-top: 24px;
     padding-bottom: 120px;
@@ -139,29 +109,33 @@ html, body { overflow-x: hidden; }
     padding: 0 24px;
 }
 
-/* === Smooth screen transitions === */
-.fade-out-up {
-  animation: fadeOutUp 420ms ease forwards;
-}
-@keyframes fadeOutUp {
-  from { opacity: 1; transform: translateY(0); }
-  to   { opacity: 0; transform: translateY(-16px); }
+/* "float up" effect for the last message. */
+#messagesList::after {
+    content: '';
+    display: block;
+    height: 40vh; 
 }
 
-.fade-in-up {
-  animation: fadeInUp 460ms ease forwards;
-}
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+.message-appear {
+    animation: messageAppear 0.5s ease-out forwards;
 }
 
-/* Optional: prevent clicks while animating in */
-.appearing {
-  pointer-events: none;
-}
-.appearing.fade-in-up {
-  pointer-events: auto; /* restore at end via JS */
+@keyframes messageAppear {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* Typing Indicator */
+.message-container.typing-indicator {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 24px;
 }
+.typing-dots span { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: #9ca3af; margin: 0 2px; animation: typing-bounce 1.4s infinite; }
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing-bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+
+/* Screen Transition Animations */
+#greetingSection { transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+#greetingSection.transitioning-out { opacity: 0; transform: translateY(-20px) scale(0.95); }
