@@ -7,7 +7,6 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" rel="stylesheet">
   {% load static %}
-  {% csrf_token %}
   <meta name="csrf-token" content="{{ csrf_token }}">
   <script src="{% static 'js/base.js' %}" defer></script>
   {% block scripts %}{% endblock %}
@@ -79,7 +78,7 @@
 
           <!-- Chat History Section -->
           <div class="pt-2 flex-1 chat-history-section" style="display: flex; flex-direction: column; min-height: 0;">
-            <div class="item-label px-2.5 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider flex-shrink-0">
+            <div class="item-label px-2 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider flex-shrink-0">
               History ({{ conversations|length }} conversations)
             </div>
             <div id="chatHistory" class="space-y-1 overflow-y-auto" style="flex: 1; height: 0;">
@@ -151,7 +150,7 @@
           <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
             <i class="fa-solid fa-exclamation-triangle text-red-600"></i>
           </div>
-          <h3 class="text-lg font-semibold text-gray-900">127.0.0.1:8000 says</h3>
+          <h3 class="text-lg font-semibold text-gray-900">Permanently delete</h3>
         </div>
         <p class="text-gray-700 mb-6">Are you sure you want to delete this conversation?</p>
         <div class="flex gap-3 justify-end">

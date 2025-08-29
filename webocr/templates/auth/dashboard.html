@@ -1,22 +1,27 @@
 {% extends "base.html" %}
 {% load static %}
-{% block styles %}{% endblock %}
-{% block scripts %}{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/dashboard.js' %}" defer></script>
+{% endblock %}
+
 {% block title %}Smart Chat - Archive System{% endblock %}
 {% block page_title %}Smart Chat{% endblock %}
+
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 <div class="min-h-screen">
     {% if current_conversation %}
-    <!-- Existing conversation view -->
     <div id="conversationSection" class="min-h-screen px-4 pt-4 pb-8">
         <div class="max-w-4xl mx-auto">
-            <!-- Messages container -->
             <div id="messagesList" class="space-y-6 pb-32">
                 {% for message in messages %}
-                    <div class="message-container {% if message.message_type == 'user' %}user{% else %}assistant{% endif %}">
+                    <div class="message-container {{ message.message_type }}">
                         <div class="message-bubble">
-                            <div class="message-content">{{ message.content }}</div>
+                            <div class="message-content">{{ message.content|safe }}</div>
                             <div class="message-time">{{ message.timestamp|date:"H:i" }}</div>
                         </div>
                     </div>
@@ -25,49 +30,15 @@
         </div>
     </div>
     
-    <!-- Fixed input area for existing conversation -->
-    <div id="fixedInputArea" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-10">
-        <div class="max-w-4xl mx-auto">
-            <form id="chatFormActive" class="relative">
-                {% csrf_token %}
-                <input type="hidden" name="conversation_id" value="{{ current_conversation.id }}">
-                <div class="flex items-end bg-gray-50 rounded-2xl border border-gray-200 px-6 py-3">
-                    <textarea
-                        id="messageInputActive"
-                        name="message"
-                        placeholder="Ask anything..."
-                        rows="1"
-                        class="flex-1 border-none outline-none text-gray-800 placeholder-gray-400 bg-transparent resize-none overflow-y-auto max-h-32 min-h-[24px]"
-                        style="scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent;"
-                    ></textarea>
-                    <button
-                        id="sendButtonActive"
-                        type="submit"
-                        disabled
-                        class="ml-4 w-8 h-8 bg-gray-300 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-full transition-all duration-200 flex items-center justify-center hover:bg-green-600 disabled:hover:bg-gray-300 flex-shrink-0"
-                    >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                        </svg>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
     {% else %}
-    <!-- New chat greeting section -->
-    <div id="greetingSection" class="h-screen flex items-center justify-center px-4 transition-all duration-700 ease-out">
+    <div id="greetingSection" class="h-screen flex items-center justify-center px-4">
         <div class="w-full max-w-3xl">
-            <!-- Main title -->
-            <div id="pageHeader" class="text-center mb-16 transition-all duration-500">
+            <div id="pageHeader" class="text-center mb-16">
                 <h1 class="text-4xl sm:text-5xl font-extrabold tracking-wide text-green-700">
                     How can I help you today?
                 </h1>
             </div>
-
-            <!-- Input area -->
-            <div id="initialInputContainer" class="relative transition-all duration-700 ease-out">
+            <div id="initialInputContainer" class="relative">
                 <form id="chatForm" class="relative">
                     {% csrf_token %}
                     <div class="flex items-center bg-white rounded-full shadow-lg border border-gray-200 px-6 py-4">
@@ -94,23 +65,20 @@
         </div>
     </div>
 
-    <!-- Conversation section (hidden initially) -->
     <div id="conversationSection" class="hidden min-h-screen px-4 pt-4 pb-8">
         <div class="max-w-4xl mx-auto">
-            <!-- Messages container -->
             <div id="messagesList" class="space-y-6 pb-32">
-                <!-- Messages will be added here -->
-            </div>
+                </div>
         </div>
     </div>
+    {% endif %}
 
-    <!-- Fixed input area (hidden initially) -->
-    <div id="fixedInputArea" class="hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-10">
+    <div id="fixedInputArea" class="{% if not current_conversation %}hidden{% endif %} fixed bottom-0 left-0 right-0 bg-white p-4 z-10">
         <div class="max-w-4xl mx-auto">
             <form id="chatFormActive" class="relative">
                 {% csrf_token %}
-                <input type="hidden" name="conversation_id" value="">
-                <div class="flex items-end bg-gray-50 rounded-2xl border border-gray-200 px-6 py-3">
+                <input type="hidden" name="conversation_id" value="{{ current_conversation.id }}">
+                <div class="flex items-end bg-gray-50 rounded-3xl border border-gray-200 px-6 py-3">
                     <textarea
                         id="messageInputActive"
                         name="message"
@@ -133,251 +101,5 @@
             </form>
         </div>
     </div>
-    {% endif %}
 </div>
-
-<style>
-.message-container.user {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 16px;
-}
-
-.message-container.assistant {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 24px;
-}
-
-.message-bubble {
-    max-width: 70%;
-    padding: 16px 20px;
-    border-radius: 20px;
-    position: relative;
-    word-wrap: break-word;
-}
-
-.message-container.user .message-bubble {
-    background-color: #11945f;
-    color: white;
-    border-bottom-right-radius: 6px;
-}
-
-.message-container.assistant .message-bubble {
-    background-color: #f3f3f4ff;
-    color: #374151;
-    border-bottom-left-radius: 6px;
-}
-
-.message-content {
-    margin-bottom: 6px;
-    line-height: 1.5;
-}
-
-.message-content ul {
-    margin: 8px 0;
-    padding-left: 20px;
-}
-
-.message-content li {
-    margin-bottom: 4px;
-}
-
-.message-time {
-    font-size: 0.75rem;
-    opacity: 0.7;
-}
-
-/* Assistant message styling for structured content */
-.message-container.assistant .message-content h3 {
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: #1F2937;
-}
-
-.message-container.assistant .message-content p {
-    margin-bottom: 8px;
-}
-
-/* Chat input area styling */
-#fixedInputArea {
-    backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.95);
-}
-
-/* Conversation view padding */
-#conversationSection {
-    padding-top: 24px;
-    padding-bottom: 120px;
-}
-
-#messagesList {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 24px;
-}
-</style>
-
-<script>
-// Handle chat form submissions
-document.addEventListener('DOMContentLoaded', function() {
-    const chatForm = document.getElementById('chatForm');
-    const chatFormActive = document.getElementById('chatFormActive');
-    
-    if (chatForm) {
-        chatForm.addEventListener('submit', handleChatSubmit);
-    }
-    
-    if (chatFormActive) {
-        chatFormActive.addEventListener('submit', function(e) {
-            handleChatSubmit(e);
-            // Clear the active input after sending
-            setTimeout(() => {
-                document.getElementById('messageInputActive').value = '';
-                document.getElementById('sendButtonActive').disabled = true;
-                document.getElementById('sendButtonActive').classList.add('bg-gray-300');
-                document.getElementById('sendButtonActive').classList.remove('bg-green-600');
-            }, 100);
-        });
-    }
-    
-    // Enable/disable send buttons based on input
-    const messageInput = document.getElementById('messageInput');
-    const messageInputActive = document.getElementById('messageInputActive');
-    const sendButton = document.getElementById('sendButton');
-    const sendButtonActive = document.getElementById('sendButtonActive');
-    
-    if (messageInput && sendButton) {
-        messageInput.addEventListener('input', function() {
-            sendButton.disabled = !this.value.trim();
-            sendButton.classList.toggle('bg-green-600', this.value.trim());
-            sendButton.classList.toggle('bg-gray-300', !this.value.trim());
-        });
-        
-        // Add Enter key functionality for initial input
-        messageInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                if (this.value.trim()) {
-                    chatForm.dispatchEvent(new Event('submit'));
-                }
-            }
-        });
-    }
-    
-    if (messageInputActive && sendButtonActive) {
-        messageInputActive.addEventListener('input', function() {
-            sendButtonActive.disabled = !this.value.trim();
-            sendButtonActive.classList.toggle('bg-green-600', this.value.trim());
-            sendButtonActive.classList.toggle('bg-gray-300', !this.value.trim());
-        });
-        
-        // Add Enter key functionality for active chat input
-        messageInputActive.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                if (this.value.trim()) {
-                    chatFormActive.dispatchEvent(new Event('submit'));
-                }
-            }
-        });
-    }
-});
-
-function handleChatSubmit(e) {
-    e.preventDefault();
-    
-    const formData = new FormData(e.target);
-    const messageContent = formData.get('message').trim();
-    
-    if (!messageContent) return;
-    
-    // If this is the initial form (greeting screen), transition to conversation view
-    const isInitialForm = e.target.id === 'chatForm';
-    
-    if (isInitialForm) {
-        // Hide greeting section and show conversation section
-        document.getElementById('greetingSection').style.display = 'none';
-        document.getElementById('conversationSection').classList.remove('hidden');
-        document.getElementById('fixedInputArea').classList.remove('hidden');
-        
-        // Add the user message to the conversation immediately
-        addMessageToChat('user', messageContent);
-        
-        // Clear the initial input
-        document.getElementById('messageInput').value = '';
-        document.getElementById('sendButton').disabled = true;
-        document.getElementById('sendButton').classList.add('bg-gray-300');
-                        document.getElementById('sendButton').classList.remove('bg-green-600');
-    }
-    
-    // Send message to server
-    fetch('/chat/message/', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            if (isInitialForm) {
-                // For new conversation, add assistant response and update conversation ID
-                addMessageToChat('assistant', data.assistant_message.content);
-                document.querySelector('input[name="conversation_id"]').value = data.conversation_id;
-                
-                // Update the page URL without reload
-                window.history.pushState({}, '', `/chat/${data.conversation_id}/`);
-                
-                // If this is a new conversation, refresh the sidebar to show it
-                if (data.is_new_conversation) {
-                    updateSidebar(data.conversation_id);
-                }
-            } else {
-                // For existing conversation, just reload to show new messages
-                location.reload();
-            }
-        } else {
-            alert('Error sending message: ' + (data.error || 'Unknown error'));
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error sending message');
-    });
-}
-
-function addMessageToChat(messageType, content) {
-    const messagesList = document.getElementById('messagesList');
-    const messageContainer = document.createElement('div');
-    messageContainer.className = `message-container ${messageType}`;
-    
-    const currentTime = new Date().toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: false 
-    });
-    
-    messageContainer.innerHTML = `
-        <div class="message-bubble">
-            <div class="message-content">${content}</div>
-            <div class="message-time">${currentTime}</div>
-        </div>
-    `;
-    
-    messagesList.appendChild(messageContainer);
-    
-    // Scroll to bottom
-    messageContainer.scrollIntoView({ behavior: 'smooth' });
-}
-
-function updateSidebar(conversationId) {
-    // Reload the entire page to refresh the sidebar with new conversation
-    // In a more sophisticated implementation, you could make an AJAX call to update just the sidebar
-    setTimeout(() => {
-        location.reload();
-    }, 1000); // Give a small delay to ensure the conversation is saved
-}
-</script>
 {% endblock %}

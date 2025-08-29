@@ -662,6 +662,7 @@ def documents_view(request):
     document = Document.objects.all()
     return render(request, 'documents/documents_view.html', {'document': document})
 
+@login_required
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -676,7 +677,14 @@ def change_password(request):
                     messages.error(request, error)
     else:
         form = PasswordChangeForm(request.user)
-    return render(request, 'auth/change_password.html', {'form': form, 'hide_sidebar': True})
+    
+    # Get conversations for sidebar
+    conversations = ChatConversation.objects.filter(user=request.user).order_by('-created_at')
+    
+    return render(request, 'auth/change_password.html', {
+        'form': form,
+        'conversations': conversations,
+    })
 
 @require_GET
 @login_required
