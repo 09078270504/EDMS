@@ -161,6 +161,7 @@ INFO 2025-08-27 13:25:56,717 security_utils 12176 5940 login_success: User=lim12
 INFO 2025-08-27 13:29:38,507 security_utils 11320 12248 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-27 13:29:40,199 security_utils 11320 12248 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-27 14:31:38,641 security_utils 9958 137070047651520 login_success: User=zapatero, IP=127.0.0.1
+<<<<<<< HEAD
 INFO 2025-08-28 08:55:52,606 security_utils 4264 4412 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-28 09:10:00,845 security_utils 4264 4080 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-28 09:19:06,704 security_utils 4264 4080 login_success: User=lim123, IP=127.0.0.1
@@ -188,3 +189,14 @@ INFO 2025-08-28 15:57:11,632 security_utils 10820 7092 login_success: User=lim12
 INFO 2025-08-28 15:57:28,571 security_utils 10820 7092 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-29 10:21:39,533 security_utils 11564 11080 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-29 10:22:10,552 security_utils 11564 11080 logout: User=lim123, IP=127.0.0.1
+=======
+INFO 2025-08-27 16:51:58,522 security_utils 44815 138148449347264 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-08-27 17:27:25,157 security_utils 78471 124059860858560 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-08-28 09:32:41,844 security_utils 57231 140421259843264 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-08-28 09:35:21,553 security_utils 58473 126274924181184 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-08-28 13:45:35,319 security_utils 133066 132235533481664 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-08-28 15:45:55,266 security_utils 181552 132980754335424 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-08-28 17:13:11,015 security_utils 215439 136467124840128 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-08-29 10:51:54,906 security_utils 78441 132957137266368 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-08-29 12:58:35,027 security_utils 125451 129886938191552 login_success: User=zapatero, IP=127.0.0.1
+>>>>>>> 72588db0057af4f09569dfc18cb1c2588db2dfd0
