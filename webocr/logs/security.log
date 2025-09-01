@@ -208,3 +208,10 @@ INFO 2025-09-01 10:23:10,415 security_utils 12664 11528 login_success: User=lim1
 INFO 2025-09-01 10:23:27,034 security_utils 12664 7548 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-09-01 10:23:29,615 security_utils 12664 7548 logout: User=lim123, IP=127.0.0.1
 INFO 2025-09-01 11:54:25,335 security_utils 13252 12144 login_success: User=lim123, IP=127.0.0.1
+INFO 2025-09-01 13:40:56,633 security_utils 11664 11308 logout: User=lim123, IP=127.0.0.1
+INFO 2025-09-01 13:41:38,365 security_utils 11664 11308 login_success: User=lim123, IP=127.0.0.1
+INFO 2025-09-01 13:41:41,799 security_utils 11664 11308 logout: User=lim123, IP=127.0.0.1
+INFO 2025-09-01 13:41:57,172 security_utils 11664 11308 login_success: User=lim123, IP=127.0.0.1
+INFO 2025-09-01 13:42:04,191 security_utils 11664 11308 logout: User=lim123, IP=127.0.0.1
+INFO 2025-09-01 14:59:31,704 security_utils 8120 1952 login_success: User=lim123, IP=127.0.0.1
+INFO 2025-09-01 14:59:51,386 security_utils 8120 1952 logout: User=lim123, IP=127.0.0.1
