@@ -61,7 +61,7 @@
                 Discover what makes <span class="text-green-600">Fowse</span> the easiest way to
                 <span class="text-green-600">manage</span> your documents.
               </h2>
-                <div class="inline-flex items-center bg-white rounded-full p-1 mt-6 border border-gray-300">
+                 <div class="inline-flex items-center bg-white rounded-full p-1 mt-6 border border-gray-300">
                       <button id="chatButton" class="px-8 py-3 text-white bg-green-600 rounded-full font-semibold transition-all duration-300">
                           Chat
                       </button>
@@ -83,46 +83,54 @@
               <ul class="list-disc pl-5 text-black text-left space-y-2">
                 <li><span class="font-bold">Document Chat:</span> Chat directly with your documents to quickly extract key details, summaries, and explanations.</li>
                 <li><span class="font-bold">Context-aware assistance:</span> Fowse Chat understands the context of your files, letting you refine queries and surface exactly the information you need.</li>
-                <li><span class="font-bold">Flexible interaction:</span> Whether you want quick summaries, detailed insights, or step-by-step explanations, Fowse Chat adapts to your workflow for smarter document collaboration.</li>
+                <li><span class="font-bold">Flexible interaction:</span> Get quick summaries, detailed insights, or step-by-step explanations to fit your workflow.</li>
               </ul>
             </div>
-            
-            <!-- Search Panel Content - Initially hidden -->
-          <div id="searchPanelText" class="p-6 md:p-8 border-b md:border-b-0 md:border-r hidden">
-            <h1 class="text-black mb-6 text-xl md:text-2xl font-semibold text-left">
-              Intelligent document search
-            </h1>
-            <ul class="list-disc pl-5 text-black text-left space-y-2">
-              <li><span class="font-bold">Smart Search:</span> Find documents instantly using natural language queries and advanced filtering options.</li>
-              <li><span class="font-bold">Content Discovery:</span> Search within document contents, not just filenames, to locate specific information across your entire archive.</li>
-              <li><span class="font-bold">Precision Results:</span> Get relevant results ranked by relevance with highlighted text snippets showing exactly where your search terms appear.</li>
-            </ul>
-          </div>
-        </div>
 
-          <!-- Right Column (Image Placeholder) -->
-            <div class="w-1/2 m-auto">
-              <!-- Content Container for the panels (Chat/Search) -->
-              <div id="contentPanel" class="mt-6">
-                <!-- Default (Chat Panel) -->
-                <div id="chatPanel" class="flex justify-center">
-                  <img src="{% static 'img/chat_placeholder.png' %}" alt="Chat Panel" class="w-full max-w-4xl aspect-video rounded-2xl overflow-hidden shadow-lg">
+            <!-- Search Panel Content - Initially hidden -->
+            <div id="searchPanelText" class="p-6 md:p-8 border-b md:border-b-0 md:border-r hidden">
+              <h1 class="text-black mb-6 text-xl md:text-2xl font-semibold text-left">
+                Intelligent document search
+              </h1>
+              <ul class="list-disc pl-5 text-black text-left space-y-2">
+                <li><span class="font-bold">Fast Search:</span> Find documents instantly using natural language queries and advanced filtering options.</li>
+                <li><span class="font-bold">Smart Filtering:</span> Narrow results with filters, tags, and
+                metadata so you always land on the exact file you need.</li>
+                <li><span class="font-bold">Scalable Performance:</span> Whether you're searching a few files or 
+                thousands, Fowse Search delivers results quickly and reliably.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Right Column: Image Placeholder -->
+          <div class="m-auto">
+            <!-- Content Container for the panels (Chat/Search) -->
+            <div id="contentPanel" class="mt-6">
+              <div id="chatPanel" class="flex justify-center">
+                <div class="w-full max-w-lg aspect-video rounded-2xl overflow-hidden shadow-lg">
+                  <img src="{% static 'img/background_fowse.png' %}" 
+                      alt="Chat Panel" 
+                      class="w-full h-full object-cover">
                 </div>
-                <!-- Default (Search Panel) - Initially hidden -->
-                <div id="searchPanel" class="flex justify-center hidden">
-                  <img src="{% static 'img/search_placeholder.png' %}" alt="Search Panel" class="w-full max-w-4xl aspect-video rounded-2xl overflow-hidden shadow-lg">
+              </div>
+
+              <!-- Search Panel -->
+              <div id="searchPanel" class="flex justify-center hidden">
+                <div class="w-full max-w-lg aspect-video rounded-2xl overflow-hidden shadow-lg">
+                  <img src="{% static 'img/background_fowse.png' %}" 
+                      alt="Search Panel" 
+                      class="w-full h-full object-cover">
                 </div>
               </div>
             </div>
           </div>
-
+        </div>
 
       <!-- Another Section -->
       <div class="py-16 bg-gray-100">
         <h2 class="text-4xl text-center font-semibold text-gray-800">Section Title</h2>
         <p class="text-center mt-4 text-gray-600">Another piece of content for the page.</p>
       </div>
-
       <!-- More sections can be added here -->
        <div class="py-16 bg-gray-100">
         <h2 class="text-4xl text-center font-semibold text-gray-800">Section Title</h2>
@@ -287,3 +295,4 @@
     <script src="{% static 'js/base.js' %}"></script>
     {% block scripts %}{% endblock %}
 </body>
+</html>
