@@ -18,10 +18,28 @@
         <p class="mt-3 text-s font-custom-verdana text-gray-600">Find your documents quickly</p>
     </div>
 
-    <!-- Search (centered, pill) -->
+    <!-- Search Mode Toggle -->
+    <div class="flex justify-center mb-6">
+        <div class="inline-flex rounded-xl bg-gray-100 p-1">
+            <button id="keywordSearchBtn" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-white shadow text-green-600 font-medium transition">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"/>
+                </svg>
+                Keyword Search
+            </button>
+            <button id="llmSearchBtn" class="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 font-medium hover:bg-gray-200 transition">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+                </svg>
+                AI Search
+            </button>
+        </div>
+    </div>
+
+    <!-- Search Form -->
     <div class="relative max-w-a mx-auto">
         <form id="searchForm" action="{% url 'search_documents' %}" method="GET" class="relative">
-            <!-- left search icon (vertically centered) -->
+            <!-- Search icon -->
             <div class="absolute inset-y-0 left-4 flex items-center">
                 <svg class="h-5 w-5 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -40,15 +58,15 @@
                         focus:ring-2 focus:ring-green-600 focus:outline-none text-base placeholder-gray-400"
             />
 
-            <!-- Hidden filter inputs for form submission -->
+            <!-- Hidden filter inputs -->
             <input type="hidden" id="client_filter_hidden" name="client_filter" value="{{ request.GET.client_filter }}">
             <input type="hidden" id="date_from_hidden" name="date_from" value="{{ request.GET.date_from }}">
             <input type="hidden" id="date_to_hidden" name="date_to" value="{{ request.GET.date_to }}">
             <input type="hidden" name="view" value="{{ request.GET.view }}">
 
-            <!-- right-side action icons (always centered inside input) -->
+            <!-- Right-side buttons -->
             <div class="absolute inset-y-0 right-2 flex items-center gap-1">
-                <!-- clear (x) -->
+                <!-- Clear button -->
                 <button id="clearBtn" type="button"
                         class="hidden h-10 w-10 rounded-full hover:bg-gray-100 text-black"
                         title="Clear">
@@ -57,7 +75,7 @@
                     </svg>
                 </button>
 
-                <!-- filter -->
+                <!-- Filter button -->
                 <button id="filterBtn" type="button"
                         class="h-10 w-10 rounded-full hover:bg-gray-100 text-black transition-colors"
                         title="Filters">
@@ -71,121 +89,20 @@
         </form>
     </div>
 
-    <!-- View toggles -->
-    <div class="max-w-6xl mx-auto">
-        <div class="mt-6 flex justify-end">
-            <div class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1">
-                <!-- List view -->
-                <a href="?{% for key, value in request.GET.items %}{% if key != 'view' %}{{ key }}={{ value }}&{% endif %}{% endfor %}" title="List view"
-                class="inline-flex h-8 w-8 items-center justify-center rounded-full {% if request.GET.view != 'grid' %}bg-green-200 text-black{% else %}hover:bg-green-200 text-black{% endif %}">
-                    <i class="fa-solid fa-list"></i>
-                </a>
-                <!-- Grid view -->
-                <a href="?view=grid&{% for key, value in request.GET.items %}{% if key != 'view' %}{{ key }}={{ value }}&{% endif %}{% endfor %}" title="Grid view"
-                class="inline-flex h-8 w-8 items-center justify-center rounded-full {% if request.GET.view == 'grid' %}bg-green-200 text-black{% else %}hover:bg-green-200 text-black{% endif %}">
-                    <i class="fa-solid fa-border-all"></i>
-                </a>
-            </div>
+    <!-- Search Mode Description -->
+    <div id="searchDescription" class="text-center mt-4 text-sm text-gray-600 max-w-2xl mx-auto">
+        <div id="keywordDescription">
+            Search by keywords, company names, amounts, or document IDs. Fast and precise results.
         </div>
-    </div>  
+        <div id="llmDescription" class="hidden">
+            Ask questions in natural language. AI will analyze documents and provide intelligent answers.
+        </div>
+    </div>
 
-    <!-- Results section - conditional based on view type -->
-    {% if request.GET.view == 'grid' %}
-        <!-- Grid view -->
-        <div class="mt-4">
-            {% if documents and documents|length > 0 %}
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {% for d in documents %}
-                    <div class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow">
-                        <div class="flex items-center justify-center h-20 mb-3 bg-red-50 rounded-lg">
-                            <span class="inline-flex h-8 w-8 items-center justify-center rounded bg-red-100 text-red-600 font-semibold text-xs">PDF</span>
-                        </div>
-                        <div class="text-center">
-                            <h3 class="font-medium text-gray-900 truncate mb-1" title="{{ d.name }}">{{ d.name }}</h3>
-                            <p class="text-xs text-gray-500 mb-1">{{ d.modified_at|date:"n/j/Y" }}</p>
-                            <p class="text-xs text-gray-500 mb-2">{{ d.size_display }}</p>
-                            <p class="text-xs text-gray-600">{{ d.item_type }}</p>
-                        </div>
-                        <div class="mt-3 flex justify-center">
-                            <button class="inline-flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100" title="More">
-                                <svg class="h-4 w-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                                    <path d="M6 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm6 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm6 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="text-center py-14">
-                    <div class="mx-auto h-16 w-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                        <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                        </svg>
-                    </div>
-                    <p class="text-gray-500">No documents found. Try another query or adjust filters.</p>
-                </div>
-            {% endif %}
-        </div>
-    {% else %}
-        <!-- List view (table) -->
-        <div class="mt-4 bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-            <div class="overflow-x-auto">
-                <table class="min-w-full text-sm">
-                    <thead class="bg-gray-50 text-gray-600">
-                        <tr>
-                            <th class="py-3 pl-6 pr-3 text-left font-semibold">Name</th>
-                            <th class="px-3 py-3 text-left font-semibold">Date Modified</th>
-                            <th class="px-3 py-3 text-left font-semibold">Item</th>
-                            <th class="px-6 py-3 text-right font-semibold">File Size</th>
-                            <th class="px-3 py-3"></th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 text-gray-800">
-                        {% if documents and documents|length > 0 %}
-                            {% for d in documents %}
-                            <tr class="hover:bg-gray-50">
-                                <td class="py-4 pl-6 pr-3">
-                                    <div class="flex items-center gap-3">
-                                        <span class="inline-flex h-6 w-6 items-center justify-center rounded-sm bg-red-100 text-red-600 font-semibold text-[10px]">PDF</span>
-                                        <div class="truncate">{{ d.name }}</div>
-                                    </div>
-                                </td>
-                                <td class="px-3 py-4 text-gray-600">{{ d.modified_at|date:"n/j/Y g:i A" }}</td>
-                                <td class="px-3 py-4 text-gray-600">{{ d.item_type }}</td>
-                                <td class="px-6 py-4 text-right text-gray-600">{{ d.size_display }}</td>
-                                <td class="px-3 py-4 text-right">
-                                    <button class="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100" title="More">
-                                        <svg class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M6 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm6 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm6 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
-                                        </svg>
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        {% else %}
-                            <tr>
-                                <td colspan="5" class="py-14 text-center text-gray-500">
-                                    No documents found. Try another query or adjust filters.
-                                </td>
-                            </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    {% endif %}
-
-    <!-- Tips -->
+    <!-- Search Examples -->
     <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="rounded-xl bg-gray-50 border border-gray-200 p-6">
-            <h3 class="text-gray-900 font-semibold mb-2">How it works</h3>
-            <p class="text-sm text-gray-700 space-y-1">
-                Search by keywords, company names, amounts, or document IDs. Use the filter button to narrow by client and date.
-            </p>
-        </div>
-        <div class="rounded-xl bg-gray-50 border border-gray-200 p-6">
-            <h3 class="text-gray-900 font-semibold mb-2">Search examples</h3>
+        <div id="keywordExamples" class="rounded-xl bg-gray-50 border border-gray-200 p-6">
+            <h3 class="text-gray-900 font-semibold mb-2">Keyword Search Examples</h3>
             <ul class="text-sm text-gray-700 space-y-1">
                 <li>• "Philippine Airlines"</li>
                 <li>• "PHP 15,000"</li>
@@ -193,10 +110,28 @@
                 <li>• "invoice 2024"</li>
             </ul>
         </div>
+        
+        <div id="llmExamples" class="hidden rounded-xl bg-gray-50 border border-gray-200 p-6">
+            <h3 class="text-gray-900 font-semibold mb-2">AI Search Examples</h3>
+            <ul class="text-sm text-gray-700 space-y-1">
+                <li>• "What invoices are from December 2024?"</li>
+                <li>• "Show me all Philippine Airlines documents"</li>
+                <li>• "What's the total amount for client ABC?"</li>
+                <li>• "Find receipts over 10,000 pesos"</li>
+            </ul>
+        </div>
+        
+        <div class="rounded-xl bg-gray-50 border border-gray-200 p-6">
+            <h3 class="text-gray-900 font-semibold mb-2">How it works</h3>
+            <p class="text-sm text-gray-700 space-y-1">
+                <span id="keywordHow">Search by keywords, company names, amounts, or document IDs. Use the filter button to narrow by client and date.</span>
+                <span id="llmHow" class="hidden">AI reads document content and provides intelligent answers to your questions in plain English.</span>
+            </p>
+        </div>
     </div>
 </div>
 
-<!-- Filter Popup Modal -->
+<!-- Filter Modal -->
 <div id="filterModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white rounded-2xl w-full max-w-2xl mx-4 p-8 shadow-2xl transform transition-all">
         <!-- Modal Header -->
@@ -211,9 +146,9 @@
 
         <!-- Filter Form -->
         <div class="space-y-6">
-            <!-- Item Type -->
+            <!-- Client -->
             <div>
-                <label class="block text-sm font-medium text-gray-900 mb-3">Item:</label>
+                <label class="block text-sm font-medium text-gray-900 mb-3">Client:</label>
                 <div class="relative">
                     <select id="client_filter" class="w-full appearance-none bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:ring-green-600 focus:border-transparent">
                         <option value="">Any</option>
@@ -227,20 +162,6 @@
                         </svg>
                     </div>
                 </div>
-            </div>
-
-            <!-- Item Name -->
-            <div>
-                <label class="block text-sm font-medium text-gray-900 mb-3">Item name:</label>
-                <input type="text" id="item_name" placeholder="Enter a term that matches part of the file name"
-                       class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-green-600 focus:border-transparent">
-            </div>
-
-            <!-- Includes the words -->
-            <div>
-                <label class="block text-sm font-medium text-gray-900 mb-3">Includes the words:</label>
-                <input type="text" id="includes_words" placeholder="Enter words found in the file"
-                       class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-green-600 focus:border-transparent">
             </div>
 
             <!-- Date Range -->
@@ -269,4 +190,102 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const keywordBtn = document.getElementById('keywordSearchBtn');
+    const llmBtn = document.getElementById('llmSearchBtn');
+    const searchForm = document.getElementById('searchForm');
+    const searchInput = document.getElementById('search_query');
+    
+    // Toggle between search modes
+    function setSearchMode(mode) {
+        if (mode === 'llm') {
+            // Switch to LLM mode
+            keywordBtn.classList.remove('bg-white', 'shadow', 'text-green-600');
+            keywordBtn.classList.add('text-gray-600', 'hover:bg-gray-200');
+            
+            llmBtn.classList.remove('text-gray-600', 'hover:bg-gray-200');
+            llmBtn.classList.add('bg-white', 'shadow', 'text-green-600');
+            
+            searchForm.action = '{% url "llm_search_documents" %}';
+            searchInput.placeholder = 'Ask a question about your documents...';
+            
+            // Toggle descriptions and examples
+            document.getElementById('keywordDescription').classList.add('hidden');
+            document.getElementById('llmDescription').classList.remove('hidden');
+            document.getElementById('keywordExamples').classList.add('hidden');
+            document.getElementById('llmExamples').classList.remove('hidden');
+            document.getElementById('keywordHow').classList.add('hidden');
+            document.getElementById('llmHow').classList.remove('hidden');
+        } else {
+            // Switch to keyword mode
+            llmBtn.classList.remove('bg-white', 'shadow', 'text-green-600');
+            llmBtn.classList.add('text-gray-600', 'hover:bg-gray-200');
+            
+            keywordBtn.classList.remove('text-gray-600', 'hover:bg-gray-200');
+            keywordBtn.classList.add('bg-white', 'shadow', 'text-green-600');
+            
+            searchForm.action = '{% url "search_documents" %}';
+            searchInput.placeholder = 'Search documents...';
+            
+            // Toggle descriptions and examples
+            document.getElementById('llmDescription').classList.add('hidden');
+            document.getElementById('keywordDescription').classList.remove('hidden');
+            document.getElementById('llmExamples').classList.add('hidden');
+            document.getElementById('keywordExamples').classList.remove('hidden');
+            document.getElementById('llmHow').classList.add('hidden');
+            document.getElementById('keywordHow').classList.remove('hidden');
+        }
+    }
+    
+    keywordBtn.addEventListener('click', () => setSearchMode('keyword'));
+    llmBtn.addEventListener('click', () => setSearchMode('llm'));
+    
+    // Clear functionality
+    const clearBtn = document.getElementById('clearBtn');
+    function toggleClearButton() {
+        if (searchInput.value.trim()) {
+            clearBtn.classList.remove('hidden');
+        } else {
+            clearBtn.classList.add('hidden');
+        }
+    }
+    
+    searchInput.addEventListener('input', toggleClearButton);
+    clearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        toggleClearButton();
+        searchInput.focus();
+    });
+    toggleClearButton();
+    
+    // Filter modal
+    const filterBtn = document.getElementById('filterBtn');
+    const filterModal = document.getElementById('filterModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    
+    filterBtn.addEventListener('click', () => filterModal.classList.remove('hidden'));
+    closeModalBtn.addEventListener('click', () => filterModal.classList.add('hidden'));
+    filterModal.addEventListener('click', (e) => {
+        if (e.target === filterModal) filterModal.classList.add('hidden');
+    });
+    
+    // Apply filters
+    document.getElementById('applyFiltersBtn').addEventListener('click', function() {
+        document.getElementById('client_filter_hidden').value = document.getElementById('client_filter').value;
+        document.getElementById('date_from_hidden').value = document.getElementById('date_from').value;
+        document.getElementById('date_to_hidden').value = document.getElementById('date_to').value;
+        searchForm.submit();
+    });
+    
+    // Reset filters
+    document.getElementById('resetFiltersBtn').addEventListener('click', function() {
+        document.getElementById('client_filter').value = '';
+        document.getElementById('date_from').value = '';
+        document.getElementById('date_to').value = '';
+    });
+});
+</script>
+
 {% endblock %}

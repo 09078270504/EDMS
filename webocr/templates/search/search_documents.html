@@ -6,240 +6,295 @@
 {% block content %}
 <div class="max-w-5xl mx-auto">
 
-    <!-- Search Header with Results Info -->
-    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-        <div class="flex justify-between items-center mb-4">
-            <div>
-                <h2 class="text-xl font-semibold text-gray-900">
-                    {% if search_performed %}
-                        Results for: "{{ search_query }}"
-                    {% else %}
-                        Search Documents
-                    {% endif %}
-                </h2>
-                {% if search_performed %}
-                    <p class="text-gray-600 mt-1">
-                        {% if total_results > 0 %}
-                            Found {{ total_results }} document{{ total_results|pluralize }}
-                            {% if search_stage_used == 1 %}
-                                using fast metadata search
-                            {% else %}
-                                using deep content search
-                            {% endif %}
-                        {% else %}
-                            No documents found after searching both metadata and full content
-                        {% endif %}
-                    </p>
-                {% endif %}
-            </div>
-            
-            <!-- Search Method Indicator -->
-            {% if search_performed and total_results > 0 %}
-            <div class="flex items-center space-x-2">
-                {% if search_stage_used == 1 %}
-                    <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
-                        ⚡ Fast Search
-                    </span>
-                {% else %}
-                    <span class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
-                        🔍 Deep Search
-                    </span>
-                {% endif %}
-                
-                <a 
-                    href="{% url 'search_form' %}" 
-                    class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm transition"
-                >
-                    New Search
-                </a>
-            </div>
+  <!-- Search Header with Results Info -->
+  <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+    <div class="flex justify-between items-center mb-4">
+      <div>
+        <h2 class="text-xl font-semibold text-gray-900">
+          {% if search_performed %}
+            Results for: "{{ search_query }}"
+          {% else %}
+            Search Documents
+          {% endif %}
+        </h2>
+        {% if search_performed %}
+          <p class="text-gray-600 mt-1">
+            {% if total_results > 0 %}
+              Found {{ total_results }} document{{ total_results|pluralize }}
+              {% if search_type == 'llm' or search_stage_used == 3 %}
+                using AI search
+              {% elif search_stage_used == 1 %}
+                using fast metadata search
+              {% else %}
+                using deep content search
+              {% endif %}
+            {% else %}
+              {% if search_type == 'llm' %}
+                No documents found, but AI provided an analysis below
+              {% else %}
+                No documents found after searching both metadata and full content
+              {% endif %}
             {% endif %}
-        </div>
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- Search Method Indicator -->
+      {% if search_performed %}
+      <div class="flex items-center space-x-2">
+        {% if search_type == 'llm' or search_stage_used == 3 %}
+          <span class="bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-full">
+            AI Search
+          </span>
+        {% elif search_stage_used == 1 %}
+          <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+            Fast Search
+          </span>
+        {% else %}
+          <span class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
+            Deep Search
+          </span>
+        {% endif %}
+
+        <a href="{% url 'search_form' %}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm transition">
+          New Search
+        </a>
+      </div>
+      {% endif %}
     </div>
 
-    <!-- Results Section -->
-    {% if search_performed %}
-        {% if results %}
-            <!-- Results List -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Document
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Amount
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Date
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Client
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            {% for document in results %}
-                            <tr class="hover:bg-gray-50 transition-colors">
-                                <!-- Document Name -->
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex flex-col">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ document.metadata.invoice_number|default:document.filename }}
-                                        </div>
-                                        <div class="text-sm text-gray-500">
-                                            {{ document.document_type|default:'Document' }}
-                                        </div>
-                                        
-                                        <!-- Show matched fields for metadata search -->
-                                        {% if search_stage_used == 1 and document.matched_fields %}
-                                        <div class="mt-1">
-                                            {% for field in document.matched_fields|slice:":2" %}
-                                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mr-1">
-                                                    {{ field.field }}
-                                                </span>
-                                            {% endfor %}
-                                        </div>
-                                        {% endif %}
-                                        
-                                        <!-- Show text snippets for deep search -->
-                                        {% if search_stage_used == 2 and document.matched_snippets %}
-                                        <div class="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
-                                            <strong>Found in text:</strong><br>
-                                            {{ document.matched_snippets.0|safe|truncatewords:15 }}...
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                                
-                                <!-- Amount -->
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {% if document.metadata.amount %}
-                                        ₱{{ document.metadata.amount|floatformat:2 }}
-                                    {% elif document.metadata.financial %}
-                                        {{ document.metadata.financial.0|default:'-' }}
-                                    {% else %}
-                                        -
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- Date -->
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {% if document.metadata.date_issued %}
-                                        {{ document.metadata.date_issued }}
-                                    {% elif document.metadata.dates %}
-                                        {{ document.metadata.dates.0|default:'-' }}
-                                    {% else %}
-                                        -
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- Client -->
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {% if document.metadata.client_name %}
-                                        {{ document.metadata.client_name }}
-                                    {% else %}
-                                        {{ document.client_name|default:'-' }}
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- Actions -->
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a 
-                                        href="{% url 'document_detail' document.id %}" 
-                                        class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition"
-                                    >
-                                        View
-                                    </a>
-                                    
-                                    {% if document.file_paths.original %}
-                                    <a 
-                                        href="{{ document.file_paths.original }}" 
-                                        target="_blank"
-                                        class="ml-2 bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-xs transition"
-                                    >
-                                        PDF
-                                    </a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <!-- Results Summary -->
-            <div class="mt-6 bg-gray-50 rounded-lg p-4">
-                <div class="text-center text-sm text-gray-600">
-                    <p>
-                        Showing {{ total_results }} result{{ total_results|pluralize }} for "{{ search_query }}"
-                    </p>
-                    {% if search_stage_used == 1 %}
-                        <p class="mt-1 text-blue-600">
-                            ⚡ Found quickly using metadata search
-                        </p>
-                    {% else %}
-                        <p class="mt-1 text-green-600">
-                            🔍 Found using deep content search (searched full document text)
-                        </p>
-                    {% endif %}
-                </div>
-            </div>
-            
-        {% else %}
-            <!-- No Results Found -->
-            <div class="bg-white rounded-lg shadow-lg p-12 text-center">
-                <div class="text-6xl mb-4">📄</div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">No documents found</h3>
-                <p class="text-gray-600 mb-6">
-                    We searched through both document metadata and full content for "{{ search_query }}", but couldn't find any matching documents.
-                    <br><br>
-                    Try different keywords, check your spelling, or search for:
-                </p>
-                
-                <!-- Search Suggestions -->
-                <div class="bg-gray-50 rounded-lg p-4 mb-6 max-w-md mx-auto">
-                    <h4 class="font-medium text-gray-900 mb-2">Search suggestions:</h4>
-                    <ul class="text-sm text-gray-600 space-y-1">
-                        <li>Company names (e.g., "Philippine Airlines")</li>
-                        <li>Document types (e.g., "invoice", "receipt")</li>
-                        <li>Dates (e.g., "January 1, 2025")</li>
-                        <li>Document number (e.g., "OR-12345")</li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <a 
-                        href="{% url 'search_form' %}" 
-                        class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition"
-                    >
-                        Try Another Search
-                    </a>
-                </div>
-            </div>
-        {% endif %}
-    {% else %}
-        <!-- No Search Performed Yet -->
-        <div class="bg-white rounded-lg shadow-lg p-12 text-center">
-            <div class="text-6xl mb-4">🔍</div>
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">Ready to search</h3>
-            <p class="text-gray-600 mb-6">
-                Enter your search terms above to find documents. Our smart search will automatically find the best results for you.
-            </p>
-            <a 
-                href="{% url 'search_form' %}" 
-                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition"
-            >
-                Start Searching
-            </a>
+    <!-- Error Message -->
+    {% if error_message %}
+      <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-red-700">⚠️</span>
+          <h3 class="text-red-800 font-semibold">Error</h3>
         </div>
+        <p class="text-red-800">{{ error_message }}</p>
+      </div>
     {% endif %}
+
+    <!-- AI Answer Panel -->
+    {% if llm_answer %}
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-4">
+        <div class="flex items-center gap-2 mb-3">
+          <svg class="h-5 w-5 text-blue-700" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+          </svg>
+          <h3 class="text-blue-800 font-semibold text-lg">AI Answer</h3>
+        </div>
+        <div class="text-gray-800 leading-relaxed">
+          {{ llm_answer|linebreaks }}
+        </div>
+        {% if total_results > 0 %}
+          <p class="text-sm text-blue-600 mt-3">
+            This answer is based on {{ total_results }} matching document{{ total_results|pluralize }} shown below.
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Results Section -->
+  {% if search_performed %}
+    {% if results %}
+      <!-- Results List -->
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        {% if llm_answer %}
+        <div class="px-6 py-3 bg-gray-50 border-b border-gray-200">
+          <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+            Supporting Documents
+          </h3>
+        </div>
+        {% endif %}
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Document
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Amount
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Date
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Client
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              {% for document in results %}
+              <tr class="hover:bg-gray-50 transition-colors">
+                <!-- Document Name -->
+                <td class="px-6 py-4">
+                  <div class="flex flex-col">
+                    <div class="text-sm font-medium text-gray-900">
+                      {{ document.metadata.invoice_number|default:document.filename }}
+                    </div>
+                    <div class="text-sm text-gray-500">
+                      {{ document.document_type|default:'Document' }}
+                    </div>
+
+                    <!-- Show matched fields for metadata search -->
+                    {% if search_stage_used == 1 and document.matched_fields %}
+                      <div class="mt-1">
+                        {% for field in document.matched_fields|slice:":2" %}
+                          <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mr-1">
+                            {{ field.field }}
+                          </span>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+
+                    <!-- Show text snippets for deep search -->
+                    {% if search_stage_used == 2 and document.matched_snippets %}
+                      <div class="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
+                        <strong>Found in text:</strong><br>
+                        {{ document.matched_snippets.0|safe|truncatewords:15 }}...
+                      </div>
+                    {% endif %}
+
+                    <!-- Show relevance for LLM search -->
+                    {% if search_stage_used == 3 %}
+                      <div class="mt-1">
+                        <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">
+                          Used for AI analysis
+                        </span>
+                      </div>
+                    {% endif %}
+                  </div>
+                </td>
+
+                <!-- Amount -->
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {% if document.metadata.amount %}
+                    ₱{{ document.metadata.amount|floatformat:2 }}
+                  {% elif document.metadata.financial %}
+                    {{ document.metadata.financial.0|default:'-' }}
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+
+                <!-- Date -->
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {% if document.metadata.date_issued %}
+                    {{ document.metadata.date_issued }}
+                  {% elif document.metadata.dates %}
+                    {{ document.metadata.dates.0|default:'-' }}
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+
+                <!-- Client -->
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {% if document.metadata.client_name %}
+                    {{ document.metadata.client_name }}
+                  {% else %}
+                    {{ document.client_name|default:'-' }}
+                  {% endif %}
+                </td>
+
+                <!-- Actions -->
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href="{% url 'document_detail' document.id %}"
+                     class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition mr-2">
+                    View
+                  </a>
+
+                  {% if document.file_paths.original %}
+                  <a href="{{ document.file_paths.original }}" target="_blank"
+                     class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-xs transition">
+                    PDF
+                  </a>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Results Summary -->
+      <div class="mt-6 bg-gray-50 rounded-lg p-4">
+        <div class="text-center text-sm text-gray-600">
+          <p>Showing {{ total_results }} result{{ total_results|pluralize }} for "{{ search_query }}"</p>
+          {% if search_type == 'llm' or search_stage_used == 3 %}
+            <p class="mt-1 text-purple-700">Answer synthesized by AI from document analysis</p>
+          {% elif search_stage_used == 1 %}
+            <p class="mt-1 text-blue-600">Found quickly using metadata search</p>
+          {% else %}
+            <p class="mt-1 text-green-600">Found using deep content search</p>
+          {% endif %}
+        </div>
+      </div>
+
+    {% else %}
+      <!-- No Results Found -->
+      <div class="bg-white rounded-lg shadow-lg p-12 text-center">
+        <div class="text-6xl mb-4">📄</div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">No documents found</h3>
+        
+        {% if search_type == 'llm' and not llm_answer %}
+        <p class="text-gray-600 mb-6">
+          AI search couldn't find relevant documents for "{{ search_query }}".
+        </p>
+        {% else %}
+        <p class="text-gray-600 mb-6">
+          We searched through documents for "{{ search_query }}", but couldn't find any matches.
+        </p>
+        {% endif %}
+
+        <!-- Search Suggestions -->
+        <div class="bg-gray-50 rounded-lg p-4 mb-6 max-w-md mx-auto">
+          <h4 class="font-medium text-gray-900 mb-2">Search suggestions:</h4>
+          {% if search_type == 'llm' %}
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>Try asking more specific questions</li>
+            <li>Use different terminology</li>
+            <li>Ask about document types (e.g., "invoices", "receipts")</li>
+            <li>Switch to keyword search for exact matches</li>
+          </ul>
+          {% else %}
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>Company names (e.g., "Philippine Airlines")</li>
+            <li>Document types (e.g., "invoice", "receipt")</li>
+            <li>Dates (e.g., "January 1, 2025")</li>
+            <li>Document numbers (e.g., "OR-12345")</li>
+          </ul>
+          {% endif %}
+        </div>
+
+        <div>
+          <a href="{% url 'search_form' %}"
+             class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition">
+            Try Another Search
+          </a>
+        </div>
+      </div>
+    {% endif %}
+  {% else %}
+    <!-- No Search Performed Yet -->
+    <div class="bg-white rounded-lg shadow-lg p-12 text-center">
+      <div class="text-6xl mb-4">🔍</div>
+      <h3 class="text-xl font-semibold text-gray-900 mb-2">Ready to search</h3>
+      <p class="text-gray-600 mb-6">
+        Enter your search terms above to find documents. Choose between keyword search for exact matches or AI search for intelligent analysis.
+      </p>
+      <a href="{% url 'search_form' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition">
+        Start Searching
+      </a>
+    </div>
+  {% endif %}
 
 </div>
 {% endblock %}
