@@ -337,10 +337,32 @@
     const searchPanel = document.getElementById("searchPanel");
     const chatButton = document.getElementById("chatButton");
     const searchButton = document.getElementById("searchButton");
+    const chatPanelText = document.getElementById("chatPanelText");
+    const searchPanelText = document.getElementById("searchPanelText");
 
     if (chatPanel) {
       // Show Chat panel by default
       chatPanel.classList.remove("hidden");
+    }
+
+    if (searchPanel) {
+      // Hide Search panel by default
+      searchPanel.classList.add("hidden");
+    }
+
+    if (chatPanelText) {
+      // Show Chat description by default
+      chatPanelText.classList.remove("hidden");
+    }
+
+    if (searchPanelText) {
+      // Hide Search description by default
+      searchPanelText.classList.add("hidden");
+    }
+
+    // Set initial active state for chat button
+    if (chatButton && searchButton) {
+      setActiveButton(chatButton, searchButton);
     }
 
     function setActiveButton(activeBtn, inactiveBtn) {
@@ -353,27 +375,42 @@
       inactiveBtn.classList.add('text-gray-600', 'bg-transparent');
     }
 
-    if (chatButton) {
-      // Add event listeners for Chat/Search buttons
-      chatButton.addEventListener("click", function() {
-        // Show Chat, hide Search
-        if (searchPanel) searchPanel.classList.add("hidden");
-        if (chatPanel) chatPanel.classList.remove("hidden");
+    function showChatPanel() {
+      // Show Chat, hide Search
+      if (searchPanel) searchPanel.classList.add("hidden");
+      if (chatPanel) chatPanel.classList.remove("hidden");
 
-        // Set Chat as active, Search as inactive
+      // Show Chat description, hide Search description
+      if (searchPanelText) searchPanelText.classList.add("hidden");
+      if (chatPanelText) chatPanelText.classList.remove("hidden");
+
+      // Set Chat as active, Search as inactive
+      if (chatButton && searchButton) {
         setActiveButton(chatButton, searchButton);
-      });
+      }
+    }
+
+    function showSearchPanel() {
+      // Show Search, hide Chat
+      if (chatPanel) chatPanel.classList.add("hidden");
+      if (searchPanel) searchPanel.classList.remove("hidden");
+
+      // Show Search description, hide Chat description
+      if (chatPanelText) chatPanelText.classList.add("hidden");
+      if (searchPanelText) searchPanelText.classList.remove("hidden");
+
+      // Set Search as active, Chat as inactive
+      if (searchButton && chatButton) {
+        setActiveButton(searchButton, chatButton);
+      }
+    }
+
+    if (chatButton) {
+      chatButton.addEventListener("click", showChatPanel);
     }
 
     if (searchButton) {
-      searchButton.addEventListener("click", function() {
-        // Show Search, hide Chat
-        if (chatPanel) chatPanel.classList.add("hidden");
-        if (searchPanel) searchPanel.classList.remove("hidden");
-
-        // Set Search as active, Chat as inactive
-        setActiveButton(searchButton, chatButton);
-      });
+      searchButton.addEventListener("click", showSearchPanel);
     }
   }
 
