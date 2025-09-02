@@ -30,39 +30,6 @@
         </div>
     </div>
     
-<<<<<<< HEAD
-    <!-- Fixed input area for existing conversation -->
-    <div id="fixedInputArea" class="fixed bottom-0 left-0 right-0 bg-white p-4 z-10">
-        <div class="max-w-4xl mx-auto">
-            <form id="chatFormActive" class="relative">
-                {% csrf_token %}
-                <input type="hidden" name="conversation_id" value="{{ current_conversation.id }}">
-                <div class="flex items-end bg-gray-50 rounded-2xl border border-gray-200 px-6 py-3">
-                    <textarea
-                        id="messageInputActive"
-                        name="message"
-                        placeholder="Ask anything..."
-                        rows="1"
-                        class="flex-1 border-none outline-none text-gray-800 placeholder-gray-400 bg-transparent resize-none overflow-y-auto max-h-32 min-h-[24px]"
-                        style="scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent;"
-                    ></textarea>
-                    <button
-                        id="sendButtonActive"
-                        type="submit"
-                        disabled
-                        class="ml-4 w-8 h-8 bg-gray-300 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-full transition-all duration-200 flex items-center justify-center hover:bg-green-600 disabled:hover:bg-gray-300 flex-shrink-0"
-                    >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                        </svg>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-=======
->>>>>>> 72588db0057af4f09569dfc18cb1c2588db2dfd0
     {% else %}
     <div id="greetingSection" class="h-screen flex items-center justify-center px-4">
         <div class="w-full max-w-3xl">
