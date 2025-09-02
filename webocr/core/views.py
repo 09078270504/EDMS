@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_GET
 from django.contrib.auth import login, logout, get_user_model, authenticate
 from django.contrib.auth.forms import PasswordChangeForm
@@ -16,21 +16,24 @@ from django.views import View
 # ===========================
 # PROJECT IMPORTS
 # ===========================
-from .models import LoginAttempt, SecurityEvent, UserSession, SuspiciousActivity, ChatConversation, ChatMessage  # Local models
-from database.models import Document  # Document model
-from database.serializer import DocumentListSerializer  # Serializer
-from .security_utils import log_security_event, track_user_session, check_multiple_failed_logins # For enhanced log in view
+from .models import LoginAttempt, SecurityEvent, UserSession, SuspiciousActivity, ChatConversation, ChatMessage
+from database.models import Document
+from database.serializer import DocumentListSerializer
+from .security_utils import log_security_event, track_user_session, check_multiple_failed_logins
+from .services.llm_search import answer_from_context
 
 # ===========================
 # STANDARD LIBRARY IMPORTS
 # ===========================
-import json  # JSON handling
-import os  # File system
-import re  # Regex
-from datetime import timedelta  # Time delta
+import json
+import os
+import re
+from datetime import timedelta
 
 
-# For team integrations
+# ===========================
+# API VIEWS
+# ===========================
 @method_decorator(csrf_exempt, name='dispatch')
 class SecurityEventsAPI(View):
     def get(self, request):
@@ -46,6 +49,7 @@ class SecurityEventsAPI(View):
             'events': list(events),
             'count': len(events)
         })
+
 
 @method_decorator(csrf_exempt, name='dispatch') 
 class SuspiciousActivitiesAPI(View):
@@ -63,6 +67,10 @@ class SuspiciousActivitiesAPI(View):
             'count': len(activities)
         })
 
+
+# ===========================
+# SEARCH ENGINE
+# ===========================
 class TwoStageSearchEngine:
     def __init__(self):
         self.stage_1_results = []
@@ -304,8 +312,13 @@ class TwoStageSearchEngine:
         
         return preview
 
+
 search_engine = TwoStageSearchEngine()
 
+
+# ===========================
+# AUTHENTICATION VIEWS
+# ===========================
 class ForgotPasswordForm(forms.Form):
     email = forms.EmailField(
         label='Email Address',
@@ -322,10 +335,12 @@ class ForgotPasswordForm(forms.Form):
             raise forms.ValidationError("No account found with this email address.")
         return email
 
+
 def base(request):
     if request.user.is_authenticated:
         return redirect('search_form')
     return render(request, 'base.html')
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -396,6 +411,7 @@ def login_view(request):
     
     return render(request, 'auth/login.html')
 
+
 def account_locked_view(request):
     ip_address = request.META.get('REMOTE_ADDR', '')
     
@@ -414,6 +430,7 @@ def account_locked_view(request):
     }
     
     return render(request, 'auth/account_locked.html', context)
+
 
 def forgot_password_view(request):
     if request.method == 'POST':
@@ -480,6 +497,7 @@ Archive System Team
 
     return render(request, 'auth/forgot_password.html', {'form': form})
 
+
 @login_required
 def dashboard(request, conversation_id=None):
     total_documents = Document.objects.count()
@@ -513,6 +531,7 @@ def dashboard(request, conversation_id=None):
     }
     return render(request, 'auth/dashboard.html', context)
 
+
 def logout_view(request):
     user = request.user
     
@@ -532,11 +551,41 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, 'Password changed successfully! Please log in again.')
+            logout(request)
+            return redirect('login')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, error)
+    else:
+        form = PasswordChangeForm(request.user)
+    
+    # Get conversations for sidebar
+    conversations = ChatConversation.objects.filter(user=request.user).order_by('-created_at')
+    
+    return render(request, 'auth/change_password.html', {
+        'form': form,
+        'conversations': conversations,
+    })
+
+
+# ===========================
+# SEARCH VIEWS
+# ===========================
 @login_required
 def search_form(request):
     return render(request, 'search/search_form.html', {
         'available_clients': Document.objects.values_list('client_name', flat=True).distinct()
     })
+
 
 def convert_stage_1_results(stage_1_results):
     results = []
@@ -556,6 +605,7 @@ def convert_stage_1_results(stage_1_results):
         results.append(doc_obj)
     return results
 
+
 def convert_stage_2_results(stage_2_results):
     results = []
     for result in stage_2_results:
@@ -573,6 +623,7 @@ def convert_stage_2_results(stage_2_results):
         })
         results.append(doc_obj)
     return results
+
 
 @login_required
 def search_documents(request):
@@ -619,6 +670,7 @@ def search_documents(request):
     
     return render(request, 'search/search_documents.html', context)
 
+
 @login_required
 def document_detail(request, document_id):
     document = get_object_or_404(Document, id=document_id)
@@ -657,34 +709,12 @@ def document_detail(request, document_id):
     
     return render(request, 'search/document_detail.html', context)
 
+
 @login_required
 def documents_view(request):
     document = Document.objects.all()
     return render(request, 'documents/documents_view.html', {'document': document})
 
-@login_required
-def change_password(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            messages.success(request, 'Password changed successfully! Please log in again.')
-            logout(request)
-            return redirect('login')
-        else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, error)
-    else:
-        form = PasswordChangeForm(request.user)
-    
-    # Get conversations for sidebar
-    conversations = ChatConversation.objects.filter(user=request.user).order_by('-created_at')
-    
-    return render(request, 'auth/change_password.html', {
-        'form': form,
-        'conversations': conversations,
-    })
 
 @require_GET
 @login_required
@@ -694,7 +724,9 @@ def document_list_api(request):
     return JsonResponse(serializer.data, safe=False)
 
 
-# Chat-related views
+# ===========================
+# CHAT VIEWS
+# ===========================
 @login_required
 def chat_message(request):
     """Handle chat messages and create/update conversations"""
@@ -777,6 +809,7 @@ def delete_conversation(request, conversation_id):
     
     return JsonResponse({'error': 'Only POST/DELETE method allowed'}, status=405)
 
+
 @login_required
 def rename_conversation(request, conversation_id):
     """Rename a conversation"""
@@ -800,3 +833,193 @@ def rename_conversation(request, conversation_id):
             return JsonResponse({'error': 'Invalid JSON data'}, status=400)
     
     return JsonResponse({'error': 'Only POST method allowed'}, status=405)
+
+
+# ===========================
+# LLM SEARCH VIEWS
+# ===========================
+@login_required
+def llm_search_documents(request):
+    """
+    LLM-powered search that provides natural language answers based on document content
+    """
+    search_query = request.GET.get('search_query', '').strip()
+    client_filter = request.GET.get('client_filter', '').strip()
+
+    results = []
+    total_results = 0
+    search_performed = False
+    llm_answer = ""
+    error_message = ""
+
+    if search_query:
+        search_performed = True
+        
+        try:
+            # Log the search attempt
+            log_security_event(
+                event_type='llm_search_attempt',
+                user=request.user,
+                request=request,
+                extra_data={'query': search_query, 'client_filter': client_filter},
+                risk_level='low'
+            )
+            
+            # Step 1: Use existing search engine to gather context documents
+            print(f"LLM Search: Starting search for '{search_query}'")
+            
+            # Try metadata search first
+            stage_1_results = search_engine.stage_1_search(search_query, client_filter)
+            docs_for_context = stage_1_results
+
+            # Fallback to OCR search if no metadata matches
+            if not docs_for_context:
+                print("LLM Search: No metadata matches, trying OCR search...")
+                stage_2_results = search_engine.stage_2_search(search_query, 'all', client_filter)
+                docs_for_context = stage_2_results
+
+            if docs_for_context:
+                # Step 2: Build context string from top document matches
+                context_blocks = []
+                for i, doc_result in enumerate(docs_for_context[:5]):  # Top 5 matches
+                    meta = doc_result.get('metadata_preview') or {}
+                    
+                    # Build context block for this document
+                    context_lines = [
+                        f"=== Document {i+1}: {doc_result.get('document_name')} ===",
+                        f"Client: {doc_result.get('client_name', 'Unknown')}",
+                        f"Type: {doc_result.get('document_type', 'Unknown')}"
+                    ]
+                    
+                    # Add metadata information
+                    if meta:
+                        for key, value in meta.items():
+                            if value and key in ['financial', 'names', 'dates', 'invoice_numbers']:
+                                if isinstance(value, list):
+                                    context_lines.append(f"{key.title()}: {', '.join(map(str, value[:3]))}")
+                                else:
+                                    context_lines.append(f"{key.title()}: {value}")
+                    
+                    # Add content snippet if available (from stage 2 search)
+                    if 'matched_snippets' in doc_result and doc_result['matched_snippets']:
+                        # Clean HTML tags from snippet
+                        clean_snippet = re.sub(r'<[^>]+>', '', doc_result['matched_snippets'][0])
+                        context_lines.append(f"Content: {clean_snippet[:300]}...")
+                    
+                    context_blocks.append("\n".join(context_lines))
+
+                # Combine all context blocks
+                full_context = "\n\n".join(context_blocks)
+                print(f"LLM Search: Built context from {len(docs_for_context)} documents, {len(full_context)} chars")
+
+                # Step 3: Send to LLM for analysis
+                try:
+                    llm_answer = answer_from_context(search_query, full_context, temperature=0.2)
+                    print(f"LLM Search: Got response length {len(llm_answer)} chars")
+                    
+                    # Log successful LLM response
+                    log_security_event(
+                        event_type='llm_search_success',
+                        user=request.user,
+                        request=request,
+                        extra_data={
+                            'query': search_query, 
+                            'response_length': len(llm_answer),
+                            'documents_used': len(docs_for_context)
+                        },
+                        risk_level='low'
+                    )
+                    
+                except Exception as llm_error:
+                    print(f"LLM Error: {llm_error}")
+                    error_message = "The AI analysis service is currently unavailable. Please try keyword search instead."
+                    llm_answer = ""
+                    
+                    # Log LLM error
+                    log_security_event(
+                        event_type='llm_search_error',
+                        user=request.user,
+                        request=request,
+                        extra_data={'query': search_query, 'error': str(llm_error)},
+                        risk_level='medium'
+                    )
+
+                # Step 4: Convert results for display (same as keyword search)
+                if 'matched_snippets' in docs_for_context[0] if docs_for_context else False:
+                    results = convert_stage_2_results(docs_for_context[:10])  # Show up to 10 supporting docs
+                else:
+                    results = convert_stage_1_results(docs_for_context[:10])
+
+                total_results = len(results)
+                
+            else:
+                # No documents found at all
+                llm_answer = "I couldn't find any documents in the database that match your query. This could be because:\n\n" \
+                           "• No documents have been processed yet\n" \
+                           "• Your search terms don't match any document content\n" \
+                           "• The document archive may need to be updated\n\n" \
+                           "Try different search terms or contact support if you believe documents should be available."
+                print("LLM Search: No documents found in database")
+                
+        except Exception as e:
+            print(f"LLM Search Error: {e}")
+            error_message = f"An error occurred during AI search: {str(e)[:100]}. Please try again or use regular keyword search."
+            llm_answer = ""
+
+    # Prepare context for template
+    context = {
+        'search_query': search_query,
+        'client_filter': client_filter,
+        'results': results,
+        'total_results': total_results,
+        'search_performed': search_performed,
+        'search_stage_used': 3,  # 3 denotes LLM search
+        'search_type': 'llm',
+        'llm_answer': llm_answer,
+        'error_message': error_message,
+        'available_clients': Document.objects.values_list('client_name', flat=True).distinct()
+    }
+    
+    return render(request, 'search/search_documents.html', context)
+
+
+@login_required  
+def llm_test_connection(request):
+    """
+    Test endpoint to verify LLM service is working
+    """
+    try:
+        test_query = "What is a test?"
+        test_context = "This is a test document with sample information."
+        result = answer_from_context(test_query, test_context, temperature=0.1)
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': 'LLM service is working',
+            'test_response': result[:100] + "..." if len(result) > 100 else result
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': f'LLM service error: {str(e)}'
+        }, status=500)
+
+
+def llm_ping(request):
+    """
+    Simple ping endpoint to test if LLM imports work
+    """
+    try:
+        # Test if we can import the LLM service
+        from .services.llm_search import answer_from_context
+        
+        # Try a very simple test
+        result = answer_from_context("ping", "test", 0.1)
+        status = "LLM service loaded successfully"
+        
+        return HttpResponse(f"LLM Status: {status}\nTest result: {result[:50]}...")
+        
+    except ImportError as e:
+        return HttpResponse(f"LLM Import Error: {e}", status=500)
+    except Exception as e:
+        return HttpResponse(f"LLM Error: {e}", status=500)

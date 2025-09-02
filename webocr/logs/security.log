@@ -32,9 +32,7 @@ INFO 2025-08-18 16:07:48,164 security_utils 13392 14088 login_success: User=lim1
 INFO 2025-08-18 16:07:55,884 security_utils 13392 14088 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-18 16:12:29,164 security_utils 748 268 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-18 16:14:01,353 security_utils 748 268 login_success: User=lim123, IP=127.0.0.1
-<<<<<<< Updated upstream
 
-=======
 INFO 2025-08-18 08:28:35,832 security_utils 32239 126290778646208 login_failure: User=Bunsenpasta, IP=127.0.0.1
 INFO 2025-08-18 08:28:43,206 security_utils 32239 126290778646208 login_failure: User=Bunsenpasta, IP=127.0.0.1
 INFO 2025-08-18 08:28:45,865 security_utils 32239 126290778646208 login_failure: User=Bunsenpasta, IP=127.0.0.1
@@ -46,7 +44,7 @@ WARNING 2025-08-18 08:29:00,330 security_utils 32239 126290778646208 suspicious_
 WARNING 2025-08-18 08:29:00,505 security_utils 32239 126290778646208 account_locked: User=Bunsenpasta, IP=127.0.0.1
 INFO 2025-08-18 08:31:54,802 security_utils 33111 126237423953600 login_success: User=Chimpanzee, IP=127.0.0.1
 INFO 2025-08-18 08:36:38,537 security_utils 33111 126237423953600 login_success: User=Chimpanzee, IP=127.0.0.1
->>>>>>> Stashed changes
+
 INFO 2025-08-18 16:58:00,833 security_utils 6008 27104 login_success: User=arvie, IP=127.0.0.1
 INFO 2025-08-18 16:59:12,586 security_utils 6008 26140 login_success: User=arvie, IP=127.0.0.1
 INFO 2025-08-19 02:20:08,594 security_utils 71985 137476421183168 login_failure: User=Crissel, IP=127.0.0.1
@@ -145,6 +143,7 @@ INFO 2025-08-26 10:22:06,276 security_utils 760 1856 login_success: User=lim123,
 INFO 2025-08-26 10:22:32,227 security_utils 760 1856 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-26 11:02:20,617 security_utils 1224 132 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-26 11:02:22,202 security_utils 1224 132 login_success: User=lim123, IP=127.0.0.1
+
 INFO 2025-08-26 11:09:46,250 security_utils 4928 11496 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-26 13:34:49,148 security_utils 9328 8524 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-26 15:35:18,782 security_utils 12368 12060 login_success: User=lim123, IP=127.0.0.1
@@ -161,7 +160,7 @@ INFO 2025-08-27 13:25:56,717 security_utils 12176 5940 login_success: User=lim12
 INFO 2025-08-27 13:29:38,507 security_utils 11320 12248 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-27 13:29:40,199 security_utils 11320 12248 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-27 14:31:38,641 security_utils 9958 137070047651520 login_success: User=zapatero, IP=127.0.0.1
-<<<<<<< HEAD
+
 INFO 2025-08-28 08:55:52,606 security_utils 4264 4412 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-28 09:10:00,845 security_utils 4264 4080 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-28 09:19:06,704 security_utils 4264 4080 login_success: User=lim123, IP=127.0.0.1
@@ -189,7 +188,7 @@ INFO 2025-08-28 15:57:11,632 security_utils 10820 7092 login_success: User=lim12
 INFO 2025-08-28 15:57:28,571 security_utils 10820 7092 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-29 10:21:39,533 security_utils 11564 11080 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-29 10:22:10,552 security_utils 11564 11080 logout: User=lim123, IP=127.0.0.1
-=======
+
 INFO 2025-08-27 16:51:58,522 security_utils 44815 138148449347264 login_success: User=zapatero, IP=127.0.0.1
 INFO 2025-08-27 17:27:25,157 security_utils 78471 124059860858560 login_success: User=zapatero, IP=127.0.0.1
 INFO 2025-08-28 09:32:41,844 security_utils 57231 140421259843264 login_success: User=zapatero, IP=127.0.0.1
@@ -199,7 +198,7 @@ INFO 2025-08-28 15:45:55,266 security_utils 181552 132980754335424 login_success
 INFO 2025-08-28 17:13:11,015 security_utils 215439 136467124840128 login_success: User=zapatero, IP=127.0.0.1
 INFO 2025-08-29 10:51:54,906 security_utils 78441 132957137266368 login_success: User=zapatero, IP=127.0.0.1
 INFO 2025-08-29 12:58:35,027 security_utils 125451 129886938191552 login_success: User=zapatero, IP=127.0.0.1
->>>>>>> 72588db0057af4f09569dfc18cb1c2588db2dfd0
+
 INFO 2025-09-01 08:46:08,299 security_utils 12228 12436 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-09-01 08:46:15,985 security_utils 12228 12436 logout: User=lim123, IP=127.0.0.1
 INFO 2025-09-01 08:56:12,380 security_utils 12228 5936 login_success: User=lim123, IP=127.0.0.1
@@ -230,3 +229,10 @@ INFO 2025-09-02 16:11:58,241 security_utils 7756 13316 login_success: User=lim12
 INFO 2025-09-02 16:12:00,208 security_utils 7756 13316 logout: User=lim123, IP=127.0.0.1
 INFO 2025-09-02 16:26:23,394 security_utils 11008 11708 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-09-02 16:26:27,687 security_utils 11008 11708 logout: User=lim123, IP=127.0.0.1
+
+INFO 2025-08-26 13:52:16,859 security_utils 98811 126032810075840 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-09-01 15:59:28,538 security_utils 177765 124192131380928 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-09-01 16:10:22,009 security_utils 182731 133617411942080 logout: User=zapatero, IP=127.0.0.1
+INFO 2025-09-01 16:10:58,772 security_utils 182731 133617394108096 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-09-01 16:11:28,758 security_utils 182731 133617411942080 login_success: User=zapatero, IP=127.0.0.1
+

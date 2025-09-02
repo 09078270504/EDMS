@@ -17,7 +17,7 @@ INFO 2025-08-18 10:54:45,809 security_utils 5576 7348 login_success: User=lim123
 INFO 2025-08-18 13:09:41,070 security_utils 14756 13960 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-18 15:56:38,829 security_utils 16148 22580 login_failure: User=Crissel, IP=127.0.0.1
 INFO 2025-08-18 15:57:08,400 security_utils 16148 22580 login_success: User=Zapatero, IP=127.0.0.1
-=======
+
 INFO 2025-08-18 16:07:48,166 security_utils 13392 14088 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-18 16:07:55,884 security_utils 13392 14088 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-18 16:12:29,165 security_utils 748 268 login_success: User=lim123, IP=127.0.0.1
@@ -127,6 +127,7 @@ INFO 2025-08-26 10:22:06,276 security_utils 760 1856 login_success: User=lim123,
 INFO 2025-08-26 10:22:32,228 security_utils 760 1856 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-26 11:02:20,618 security_utils 1224 132 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-26 11:02:22,202 security_utils 1224 132 login_success: User=lim123, IP=127.0.0.1
+
 INFO 2025-08-26 11:09:46,252 security_utils 4928 11496 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-26 13:34:49,160 security_utils 9328 8524 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-26 15:35:18,784 security_utils 12368 12060 login_success: User=lim123, IP=127.0.0.1
@@ -143,7 +144,7 @@ INFO 2025-08-27 13:25:56,718 security_utils 12176 5940 login_success: User=lim12
 INFO 2025-08-27 13:29:38,507 security_utils 11320 12248 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-27 13:29:40,200 security_utils 11320 12248 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-27 14:31:38,654 security_utils 9958 137070047651520 login_success: User=zapatero, IP=127.0.0.1
-<<<<<<< HEAD
+
 INFO 2025-08-28 08:55:52,607 security_utils 4264 4412 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-28 09:10:00,847 security_utils 4264 4080 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-28 09:19:06,705 security_utils 4264 4080 login_success: User=lim123, IP=127.0.0.1
@@ -171,7 +172,7 @@ INFO 2025-08-28 15:57:11,633 security_utils 10820 7092 login_success: User=lim12
 INFO 2025-08-28 15:57:28,572 security_utils 10820 7092 logout: User=lim123, IP=127.0.0.1
 INFO 2025-08-29 10:21:39,569 security_utils 11564 11080 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-08-29 10:22:10,552 security_utils 11564 11080 logout: User=lim123, IP=127.0.0.1
-=======
+
 INFO 2025-08-27 16:51:58,638 security_utils 44815 138148449347264 login_success: User=zapatero, IP=127.0.0.1
 INFO 2025-08-27 17:27:25,254 security_utils 78471 124059860858560 login_success: User=zapatero, IP=127.0.0.1
 INFO 2025-08-28 09:32:41,845 security_utils 57231 140421259843264 login_success: User=zapatero, IP=127.0.0.1
@@ -181,7 +182,6 @@ INFO 2025-08-28 15:45:55,266 security_utils 181552 132980754335424 login_success
 INFO 2025-08-28 17:13:11,066 security_utils 215439 136467124840128 login_success: User=zapatero, IP=127.0.0.1
 INFO 2025-08-29 10:51:55,076 security_utils 78441 132957137266368 login_success: User=zapatero, IP=127.0.0.1
 INFO 2025-08-29 12:58:35,028 security_utils 125451 129886938191552 login_success: User=zapatero, IP=127.0.0.1
->>>>>>> 72588db0057af4f09569dfc18cb1c2588db2dfd0
 INFO 2025-09-01 08:46:08,308 security_utils 12228 12436 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-09-01 08:46:15,985 security_utils 12228 12436 logout: User=lim123, IP=127.0.0.1
 INFO 2025-09-01 08:56:12,380 security_utils 12228 5936 login_success: User=lim123, IP=127.0.0.1
@@ -212,3 +212,10 @@ INFO 2025-09-02 16:11:58,242 security_utils 7756 13316 login_success: User=lim12
 INFO 2025-09-02 16:12:00,208 security_utils 7756 13316 logout: User=lim123, IP=127.0.0.1
 INFO 2025-09-02 16:26:23,468 security_utils 11008 11708 login_success: User=lim123, IP=127.0.0.1
 INFO 2025-09-02 16:26:27,688 security_utils 11008 11708 logout: User=lim123, IP=127.0.0.1
+
+INFO 2025-08-26 13:52:16,923 security_utils 98811 126032810075840 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-09-01 15:59:28,538 security_utils 177765 124192131380928 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-09-01 16:10:22,010 security_utils 182731 133617411942080 logout: User=zapatero, IP=127.0.0.1
+INFO 2025-09-01 16:10:58,772 security_utils 182731 133617394108096 login_success: User=zapatero, IP=127.0.0.1
+INFO 2025-09-01 16:11:28,759 security_utils 182731 133617411942080 login_success: User=zapatero, IP=127.0.0.1
+
