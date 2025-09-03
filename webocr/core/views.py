@@ -30,6 +30,11 @@ import os
 import re
 from datetime import timedelta
 
+# ===========================
+# FUZZY SEARXGH
+# ===========================
+from rapidfuzz import fuzz, process
+
 
 # ===========================
 # API VIEWS
@@ -71,19 +76,29 @@ class SuspiciousActivitiesAPI(View):
 # ===========================
 # SEARCH ENGINE
 # ===========================
-class TwoStageSearchEngine:
+class EnhancedTwoStageSearchEngine:
     def __init__(self):
         self.stage_1_results = []
         self.stage_2_results = []
-    
-    def stage_1_search(self, query, client_filter=None):
-        print(f"Stage 1: Searching metadata for '{query}'")
+        self.fuzzy_results = []
+        
+        # Fuzzy search configuration
+        self.fuzzy_threshold = getattr(settings, 'FUZZY_SEARCH_THRESHOLD', 70)  # Minimum similarity score
+        self.fuzzy_limit = getattr(settings, 'FUZZY_SEARCH_LIMIT', 10)  # Max fuzzy results per stage
+        self.enable_fuzzy = getattr(settings, 'ENABLE_FUZZY_SEARCH', True)
+        
+    def stage_1_search(self, query, client_filter=None, use_fuzzy=True):
+        """
+        Stage 1: Search metadata with exact matching + fuzzy search
+        """
+        print(f"Stage 1: Searching metadata for '{query}' (fuzzy: {use_fuzzy and self.enable_fuzzy})")
         
         documents = Document.objects.all()
         if client_filter:
             documents = documents.filter(client_name__icontains=client_filter)
         
-        stage_1_matches = []
+        exact_matches = []
+        fuzzy_candidates = []
         search_terms = query.lower().split()
         
         for doc in documents:
@@ -96,36 +111,35 @@ class TwoStageSearchEngine:
                 with open(metadata_path, 'r', encoding='utf-8') as f:
                     metadata = json.load(f)
                 
-                match_score, matched_fields = self._search_metadata(metadata, search_terms)
+                # Exact matching (existing logic)
+                exact_score, exact_fields = self._search_metadata_exact(metadata, search_terms)
                 
-                if match_score > 0:
-                    result = {
-                        'document_id': doc.id,
-                        'document_name': doc.document_name,
-                        'client_name': getattr(doc, 'client_name', 'Unknown'),
-                        'document_type': metadata.get('document_type', 'Unknown'),
-                        'match_score': match_score,
-                        'matched_fields': matched_fields,
-                        'metadata_preview': self._create_metadata_preview(metadata),
-                        'file_paths': {
-                            'metadata': metadata_path,
-                            'ocr': self._get_ocr_path(doc),
-                            'original': self._get_original_path(doc)
-                        },
-                        'search_stage': 1
-                    }
-                    stage_1_matches.append(result)
+                if exact_score > 0:
+                    result = self._create_stage1_result(doc, metadata, exact_score, exact_fields, 'exact')
+                    exact_matches.append(result)
+                elif use_fuzzy and self.enable_fuzzy:
+                    # Fuzzy matching for documents without exact matches
+                    fuzzy_score, fuzzy_fields = self._search_metadata_fuzzy(metadata, query, search_terms)
                     
+                    if fuzzy_score >= self.fuzzy_threshold:
+                        result = self._create_stage1_result(doc, metadata, fuzzy_score, fuzzy_fields, 'fuzzy')
+                        fuzzy_candidates.append(result)
+                        
             except Exception as e:
                 print(f"Error reading metadata for {doc.document_name}: {e}")
                 continue
         
-        stage_1_matches.sort(key=lambda x: x['match_score'], reverse=True)
-        print(f"Stage 1 found {len(stage_1_matches)} results")
-        return stage_1_matches
+        # Combine and sort results (exact matches first, then fuzzy)
+        all_results = exact_matches + sorted(fuzzy_candidates, key=lambda x: x['match_score'], reverse=True)[:self.fuzzy_limit]
+        
+        print(f"Stage 1 found {len(exact_matches)} exact matches, {len(fuzzy_candidates)} fuzzy matches")
+        return all_results
     
-    def stage_2_search(self, query, documents_to_search, client_filter=None):
-        print(f"Stage 2: Deep search in OCR text for '{query}'")
+    def stage_2_search(self, query, documents_to_search, client_filter=None, use_fuzzy=True):
+        """
+        Stage 2: Deep search in OCR text with exact matching + fuzzy search
+        """
+        print(f"Stage 2: Deep search in OCR text for '{query}' (fuzzy: {use_fuzzy and self.enable_fuzzy})")
         
         if documents_to_search == 'all':
             documents = Document.objects.all()
@@ -134,7 +148,8 @@ class TwoStageSearchEngine:
         else:
             documents = Document.objects.filter(id__in=documents_to_search)
         
-        stage_2_matches = []
+        exact_matches = []
+        fuzzy_candidates = []
         search_terms = query.lower().split()
         
         for doc in documents:
@@ -147,43 +162,346 @@ class TwoStageSearchEngine:
                 with open(ocr_path, 'r', encoding='utf-8') as f:
                     ocr_text = f.read()
                 
-                match_score, matched_snippets = self._search_ocr_text(ocr_text, search_terms)
+                # Exact matching (existing logic)
+                exact_score, exact_snippets = self._search_ocr_text_exact(ocr_text, search_terms)
                 
-                if match_score > 0:
-                    metadata_path = self._get_metadata_path(doc)
-                    metadata = {}
-                    if metadata_path and os.path.exists(metadata_path):
-                        try:
-                            with open(metadata_path, 'r', encoding='utf-8') as f:
-                                metadata = json.load(f)
-                        except:
-                            pass
+                if exact_score > 0:
+                    result = self._create_stage2_result(doc, exact_score, exact_snippets, 'exact')
+                    exact_matches.append(result)
+                elif use_fuzzy and self.enable_fuzzy:
+                    # Fuzzy matching for documents without exact matches
+                    fuzzy_score, fuzzy_snippets = self._search_ocr_text_fuzzy(ocr_text, query, search_terms)
                     
-                    result = {
-                        'document_id': doc.id,
-                        'document_name': doc.document_name,
-                        'client_name': getattr(doc, 'client_name', 'Unknown'),
-                        'document_type': metadata.get('document_type', 'Unknown'),
-                        'match_score': match_score,
-                        'matched_snippets': matched_snippets,
-                        'metadata_preview': self._create_metadata_preview(metadata),
-                        'file_paths': {
-                            'metadata': metadata_path,
-                            'ocr': ocr_path,
-                            'original': self._get_original_path(doc)
-                        },
-                        'search_stage': 2
-                    }
-                    stage_2_matches.append(result)
-                    
+                    if fuzzy_score >= self.fuzzy_threshold:
+                        result = self._create_stage2_result(doc, fuzzy_score, fuzzy_snippets, 'fuzzy')
+                        fuzzy_candidates.append(result)
+                        
             except Exception as e:
                 print(f"Error reading OCR text for {doc.document_name}: {e}")
                 continue
         
-        stage_2_matches.sort(key=lambda x: x['match_score'], reverse=True)
-        print(f"Stage 2 found {len(stage_2_matches)} results")
-        return stage_2_matches
+        # Combine and sort results
+        all_results = exact_matches + sorted(fuzzy_candidates, key=lambda x: x['match_score'], reverse=True)[:self.fuzzy_limit]
+        
+        print(f"Stage 2 found {len(exact_matches)} exact matches, {len(fuzzy_candidates)} fuzzy matches")
+        return all_results
     
+    def fuzzy_search_stage(self, query, client_filter=None):
+        """
+        Stage 3: Pure fuzzy search across all content (fallback option)
+        """
+        print(f"Stage 3: Pure fuzzy search for '{query}'")
+        
+        documents = Document.objects.all()
+        if client_filter:
+            documents = documents.filter(client_name__icontains=client_filter)
+        
+        fuzzy_results = []
+        
+        for doc in documents:
+            # Combine metadata and OCR content for comprehensive fuzzy search
+            combined_text = self._get_combined_document_text(doc)
+            
+            if combined_text:
+                fuzzy_score = self._calculate_fuzzy_score(query, combined_text)
+                
+                if fuzzy_score >= self.fuzzy_threshold:
+                    snippets = self._extract_fuzzy_snippets(combined_text, query)
+                    result = self._create_fuzzy_result(doc, fuzzy_score, snippets)
+                    fuzzy_results.append(result)
+        
+        fuzzy_results.sort(key=lambda x: x['match_score'], reverse=True)
+        print(f"Stage 3 found {len(fuzzy_results)} fuzzy matches")
+        return fuzzy_results[:self.fuzzy_limit]
+    
+    def _search_metadata_exact(self, metadata, search_terms):
+        """Existing exact metadata search logic"""
+        matched_fields = []
+        total_score = 0
+        
+        field_weights = {
+            'names': 3, 'invoice_numbers': 4, 'financial': 2, 'emails': 2,
+            'phones': 2, 'document_type': 3, 'keywords': 1, 'addresses': 1
+        }
+        
+        for field_name, field_data in metadata.items():
+            if not isinstance(field_data, (list, str)):
+                continue
+            
+            field_text = ""
+            if isinstance(field_data, list):
+                field_text = " ".join(str(item) for item in field_data)
+            else:
+                field_text = str(field_data)
+            
+            field_text_lower = field_text.lower()
+            field_matches = sum(1 for term in search_terms if term in field_text_lower)
+            
+            if field_matches > 0:
+                weight = field_weights.get(field_name, 1)
+                field_score = field_matches * weight
+                total_score += field_score
+                
+                matched_fields.append({
+                    'field': field_name,
+                    'matches': field_matches,
+                    'sample_data': field_text[:100] + "..." if len(field_text) > 100 else field_text
+                })
+        
+        return total_score, matched_fields
+    
+    def _search_metadata_fuzzy(self, metadata, original_query, search_terms):
+        """Fuzzy metadata search using rapidfuzz"""
+        matched_fields = []
+        total_score = 0
+        
+        field_weights = {
+            'names': 3, 'invoice_numbers': 4, 'financial': 2, 'emails': 2,
+            'phones': 2, 'document_type': 3, 'keywords': 1, 'addresses': 1
+        }
+        
+        for field_name, field_data in metadata.items():
+            if not isinstance(field_data, (list, str)):
+                continue
+            
+            field_text = ""
+            if isinstance(field_data, list):
+                field_text = " ".join(str(item) for item in field_data)
+            else:
+                field_text = str(field_data)
+            
+            # Calculate fuzzy similarity
+            similarity = fuzz.partial_ratio(original_query.lower(), field_text.lower())
+            
+            if similarity >= self.fuzzy_threshold:
+                weight = field_weights.get(field_name, 1)
+                field_score = (similarity / 100.0) * weight * 50  # Scale to match exact search scores
+                total_score += field_score
+                
+                matched_fields.append({
+                    'field': field_name,
+                    'similarity': similarity,
+                    'match_type': 'fuzzy',
+                    'sample_data': field_text[:100] + "..." if len(field_text) > 100 else field_text
+                })
+        
+        return total_score, matched_fields
+    
+    def _search_ocr_text_exact(self, ocr_text, search_terms):
+        """Existing exact OCR search logic"""
+        ocr_lower = ocr_text.lower()
+        matched_snippets = []
+        total_score = 0
+        
+        for term in search_terms:
+            if term in ocr_lower:
+                total_score += 1
+                snippets = self._extract_snippets(ocr_text, term)
+                matched_snippets.extend(snippets)
+        
+        # Remove duplicates
+        unique_snippets = []
+        for snippet in matched_snippets:
+            if snippet not in unique_snippets:
+                unique_snippets.append(snippet)
+        
+        return total_score, unique_snippets[:5]
+    
+    def _search_ocr_text_fuzzy(self, ocr_text, original_query, search_terms):
+        """Fuzzy OCR search using rapidfuzz"""
+        
+        # Split OCR text into chunks for better fuzzy matching
+        chunks = self._split_text_into_chunks(ocr_text, chunk_size=200)
+        matched_snippets = []
+        best_similarity = 0
+        
+        for chunk in chunks:
+            similarity = fuzz.partial_ratio(original_query.lower(), chunk.lower())
+            
+            if similarity >= self.fuzzy_threshold:
+                if similarity > best_similarity:
+                    best_similarity = similarity
+                
+                # Extract snippet with fuzzy highlighting
+                highlighted_chunk = self._highlight_fuzzy_match(chunk, original_query)
+                matched_snippets.append(highlighted_chunk)
+        
+        # Score based on best similarity found
+        total_score = (best_similarity / 100.0) * 10  # Scale to match exact search scores
+        
+        return total_score, matched_snippets[:5]
+    
+    def _split_text_into_chunks(self, text, chunk_size=200):
+        """Split text into overlapping chunks for better fuzzy matching"""
+        words = text.split()
+        chunks = []
+        
+        for i in range(0, len(words), chunk_size // 2):  # 50% overlap
+            chunk = " ".join(words[i:i + chunk_size])
+            chunks.append(chunk)
+            
+            if i + chunk_size >= len(words):
+                break
+        
+        return chunks
+    
+    def _highlight_fuzzy_match(self, text, query):
+        """Highlight fuzzy matches in text"""
+        # Find the best matching substring
+        words = text.split()
+        query_words = query.split()
+        
+        best_match = ""
+        best_score = 0
+        
+        # Try different combinations of consecutive words
+        for i in range(len(words)):
+            for j in range(i + 1, min(i + len(query_words) + 2, len(words) + 1)):
+                substring = " ".join(words[i:j])
+                score = fuzz.ratio(query.lower(), substring.lower())
+                
+                if score > best_score:
+                    best_score = score
+                    best_match = substring
+        
+        # Highlight the best match
+        if best_match and best_score >= self.fuzzy_threshold:
+            highlighted_text = text.replace(best_match, f"<mark>{best_match}</mark>")
+            return highlighted_text
+        
+        return text
+    
+    def _calculate_fuzzy_score(self, query, combined_text):
+        """Calculate overall fuzzy similarity score"""
+        # Use different fuzzy algorithms and take the best score
+        partial_ratio = fuzz.partial_ratio(query.lower(), combined_text.lower())
+        token_sort_ratio = fuzz.token_sort_ratio(query.lower(), combined_text.lower())
+        token_set_ratio = fuzz.token_set_ratio(query.lower(), combined_text.lower())
+        
+        # Return the highest score
+        return max(partial_ratio, token_sort_ratio, token_set_ratio)
+    
+    def _get_combined_document_text(self, doc):
+        """Get combined metadata and OCR text for comprehensive fuzzy search"""
+        combined_parts = []
+        
+        # Add metadata text
+        metadata_path = self._get_metadata_path(doc)
+        if metadata_path and os.path.exists(metadata_path):
+            try:
+                with open(metadata_path, 'r', encoding='utf-8') as f:
+                    metadata = json.load(f)
+                    
+                for key, value in metadata.items():
+                    if isinstance(value, list):
+                        combined_parts.extend(str(item) for item in value)
+                    elif isinstance(value, str):
+                        combined_parts.append(value)
+            except:
+                pass
+        
+        # Add OCR text (first 1000 characters to avoid memory issues)
+        ocr_path = self._get_ocr_path(doc)
+        if ocr_path and os.path.exists(ocr_path):
+            try:
+                with open(ocr_path, 'r', encoding='utf-8') as f:
+                    ocr_text = f.read()[:1000]  # Limit size for fuzzy search
+                    combined_parts.append(ocr_text)
+            except:
+                pass
+        
+        return " ".join(combined_parts)
+    
+    def _extract_fuzzy_snippets(self, text, query):
+        """Extract relevant snippets for fuzzy matches"""
+        chunks = self._split_text_into_chunks(text, chunk_size=150)
+        relevant_snippets = []
+        
+        for chunk in chunks:
+            similarity = fuzz.partial_ratio(query.lower(), chunk.lower())
+            
+            if similarity >= self.fuzzy_threshold:
+                highlighted_chunk = self._highlight_fuzzy_match(chunk, query)
+                relevant_snippets.append(highlighted_chunk)
+        
+        return relevant_snippets[:3]
+    
+    def _create_stage1_result(self, doc, metadata, score, fields, match_type):
+        """Create result object for stage 1 search"""
+        return {
+            'document_id': doc.id,
+            'document_name': doc.document_name,
+            'client_name': getattr(doc, 'client_name', 'Unknown'),
+            'document_type': metadata.get('document_type', 'Unknown'),
+            'match_score': score,
+            'matched_fields': fields,
+            'match_type': match_type,
+            'metadata_preview': self._create_metadata_preview(metadata),
+            'file_paths': {
+                'metadata': self._get_metadata_path(doc),
+                'ocr': self._get_ocr_path(doc),
+                'original': self._get_original_path(doc)
+            },
+            'search_stage': 1
+        }
+    
+    def _create_stage2_result(self, doc, score, snippets, match_type):
+        """Create result object for stage 2 search"""
+        metadata_path = self._get_metadata_path(doc)
+        metadata = {}
+        if metadata_path and os.path.exists(metadata_path):
+            try:
+                with open(metadata_path, 'r', encoding='utf-8') as f:
+                    metadata = json.load(f)
+            except:
+                pass
+        
+        return {
+            'document_id': doc.id,
+            'document_name': doc.document_name,
+            'client_name': getattr(doc, 'client_name', 'Unknown'),
+            'document_type': metadata.get('document_type', 'Unknown'),
+            'match_score': score,
+            'matched_snippets': snippets,
+            'match_type': match_type,
+            'metadata_preview': self._create_metadata_preview(metadata),
+            'file_paths': {
+                'metadata': metadata_path,
+                'ocr': self._get_ocr_path(doc),
+                'original': self._get_original_path(doc)
+            },
+            'search_stage': 2
+        }
+    
+    def _create_fuzzy_result(self, doc, score, snippets):
+        """Create result object for fuzzy search"""
+        metadata_path = self._get_metadata_path(doc)
+        metadata = {}
+        if metadata_path and os.path.exists(metadata_path):
+            try:
+                with open(metadata_path, 'r', encoding='utf-8') as f:
+                    metadata = json.load(f)
+            except:
+                pass
+        
+        return {
+            'document_id': doc.id,
+            'document_name': doc.document_name,
+            'client_name': getattr(doc, 'client_name', 'Unknown'),
+            'document_type': metadata.get('document_type', 'Unknown'),
+            'match_score': score,
+            'matched_snippets': snippets,
+            'match_type': 'fuzzy',
+            'metadata_preview': self._create_metadata_preview(metadata),
+            'file_paths': {
+                'metadata': metadata_path,
+                'ocr': self._get_ocr_path(doc),
+                'original': self._get_original_path(doc)
+            },
+            'search_stage': 3
+        }
+    
+    # Keep all your existing helper methods (_get_metadata_path, _get_ocr_path, etc.)
     def _get_metadata_path(self, doc):
         if hasattr(doc, 'metadata_path') and doc.metadata_path:
             return doc.metadata_path
@@ -207,69 +525,6 @@ class TwoStageSearchEngine:
         base_name = os.path.splitext(doc.document_name)[0]
         client_name = getattr(doc, 'client_name', 'unknown')
         return f"archive/{client_name}/{base_name}/original/{base_name}.pdf"
-    
-    def _search_metadata(self, metadata, search_terms):
-        matched_fields = []
-        total_score = 0
-        
-        field_weights = {
-            'names': 3,
-            'invoice_numbers': 4,
-            'financial': 2,
-            'emails': 2,
-            'phones': 2,
-            'document_type': 3,
-            'keywords': 1,
-            'addresses': 1
-        }
-        
-        for field_name, field_data in metadata.items():
-            if not isinstance(field_data, (list, str)):
-                continue
-            
-            field_text = ""
-            if isinstance(field_data, list):
-                field_text = " ".join(str(item) for item in field_data)
-            else:
-                field_text = str(field_data)
-            
-            field_text_lower = field_text.lower()
-            
-            field_matches = 0
-            for term in search_terms:
-                if term in field_text_lower:
-                    field_matches += 1
-            
-            if field_matches > 0:
-                weight = field_weights.get(field_name, 1)
-                field_score = field_matches * weight
-                total_score += field_score
-                
-                matched_fields.append({
-                    'field': field_name,
-                    'matches': field_matches,
-                    'sample_data': field_text[:100] + "..." if len(field_text) > 100 else field_text
-                })
-        
-        return total_score, matched_fields
-    
-    def _search_ocr_text(self, ocr_text, search_terms):
-        ocr_lower = ocr_text.lower()
-        matched_snippets = []
-        total_score = 0
-        
-        for term in search_terms:
-            if term in ocr_lower:
-                total_score += 1
-                snippets = self._extract_snippets(ocr_text, term)
-                matched_snippets.extend(snippets)
-        
-        unique_snippets = []
-        for snippet in matched_snippets:
-            if snippet not in unique_snippets:
-                unique_snippets.append(snippet)
-        
-        return total_score, unique_snippets[:5]
     
     def _extract_snippets(self, text, search_term, context_chars=150):
         snippets = []
@@ -313,7 +568,7 @@ class TwoStageSearchEngine:
         return preview
 
 
-search_engine = TwoStageSearchEngine()
+enhanced_search_engine = EnhancedTwoStageSearchEngine()
 
 
 # ===========================
@@ -629,33 +884,78 @@ def convert_stage_2_results(stage_2_results):
 def search_documents(request):
     search_query = request.GET.get('search_query', '')
     client_filter = request.GET.get('client_filter', '')
+    enable_fuzzy = request.GET.get('fuzzy', 'true').lower() == 'true'  # Allow disabling fuzzy search
     
     results = []
     total_results = 0
     search_performed = False
     search_stage_used = 1
     search_type = 'metadata'
+    search_modes_used = []
     
     if search_query:
         search_performed = True
-        print(f"Starting search: '{search_query}'")
+        print(f"Starting enhanced search: '{search_query}' (fuzzy: {enable_fuzzy})")
         
-        stage_1_results = search_engine.stage_1_search(search_query, client_filter)
+        # Stage 1: Enhanced metadata search with fuzzy
+        stage_1_results = enhanced_search_engine.stage_1_search(
+            search_query, client_filter, use_fuzzy=enable_fuzzy
+        )
         
         if stage_1_results:
-            results = convert_stage_1_results(stage_1_results)
+            results = convert_enhanced_stage_1_results(stage_1_results)
             total_results = len(results)
             search_stage_used = 1
             search_type = 'metadata'
+            
+            # Track which search modes found results
+            exact_count = len([r for r in stage_1_results if r.get('match_type') == 'exact'])
+            fuzzy_count = len([r for r in stage_1_results if r.get('match_type') == 'fuzzy'])
+            
+            if exact_count > 0:
+                search_modes_used.append(f"{exact_count} exact")
+            if fuzzy_count > 0:
+                search_modes_used.append(f"{fuzzy_count} fuzzy")
+                
         else:
-            print("No Stage 1 matches - falling back to Stage 2")
-            stage_2_results = search_engine.stage_2_search(search_query, 'all', client_filter)
+            print("No Stage 1 matches - trying Stage 2 with fuzzy search")
+            
+            # Stage 2: Enhanced OCR search with fuzzy
+            stage_2_results = enhanced_search_engine.stage_2_search(
+                search_query, 'all', client_filter, use_fuzzy=enable_fuzzy
+            )
             
             if stage_2_results:
-                results = convert_stage_2_results(stage_2_results)
+                results = convert_enhanced_stage_2_results(stage_2_results)
                 total_results = len(results)
                 search_stage_used = 2
                 search_type = 'full_content'
+                
+                exact_count = len([r for r in stage_2_results if r.get('match_type') == 'exact'])
+                fuzzy_count = len([r for r in stage_2_results if r.get('match_type') == 'fuzzy'])
+                
+                if exact_count > 0:
+                    search_modes_used.append(f"{exact_count} exact")
+                if fuzzy_count > 0:
+                    search_modes_used.append(f"{fuzzy_count} fuzzy")
+            else:
+                # Stage 3: Pure fuzzy search as last resort (only if fuzzy is enabled)
+                if enable_fuzzy:
+                    print("No Stage 2 matches - trying pure fuzzy search")
+                    
+                    fuzzy_results = enhanced_search_engine.fuzzy_search_stage(
+                        search_query, client_filter
+                    )
+                    
+                    if fuzzy_results:
+                        results = convert_enhanced_fuzzy_results(fuzzy_results)
+                        total_results = len(results)
+                        search_stage_used = 3
+                        search_type = 'fuzzy_comprehensive'
+                        search_modes_used.append(f"{len(fuzzy_results)} comprehensive fuzzy")
+    
+    # Create search summary for display
+    search_summary = " + ".join(search_modes_used) if search_modes_used else ""
     
     context = {
         'search_query': search_query,
@@ -665,11 +965,72 @@ def search_documents(request):
         'search_performed': search_performed,
         'search_stage_used': search_stage_used,
         'search_type': search_type,
+        'search_summary': search_summary,
+        'fuzzy_enabled': enable_fuzzy,
         'available_clients': Document.objects.values_list('client_name', flat=True).distinct()
     }
     
     return render(request, 'search/search_documents.html', context)
 
+def convert_enhanced_stage_1_results(stage_1_results):
+    """Convert enhanced stage 1 results with fuzzy match information"""
+    results = []
+    for result in stage_1_results:
+        doc_obj = type('obj', (object,), {
+            'id': result['document_id'],
+            'document_name': result['document_name'],
+            'filename': result['document_name'],
+            'client_name': result['client_name'],
+            'document_type': result['document_type'],
+            'match_score': result['match_score'],
+            'matched_fields': result['matched_fields'],
+            'match_type': result.get('match_type', 'exact'),
+            'search_stage': 1,
+            'file_paths': result['file_paths'],
+            'metadata': result['metadata_preview']
+        })
+        results.append(doc_obj)
+    return results
+
+def convert_enhanced_stage_2_results(stage_2_results):
+    """Convert enhanced stage 2 results with fuzzy match information"""
+    results = []
+    for result in stage_2_results:
+        doc_obj = type('obj', (object,), {
+            'id': result['document_id'],
+            'document_name': result['document_name'],
+            'filename': result['document_name'],
+            'client_name': result['client_name'],
+            'document_type': result['document_type'],
+            'match_score': result['match_score'],
+            'matched_snippets': result['matched_snippets'],
+            'match_type': result.get('match_type', 'exact'),
+            'search_stage': 2,
+            'file_paths': result['file_paths'],
+            'metadata': result['metadata_preview']
+        })
+        results.append(doc_obj)
+    return results
+
+def convert_enhanced_fuzzy_results(fuzzy_results):
+    """Convert pure fuzzy search results"""
+    results = []
+    for result in fuzzy_results:
+        doc_obj = type('obj', (object,), {
+            'id': result['document_id'],
+            'document_name': result['document_name'],
+            'filename': result['document_name'],
+            'client_name': result['client_name'],
+            'document_type': result['document_type'],
+            'match_score': result['match_score'],
+            'matched_snippets': result['matched_snippets'],
+            'match_type': 'fuzzy',
+            'search_stage': 3,
+            'file_paths': result['file_paths'],
+            'metadata': result['metadata_preview']
+        })
+        results.append(doc_obj)
+    return results
 
 @login_required
 def document_detail(request, document_id):
@@ -840,11 +1201,9 @@ def rename_conversation(request, conversation_id):
 # ===========================
 @login_required
 def llm_search_documents(request):
-    """
-    LLM-powered search that provides natural language answers based on document content
-    """
     search_query = request.GET.get('search_query', '').strip()
     client_filter = request.GET.get('client_filter', '').strip()
+    enable_fuzzy = request.GET.get('fuzzy', 'true').lower() == 'true'
 
     results = []
     total_results = 0
@@ -856,39 +1215,38 @@ def llm_search_documents(request):
         search_performed = True
         
         try:
-            # Log the search attempt
-            log_security_event(
-                event_type='llm_search_attempt',
-                user=request.user,
-                request=request,
-                extra_data={'query': search_query, 'client_filter': client_filter},
-                risk_level='low'
+            # Use enhanced search engine for better context gathering
+            stage_1_results = enhanced_search_engine.stage_1_search(
+                search_query, client_filter, use_fuzzy=enable_fuzzy
             )
-            
-            # Step 1: Use existing search engine to gather context documents
-            print(f"LLM Search: Starting search for '{search_query}'")
-            
-            # Try metadata search first
-            stage_1_results = search_engine.stage_1_search(search_query, client_filter)
             docs_for_context = stage_1_results
 
-            # Fallback to OCR search if no metadata matches
+            # Fallback to enhanced stage 2 if needed
             if not docs_for_context:
-                print("LLM Search: No metadata matches, trying OCR search...")
-                stage_2_results = search_engine.stage_2_search(search_query, 'all', client_filter)
+                stage_2_results = enhanced_search_engine.stage_2_search(
+                    search_query, 'all', client_filter, use_fuzzy=enable_fuzzy
+                )
                 docs_for_context = stage_2_results
+                
+            # Final fallback to pure fuzzy search
+            if not docs_for_context and enable_fuzzy:
+                fuzzy_results = enhanced_search_engine.fuzzy_search_stage(
+                    search_query, client_filter
+                )
+                docs_for_context = fuzzy_results
 
             if docs_for_context:
-                # Step 2: Build context string from top document matches
+                # Build context with enhanced information
                 context_blocks = []
-                for i, doc_result in enumerate(docs_for_context[:5]):  # Top 5 matches
+                for i, doc_result in enumerate(docs_for_context[:5]):
                     meta = doc_result.get('metadata_preview') or {}
                     
-                    # Build context block for this document
                     context_lines = [
                         f"=== Document {i+1}: {doc_result.get('document_name')} ===",
                         f"Client: {doc_result.get('client_name', 'Unknown')}",
-                        f"Type: {doc_result.get('document_type', 'Unknown')}"
+                        f"Type: {doc_result.get('document_type', 'Unknown')}",
+                        f"Match type: {doc_result.get('match_type', 'exact')}",
+                        f"Match score: {doc_result.get('match_score', 0):.1f}"
                     ]
                     
                     # Add metadata information
@@ -900,83 +1258,47 @@ def llm_search_documents(request):
                                 else:
                                     context_lines.append(f"{key.title()}: {value}")
                     
-                    # Add content snippet if available (from stage 2 search)
+                    # Add content snippet
                     if 'matched_snippets' in doc_result and doc_result['matched_snippets']:
-                        # Clean HTML tags from snippet
                         clean_snippet = re.sub(r'<[^>]+>', '', doc_result['matched_snippets'][0])
                         context_lines.append(f"Content: {clean_snippet[:300]}...")
                     
                     context_blocks.append("\n".join(context_lines))
 
-                # Combine all context blocks
                 full_context = "\n\n".join(context_blocks)
-                print(f"LLM Search: Built context from {len(docs_for_context)} documents, {len(full_context)} chars")
-
-                # Step 3: Send to LLM for analysis
-                try:
-                    llm_answer = answer_from_context(search_query, full_context, temperature=0.2)
-                    print(f"LLM Search: Got response length {len(llm_answer)} chars")
-                    
-                    # Log successful LLM response
-                    log_security_event(
-                        event_type='llm_search_success',
-                        user=request.user,
-                        request=request,
-                        extra_data={
-                            'query': search_query, 
-                            'response_length': len(llm_answer),
-                            'documents_used': len(docs_for_context)
-                        },
-                        risk_level='low'
-                    )
-                    
-                except Exception as llm_error:
-                    print(f"LLM Error: {llm_error}")
-                    error_message = "The AI analysis service is currently unavailable. Please try keyword search instead."
-                    llm_answer = ""
-                    
-                    # Log LLM error
-                    log_security_event(
-                        event_type='llm_search_error',
-                        user=request.user,
-                        request=request,
-                        extra_data={'query': search_query, 'error': str(llm_error)},
-                        risk_level='medium'
-                    )
-
-                # Step 4: Convert results for display (same as keyword search)
+                
+                # Send to LLM
+                llm_answer = answer_from_context(search_query, full_context, temperature=0.2)
+                
+                # Convert results for display
                 if 'matched_snippets' in docs_for_context[0] if docs_for_context else False:
-                    results = convert_stage_2_results(docs_for_context[:10])  # Show up to 10 supporting docs
+                    results = convert_enhanced_stage_2_results(docs_for_context[:10])
+                elif docs_for_context[0].get('search_stage') == 3:
+                    results = convert_enhanced_fuzzy_results(docs_for_context[:10])
                 else:
-                    results = convert_stage_1_results(docs_for_context[:10])
+                    results = convert_enhanced_stage_1_results(docs_for_context[:10])
 
                 total_results = len(results)
                 
             else:
-                # No documents found at all
-                llm_answer = "I couldn't find any documents in the database that match your query. This could be because:\n\n" \
-                           "• No documents have been processed yet\n" \
-                           "• Your search terms don't match any document content\n" \
-                           "• The document archive may need to be updated\n\n" \
-                           "Try different search terms or contact support if you believe documents should be available."
-                print("LLM Search: No documents found in database")
+                llm_answer = "I couldn't find any documents that match your query, even with fuzzy search enabled. This could be because the database is empty or your search terms are too different from the document content."
                 
         except Exception as e:
-            print(f"LLM Search Error: {e}")
-            error_message = f"An error occurred during AI search: {str(e)[:100]}. Please try again or use regular keyword search."
+            print(f"Enhanced LLM Search Error: {e}")
+            error_message = f"An error occurred during AI search: {str(e)[:100]}"
             llm_answer = ""
 
-    # Prepare context for template
     context = {
         'search_query': search_query,
         'client_filter': client_filter,
         'results': results,
         'total_results': total_results,
         'search_performed': search_performed,
-        'search_stage_used': 3,  # 3 denotes LLM search
-        'search_type': 'llm',
+        'search_stage_used': 3,
+        'search_type': 'llm_enhanced',
         'llm_answer': llm_answer,
         'error_message': error_message,
+        'fuzzy_enabled': enable_fuzzy,
         'available_clients': Document.objects.values_list('client_name', flat=True).distinct()
     }
     

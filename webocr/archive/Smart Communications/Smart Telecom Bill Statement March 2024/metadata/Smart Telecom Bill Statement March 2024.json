@@ -1,0 +1,12 @@
+{
+    "document_type": "Billing Statement",
+    "client_name": "Smart Communications",
+    "names": ["Smart", "Smart Communications", "Smart Telecom", "PLDT Smart"],
+    "invoice_numbers": ["BILL-2024-03-789456", "789456"],
+    "financial": ["PHP 3,250.00", "3250", "Three Thousand Two Hundred Fifty Pesos"],
+    "dates": ["March 05, 2024", "2024-03-05", "Mar 5, 2024"],
+    "emails": ["billing@smart.com.ph", "customercare@smart.com.ph"],
+    "phones": ["*888", "02-8-888-1111", "+63-2-8888-1111"],
+    "addresses": ["Smart Tower, 6799 Ayala Avenue, Makati City"],
+    "keywords": ["mobile", "postpaid", "data plan", "unlimited", "5G", "telecommunications"]
+}

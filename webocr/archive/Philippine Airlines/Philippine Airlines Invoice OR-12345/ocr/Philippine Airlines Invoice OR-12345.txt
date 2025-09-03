@@ -1,0 +1,20 @@
+PHILIPPINE AIRLINES
+Official Receipt / Invoice
+OR-12345
+
+Date: January 15, 2024
+Customer: Corporate Travel Department
+Amount: PHP 25,500.00
+
+Flight Details:
+Manila to Cebu - Business Class
+Passenger: John Doe
+Flight PR-123
+
+Total Amount: PHP 25,500.00
+Payment Method: Corporate Account
+Status: Paid
+
+Thank you for flying with Philippine Airlines!
+For inquiries, contact: billing@philippineairlines.com
+Phone: +63-2-8855-8888

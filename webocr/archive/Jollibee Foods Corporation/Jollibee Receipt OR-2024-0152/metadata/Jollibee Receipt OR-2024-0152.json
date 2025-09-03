@@ -1,0 +1,12 @@
+{
+    "document_type": "Official Receipt",
+    "client_name": "Jollibee Foods Corporation",
+    "names": ["Jollibee", "Jollibee Foods Corp", "JFC", "Jolibee"],
+    "invoice_numbers": ["OR-2024-0152", "OR20240152"],
+    "financial": ["PHP 1,850.00", "1850", "One Thousand Eight Hundred Fifty Pesos"],
+    "dates": ["January 22, 2024", "2024-01-22", "Jan 22, 2024"],
+    "emails": ["catering@jollibee.com.ph"],
+    "phones": ["+63-2-8-JOLLIBEE", "02-8-565-5423", "8565-5423"],
+    "addresses": ["Jollibee Plaza, Emerald Avenue, Ortigas Center, Pasig City"],
+    "keywords": ["catering", "party package", "kiddie party", "food", "fastfood"]
+}

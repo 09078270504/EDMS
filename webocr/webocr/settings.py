@@ -497,3 +497,38 @@ TEMPLATES = [
    },
 ]
 
+# ====================================
+# FUZZY SEARCH CONFIGURATION
+# ====================================
+
+# Enable/disable fuzzy search
+ENABLE_FUZZY_SEARCH = os.environ.get('ENABLE_FUZZY_SEARCH', 'True').lower() == 'true'
+
+# Minimum similarity score for fuzzy matches (0-100)
+# 70 = Good balance between accuracy and recall
+# 80 = More strict, fewer false positives
+# 60 = More lenient, more potential matches
+FUZZY_SEARCH_THRESHOLD = int(os.environ.get('FUZZY_SEARCH_THRESHOLD', '70'))
+
+# Maximum number of fuzzy results per search stage
+FUZZY_SEARCH_LIMIT = int(os.environ.get('FUZZY_SEARCH_LIMIT', '10'))
+
+# Fuzzy search algorithms priority (rapidfuzz options)
+FUZZY_ALGORITHMS = {
+    'partial_ratio': True,      # Good for substring matching
+    'token_sort_ratio': True,   # Good for word order variations
+    'token_set_ratio': True,    # Good for missing/extra words
+    'ratio': False             # Basic similarity (usually too strict)
+}
+
+# Performance settings
+FUZZY_CHUNK_SIZE = int(os.environ.get('FUZZY_CHUNK_SIZE', '200'))  # Words per chunk for OCR fuzzy search
+FUZZY_MAX_TEXT_LENGTH = int(os.environ.get('FUZZY_MAX_TEXT_LENGTH', '5000'))  # Max chars to analyze per document
+
+# Development settings
+if DEBUG:
+    # More lenient settings for development
+    FUZZY_SEARCH_THRESHOLD = 60
+    FUZZY_SEARCH_LIMIT = 15
+
+

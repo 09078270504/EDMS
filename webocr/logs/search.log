@@ -18,3 +18,311 @@ INFO 2025-09-01 17:49:04,174 basehttp 628673 133380806014656 "GET /search/llm/?s
 WARNING 2025-09-01 17:49:19,114 log 628673 133380806014656 Not Found: /favicon.ico
 INFO 2025-09-01 17:49:23,208 basehttp 628673 133380806014656 "GET /search/documents/?search_query=Shania&client_filter=&date_from=&date_to=&view= HTTP/1.1" 200 10596
 WARNING 2025-09-01 17:49:23,670 log 628673 133380806014656 Not Found: /favicon.ico
+INFO 2025-09-02 08:28:21,949 autoreload 8592 126476406808704 Watching for file changes with StatReloader
+INFO 2025-09-02 08:28:33,188 basehttp 8592 126471546861248 "GET / HTTP/1.1" 302 0
+INFO 2025-09-02 08:28:33,535 basehttp 8592 126471546861248 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 08:28:46,427 basehttp 8592 126471546861248 "GET /search/documents/?search_query=Shania&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 13071
+INFO 2025-09-02 08:28:54,519 basehttp 8592 126471546861248 "GET /search/documents/?search_query=Shania&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 13071
+INFO 2025-09-02 08:28:59,983 basehttp 8592 126471546861248 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 08:31:03,842 basehttp 8592 126471546861248 "GET /search/documents/?search_query=Philippines&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 13081
+INFO 2025-09-02 08:31:08,794 basehttp 8592 126471546861248 "GET /search/documents/?search_query=Philippines&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 13081
+INFO 2025-09-02 08:31:10,728 basehttp 8592 126471546861248 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 08:31:18,347 basehttp 8592 126471546861248 "GET /search/llm/?search_query=Philippines&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12556
+INFO 2025-09-02 08:31:49,152 basehttp 8592 126471546861248 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 08:31:52,356 basehttp 8592 126471546861248 "GET /search/documents/?search_query=Philippine+Airlines+Invoice+OR-12345.pdf&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 13139
+INFO 2025-09-02 08:31:56,250 basehttp 8592 126471546861248 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 08:32:00,250 basehttp 8592 126471546861248 "GET /search/documents/?search_query=Philippine+Airlines+Invoice+OR-12345&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 13131
+INFO 2025-09-02 08:32:02,347 basehttp 8592 126471546861248 "GET /search/documents/?search_query=Philippine+Airlines+Invoice+OR-12345&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 13131
+INFO 2025-09-02 08:38:48,097 autoreload 9626 126592957681792 Watching for file changes with StatReloader
+INFO 2025-09-02 08:38:59,482 basehttp 9626 126588096083648 "GET / HTTP/1.1" 302 0
+INFO 2025-09-02 08:38:59,627 basehttp 9626 126588096083648 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 08:39:06,130 basehttp 9626 126588096083648 "GET /search/documents/?search_query=Philippines&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16943
+ERROR 2025-09-02 08:39:18,719 log 9626 126588096083648 Internal Server Error: /document/1/
+Traceback (most recent call last):
+  File "/home/feona/archive/.venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/feona/archive/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/feona/archive/.venv/lib/python3.12/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/feona/archive/webocr/core/views.py", line 1039, in document_detail
+    metadata_path = search_engine._get_metadata_path(document)
+                    ^^^^^^^^^^^^^
+NameError: name 'search_engine' is not defined
+ERROR 2025-09-02 08:39:18,728 basehttp 9626 126588096083648 "GET /document/1/ HTTP/1.1" 500 81828
+WARNING 2025-09-02 08:39:21,508 log 9626 126588096083648 Not Found: /search/documents/archive/Philippine Airlines/Philippine Airlines Invoice OR-12345/original/Philippine Airlines Invoice OR-12345.pdf
+WARNING 2025-09-02 08:39:21,509 basehttp 9626 126588096083648 "GET /search/documents/archive/Philippine%20Airlines/Philippine%20Airlines%20Invoice%20OR-12345/original/Philippine%20Airlines%20Invoice%20OR-12345.pdf HTTP/1.1" 404 6530
+INFO 2025-09-02 08:39:40,061 basehttp 9626 126588096083648 "GET /search/documents/?search_query=pilipins&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16911
+INFO 2025-09-02 08:42:51,434 autoreload 10205 128335943295104 Watching for file changes with StatReloader
+INFO 2025-09-02 08:43:31,495 basehttp 10205 128331083151040 "GET / HTTP/1.1" 302 0
+INFO 2025-09-02 08:43:32,246 basehttp 10205 128331083151040 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 08:43:32,909 basehttp 10205 128331064268480 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+WARNING 2025-09-02 08:43:34,214 log 10205 128331064268480 Not Found: /favicon.ico
+INFO 2025-09-02 08:43:40,733 basehttp 10205 128331064268480 "GET /search/documents/?search_query=pulipine&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16919
+WARNING 2025-09-02 08:45:51,299 log 10205 128331064268480 Not Found: /favicon.ico
+INFO 2025-09-02 08:45:55,996 basehttp 10205 128331064268480 "GET /search/documents/?search_query=invice&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16928
+WARNING 2025-09-02 08:45:56,095 log 10205 128331064268480 Not Found: /favicon.ico
+WARNING 2025-09-02 08:46:03,095 log 10205 128331064268480 Not Found: /favicon.ico
+INFO 2025-09-02 09:03:03,258 autoreload 12970 123955910533248 Watching for file changes with StatReloader
+INFO 2025-09-02 09:03:16,070 basehttp 12970 123950653765312 "GET / HTTP/1.1" 302 0
+INFO 2025-09-02 09:03:16,962 basehttp 12970 123950653765312 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 09:03:18,921 basehttp 12970 123950633834176 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+WARNING 2025-09-02 09:03:19,838 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 09:03:37,303 basehttp 12970 123950633834176 "GET / HTTP/1.1" 302 0
+INFO 2025-09-02 09:03:38,013 basehttp 12970 123950633834176 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 09:04:06,989 basehttp 12970 123950633834176 "GET /search/documents/?search_query=pshania&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16909
+WARNING 2025-09-02 09:04:07,288 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 09:04:19,858 basehttp 12970 123950633834176 "GET /search/documents/?search_query=Shania&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16649
+WARNING 2025-09-02 09:04:30,520 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 09:05:01,297 basehttp 12970 123950633834176 "GET /search/documents/?search_query=Airline&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16876
+WARNING 2025-09-02 09:05:01,568 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 09:05:10,284 basehttp 12970 123950633834176 "GET /search/documents/?search_query=Shania&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16649
+WARNING 2025-09-02 09:05:17,790 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 09:05:22,920 basehttp 12970 123950633834176 "GET /search/documents/?search_query=Philippine&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16882
+WARNING 2025-09-02 09:05:23,108 log 12970 123950633834176 Not Found: /favicon.ico
+WARNING 2025-09-02 09:05:26,072 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 09:05:29,188 basehttp 12970 123950633834176 "GET /search/documents/?search_query=Shania&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16649
+WARNING 2025-09-02 09:05:35,822 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 09:09:37,248 basehttp 12970 123950633834176 "GET /search/documents/?search_query=Chimpanzee&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 13079
+INFO 2025-09-02 09:09:37,296 basehttp 12970 123950633834176 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+WARNING 2025-09-02 09:09:37,409 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 09:09:44,948 basehttp 12970 123950633834176 "GET /search/documents/?search_query=Shania&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16649
+INFO 2025-09-02 09:09:57,257 basehttp 12970 123950633834176 "GET /search/documents/?search_query=Chimpanzee&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 13079
+WARNING 2025-09-02 09:09:57,435 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 09:10:12,213 basehttp 12970 123950633834176 "GET /search/documents/?search_query=villanueva&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 13079
+INFO 2025-09-02 09:10:17,411 basehttp 12970 123950633834176 "GET /search/documents/?search_query=Shania&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16649
+INFO 2025-09-02 09:10:34,838 basehttp 12970 123950633834176 "GET /search/documents/?search_query=Villanueva&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 13079
+WARNING 2025-09-02 09:10:35,004 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 09:10:42,124 basehttp 12970 123950633834176 "GET /documents/ HTTP/1.1" 200 27875
+WARNING 2025-09-02 09:10:42,278 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 09:10:47,136 basehttp 12970 123950633834176 "GET /search/llm/?search_query=Shania&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16619
+WARNING 2025-09-02 09:10:47,288 log 12970 123950633834176 Not Found: /favicon.ico
+WARNING 2025-09-02 09:10:54,434 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 09:12:04,801 basehttp 12970 123950633834176 "GET /search/llm/?search_query=Makati&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16551
+WARNING 2025-09-02 09:12:04,930 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 09:12:31,546 basehttp 12970 123950633834176 "GET /search/llm/?search_query=ABC+corporation&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16574
+INFO 2025-09-02 09:14:25,080 basehttp 12970 123950633834176 "GET /search/documents/?search_query=Shania&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16649
+INFO 2025-09-02 09:14:25,145 basehttp 12970 123950633834176 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+WARNING 2025-09-02 09:14:25,256 log 12970 123950633834176 Not Found: /favicon.ico
+WARNING 2025-09-02 09:14:30,859 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 10:15:09,942 basehttp 12970 123950633834176 "GET /search/documents/?search_query=Shania&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16649
+INFO 2025-09-02 10:15:11,349 basehttp 12970 123950633834176 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+WARNING 2025-09-02 10:15:13,053 log 12970 123950653765312 Not Found: /favicon.ico
+WARNING 2025-09-02 10:15:16,086 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 10:16:16,923 basehttp 12970 123950633834176 "GET /search/documents/?search_query=Shania&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16649
+WARNING 2025-09-02 10:16:17,229 log 12970 123950633834176 Not Found: /favicon.ico
+INFO 2025-09-02 10:27:04,104 basehttp 12970 123950633834176 "GET /search/documents/?search_query=Shania&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 302 0
+INFO 2025-09-02 10:27:04,642 basehttp 12970 123950633834176 "GET /login/?next=/search/documents/%3Fsearch_query%3DShania%26client_filter%3D%26date_from%3D%26date_to%3D%26fuzzy%3Dtrue%26view%3D HTTP/1.1" 200 10696
+INFO 2025-09-02 10:27:05,177 basehttp 12970 123950642226880 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+WARNING 2025-09-02 10:27:05,240 basehttp 12970 123950653765312 "GET /static/img/search_placeholder.png HTTP/1.1" 404 1837
+WARNING 2025-09-02 10:27:05,243 basehttp 12970 123950633834176 "GET /static/img/chat_placeholder.png HTTP/1.1" 404 1831
+WARNING 2025-09-02 10:27:05,338 log 12970 123950642226880 Not Found: /favicon.ico
+WARNING 2025-09-02 10:27:05,371 basehttp 12970 123950642226880 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2025-09-02 10:27:12,425 basehttp 12970 123950642226880 "POST /login/?next=/search/documents/%3Fsearch_query%3DShania%26client_filter%3D%26date_from%3D%26date_to%3D%26fuzzy%3Dtrue%26view%3D HTTP/1.1" 302 0
+INFO 2025-09-02 10:27:12,783 basehttp 12970 123950642226880 "GET /documents/ HTTP/1.1" 200 27875
+WARNING 2025-09-02 10:27:13,378 log 12970 123950642226880 Not Found: /favicon.ico
+WARNING 2025-09-02 10:27:13,380 basehttp 12970 123950642226880 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2025-09-02 10:27:19,480 basehttp 12970 123950642226880 "GET /search/llm/?search_query=Shania&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16619
+WARNING 2025-09-02 10:27:19,884 log 12970 123950642226880 Not Found: /favicon.ico
+INFO 2025-09-02 10:35:58,893 autoreload 12970 123955910533248 /home/feona/archive/webocr/webocr/settings.py changed, reloading.
+INFO 2025-09-02 10:57:36,661 autoreload 21185 125603814166656 Watching for file changes with StatReloader
+INFO 2025-09-02 10:57:42,837 autoreload 21226 137768888889472 Watching for file changes with StatReloader
+INFO 2025-09-02 10:58:22,216 basehttp 21226 137763632445120 "GET / HTTP/1.1" 302 0
+INFO 2025-09-02 10:58:23,156 basehttp 21226 137763632445120 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 10:58:23,425 basehttp 21226 137763632445120 "GET /static/css/search_form.css HTTP/1.1" 200 502
+INFO 2025-09-02 10:58:23,427 basehttp 21226 137763620906688 "GET /static/css/base.css HTTP/1.1" 200 7712
+INFO 2025-09-02 10:58:23,467 basehttp 21226 137763620906688 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+INFO 2025-09-02 10:58:23,819 basehttp 21226 137763620906688 "GET /static/js/base.js HTTP/1.1" 200 12570
+WARNING 2025-09-02 10:58:24,581 log 21226 137763620906688 Not Found: /favicon.ico
+INFO 2025-09-02 10:58:31,389 basehttp 21226 137763632445120 "GET /search/llm/?search_query=hey&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12540
+WARNING 2025-09-02 10:58:42,174 log 21226 137763632445120 Not Found: /favicon.ico
+INFO 2025-09-02 11:12:13,661 autoreload 22542 133249166516352 Watching for file changes with StatReloader
+INFO 2025-09-02 11:12:53,790 basehttp 22542 133243910223552 "GET / HTTP/1.1" 302 0
+INFO 2025-09-02 11:12:54,082 basehttp 22542 133243910223552 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 11:12:54,352 basehttp 22542 133243890292416 "GET /static/js/base.js HTTP/1.1" 200 12570
+INFO 2025-09-02 11:12:54,353 basehttp 22542 133243881899712 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+WARNING 2025-09-02 11:12:54,855 log 22542 133243881899712 Not Found: /favicon.ico
+INFO 2025-09-02 11:13:03,796 basehttp 22542 133243890292416 "GET / HTTP/1.1" 302 0
+INFO 2025-09-02 11:13:03,896 basehttp 22542 133243890292416 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 11:13:10,502 basehttp 22542 133243890292416 "GET /search/llm/?search_query=Shania&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16619
+WARNING 2025-09-02 11:13:19,806 log 22542 133243890292416 Not Found: /favicon.ico
+INFO 2025-09-02 11:13:30,889 basehttp 22542 133243890292416 "GET /search/llm/?search_query=Philippine+Airlines&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16879
+WARNING 2025-09-02 11:13:31,051 log 22542 133243890292416 Not Found: /favicon.ico
+INFO 2025-09-02 11:14:02,295 basehttp 22542 133243890292416 "GET /search/llm/?search_query=Philippine+Airlines&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16879
+INFO 2025-09-02 11:14:02,335 basehttp 22542 133243890292416 "GET /static/css/base.css HTTP/1.1" 304 0
+INFO 2025-09-02 11:14:14,751 basehttp 22542 133243890292416 "GET /search/llm/?search_query=Philippine+Airlines+Invoice&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16924
+WARNING 2025-09-02 11:14:14,993 log 22542 133243890292416 Not Found: /favicon.ico
+WARNING 2025-09-02 11:15:27,276 log 22542 133243890292416 Not Found: /favicon.ico
+INFO 2025-09-02 11:15:32,084 basehttp 22542 133243890292416 "GET /search/llm/?search_query=Janueary&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 19684
+INFO 2025-09-02 11:16:31,806 basehttp 22542 133243890292416 "GET /search/documents/?search_query=Janueary&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 19711
+INFO 2025-09-02 12:47:44,672 basehttp 22542 133243890292416 "GET /search/documents/?search_query=Januearey&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 302 0
+INFO 2025-09-02 12:47:44,697 basehttp 22542 133243890292416 "GET /login/?next=/search/documents/%3Fsearch_query%3DJanuearey%26client_filter%3D%26date_from%3D%26date_to%3D%26fuzzy%3Dtrue%26view%3D HTTP/1.1" 200 10696
+INFO 2025-09-02 12:47:44,981 basehttp 22542 133243898685120 "GET /static/css/base.css HTTP/1.1" 304 0
+INFO 2025-09-02 12:47:44,983 basehttp 22542 133243898685120 "GET /static/img/fowse.png HTTP/1.1" 304 0
+INFO 2025-09-02 12:47:44,984 basehttp 22542 133243910223552 "GET /static/js/base.js HTTP/1.1" 304 0
+WARNING 2025-09-02 12:47:45,011 basehttp 22542 133243890292416 "GET /static/img/chat_placeholder.png HTTP/1.1" 404 1831
+WARNING 2025-09-02 12:47:45,011 basehttp 22542 133243881899712 "GET /static/img/search_placeholder.png HTTP/1.1" 404 1837
+INFO 2025-09-02 12:47:45,030 basehttp 22542 133243872458432 "GET /static/img/background_fowse.png HTTP/1.1" 200 11957
+WARNING 2025-09-02 12:47:45,049 log 22542 133243872458432 Not Found: /favicon.ico
+WARNING 2025-09-02 12:47:45,049 basehttp 22542 133243872458432 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2025-09-02 12:47:50,155 basehttp 22542 133243872458432 "POST /login/?next=/search/documents/%3Fsearch_query%3DJanuearey%26client_filter%3D%26date_from%3D%26date_to%3D%26fuzzy%3Dtrue%26view%3D HTTP/1.1" 302 0
+INFO 2025-09-02 12:47:50,301 basehttp 22542 133243872458432 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 12:47:50,384 basehttp 22542 133243872458432 "GET /static/css/search_form.css HTTP/1.1" 200 502
+WARNING 2025-09-02 12:47:50,538 log 22542 133243872458432 Not Found: /favicon.ico
+WARNING 2025-09-02 12:47:50,539 basehttp 22542 133243872458432 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2025-09-02 12:47:57,690 basehttp 22542 133243872458432 "GET /search/documents/?search_query=janwarey&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 19711
+INFO 2025-09-02 12:52:59,137 basehttp 22542 133243898685120 "GET /search/llm/?search_query=janwarey&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 19684
+INFO 2025-09-02 13:02:03,104 basehttp 22542 133243898685120 "GET /chat/ HTTP/1.1" 200 12433
+INFO 2025-09-02 13:02:03,168 basehttp 22542 133243910223552 "GET /static/css/dashboard.css HTTP/1.1" 200 3497
+INFO 2025-09-02 13:02:03,169 basehttp 22542 133243910223552 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+INFO 2025-09-02 13:02:03,172 basehttp 22542 133243898685120 "GET /static/js/dashboard.js HTTP/1.1" 200 10737
+WARNING 2025-09-02 13:02:03,480 log 22542 133243910223552 Not Found: /favicon.ico
+INFO 2025-09-02 13:03:19,605 basehttp 22542 133243872458432 "GET /chat/?csrfmiddlewaretoken=rwfkE5DgRSku6cpVp9K5C8Ci83B7Dif9ZuuqvtvITmLnXYZF6VcySgx2ULN8FSAI&message=hello HTTP/1.1" 200 12433
+WARNING 2025-09-02 13:03:19,891 log 22542 133243872458432 Not Found: /favicon.ico
+INFO 2025-09-02 13:03:37,230 basehttp 22542 133243898685120 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 13:34:34,325 basehttp 22542 133243898685120 "GET /search/documents/?search_query=janwari&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 19735
+INFO 2025-09-02 13:34:34,372 basehttp 22542 133243898685120 "GET /static/js/base.js HTTP/1.1" 304 0
+INFO 2025-09-02 13:34:34,372 basehttp 22542 133243872458432 "GET /static/css/base.css HTTP/1.1" 304 0
+INFO 2025-09-02 13:34:34,374 basehttp 22542 133243898685120 "GET /static/img/fowse.png HTTP/1.1" 304 0
+INFO 2025-09-02 13:34:52,908 basehttp 22542 133243898685120 "GET /search/documents/?search_query=Don&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16875
+INFO 2025-09-02 13:35:00,581 basehttp 22542 133243898685120 "GET /search/documents/?search_query=Villanueva&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 13079
+WARNING 2025-09-02 13:35:07,539 log 22542 133243898685120 Not Found: /favicon.ico
+INFO 2025-09-02 13:35:11,928 basehttp 22542 133243898685120 "GET /search/llm/?search_query=Villanueva&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12554
+INFO 2025-09-02 13:35:39,830 basehttp 22542 133243898685120 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 13:35:39,863 basehttp 22542 133243898685120 "GET /static/css/search_form.css HTTP/1.1" 304 0
+INFO 2025-09-02 13:35:41,257 basehttp 22542 133243898685120 "GET /chat/ HTTP/1.1" 200 13373
+INFO 2025-09-02 13:35:41,306 basehttp 22542 133243898685120 "GET /static/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-09-02 13:35:41,309 basehttp 22542 133243872458432 "GET /static/js/dashboard.js HTTP/1.1" 304 0
+INFO 2025-09-02 13:35:56,713 basehttp 22542 133243898685120 "GET /documents/ HTTP/1.1" 200 27875
+INFO 2025-09-02 13:41:47,234 autoreload 29863 133832450248832 Watching for file changes with StatReloader
+INFO 2025-09-02 13:42:57,434 basehttp 29863 133827194255040 "GET / HTTP/1.1" 302 0
+INFO 2025-09-02 13:42:57,716 basehttp 29863 133827194255040 "GET /documents/ HTTP/1.1" 200 28456
+WARNING 2025-09-02 13:42:58,118 log 29863 133827194255040 Not Found: /favicon.ico
+INFO 2025-09-02 13:43:18,419 basehttp 29863 133827194255040 "GET /search/documents/?search_query=Jolebeh&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 20043
+INFO 2025-09-02 13:45:17,348 basehttp 29863 133827194255040 "GET /search/documents/?search_query=jollibeer&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16940
+INFO 2025-09-02 13:45:40,479 basehttp 29863 133827194255040 "GET /search/documents/?search_query=bdo&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 23635
+WARNING 2025-09-02 13:45:40,709 log 29863 133827194255040 Not Found: /favicon.ico
+INFO 2025-09-02 14:01:13,094 autoreload 31335 127965900181632 Watching for file changes with StatReloader
+INFO 2025-09-02 14:01:42,099 basehttp 31335 127960644318912 "GET / HTTP/1.1" 302 0
+INFO 2025-09-02 14:01:42,600 basehttp 31335 127960644318912 "GET /documents/ HTTP/1.1" 200 28456
+INFO 2025-09-02 14:02:02,437 basehttp 31335 127960644318912 "GET /search/documents/?search_query=BDO&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 23635
+INFO 2025-09-02 14:31:08,800 basehttp 31335 127960644318912 "GET /search/documents/?search_query=BDO+&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16843
+INFO 2025-09-02 14:31:08,842 basehttp 31335 127960644318912 "GET /static/css/base.css HTTP/1.1" 304 0
+INFO 2025-09-02 14:31:08,843 basehttp 31335 127960564627136 "GET /static/js/base.js HTTP/1.1" 304 0
+INFO 2025-09-02 14:31:08,884 basehttp 31335 127960564627136 "GET /static/img/fowse.png HTTP/1.1" 304 0
+INFO 2025-09-02 14:34:12,179 basehttp 31335 127960564627136 "GET /search/documents/?search_query=BDO+&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16843
+INFO 2025-09-02 14:34:24,573 basehttp 31335 127960564627136 "GET /search/documents/?search_query=BDO+&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16852
+INFO 2025-09-02 14:42:24,897 basehttp 31335 127960564627136 "GET /search/documents/?search_query=BDO+&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16227
+WARNING 2025-09-02 14:42:25,641 log 31335 127960564627136 Not Found: /favicon.ico
+INFO 2025-09-02 14:43:58,723 basehttp 31335 127960564627136 "GET /search/documents/?search_query=BDO+&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16227
+INFO 2025-09-02 14:43:59,581 basehttp 31335 127960564627136 "GET /search/documents/?search_query=BDO+&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16227
+INFO 2025-09-02 14:44:11,521 basehttp 31335 127960564627136 "GET /documents/ HTTP/1.1" 200 28456
+INFO 2025-09-02 14:44:11,571 basehttp 31335 127960564627136 "GET /static/css/search_form.css HTTP/1.1" 200 502
+INFO 2025-09-02 14:44:14,953 basehttp 31335 127960564627136 "GET /search/documents/?search_query=ha&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 31476
+WARNING 2025-09-02 14:44:15,146 log 31335 127960564627136 Not Found: /favicon.ico
+INFO 2025-09-02 14:44:54,174 basehttp 31335 127960564627136 "GET /search/documents/?search_query=chimp&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 33140
+INFO 2025-09-02 14:44:54,230 basehttp 31335 127960564627136 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+WARNING 2025-09-02 14:44:54,533 log 31335 127960564627136 Not Found: /favicon.ico
+INFO 2025-09-02 14:47:14,826 basehttp 31335 127960564627136 "GET /search/documents/?search_query=chimp&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 33154
+WARNING 2025-09-02 14:47:15,113 log 31335 127960564627136 Not Found: /favicon.ico
+INFO 2025-09-02 14:47:50,112 basehttp 31335 127960564627136 "GET /documents/ HTTP/1.1" 200 28456
+WARNING 2025-09-02 14:47:50,379 log 31335 127960564627136 Not Found: /favicon.ico
+INFO 2025-09-02 14:48:09,126 basehttp 31335 127960564627136 "GET /search/llm/?search_query=aaa&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 302 0
+INFO 2025-09-02 14:48:09,141 basehttp 31335 127960564627136 "GET /login/?next=/search/llm/%3Fsearch_query%3Daaa%26client_filter%3D%26date_from%3D%26date_to%3D%26fuzzy%3Dtrue%26view%3D HTTP/1.1" 200 10696
+WARNING 2025-09-02 14:48:09,216 basehttp 31335 127960564627136 "GET /static/img/chat_placeholder.png HTTP/1.1" 404 1831
+WARNING 2025-09-02 14:48:09,220 basehttp 31335 127960644318912 "GET /static/img/search_placeholder.png HTTP/1.1" 404 1837
+INFO 2025-09-02 14:48:09,231 basehttp 31335 127960644318912 "GET /static/img/background_fowse.png HTTP/1.1" 200 11957
+WARNING 2025-09-02 14:48:09,331 log 31335 127960644318912 Not Found: /favicon.ico
+WARNING 2025-09-02 14:48:09,331 basehttp 31335 127960644318912 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2025-09-02 14:48:14,097 basehttp 31335 127960644318912 "POST /login/?next=/search/llm/%3Fsearch_query%3Daaa%26client_filter%3D%26date_from%3D%26date_to%3D%26fuzzy%3Dtrue%26view%3D HTTP/1.1" 302 0
+INFO 2025-09-02 14:48:14,313 basehttp 31335 127960644318912 "GET /documents/ HTTP/1.1" 200 28456
+WARNING 2025-09-02 14:48:14,523 log 31335 127960644318912 Not Found: /favicon.ico
+WARNING 2025-09-02 14:48:14,524 basehttp 31335 127960644318912 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2025-09-02 14:48:20,627 basehttp 31335 127960644318912 "GET /search/llm/?search_query=What+%3F&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15694
+WARNING 2025-09-02 14:48:20,764 log 31335 127960644318912 Not Found: /favicon.ico
+WARNING 2025-09-02 14:48:46,674 log 31335 127960644318912 Not Found: /favicon.ico
+INFO 2025-09-02 14:49:50,581 basehttp 31335 127960644318912 "GET /search/documents/?search_query=janwari&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 23817
+WARNING 2025-09-02 14:49:50,751 log 31335 127960644318912 Not Found: /favicon.ico
+INFO 2025-09-02 14:50:13,274 basehttp 31335 127960564627136 "GET /search/documents/?search_query=Jollibee&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 16263
+WARNING 2025-09-02 14:50:13,495 log 31335 127960564627136 Not Found: /favicon.ico
+WARNING 2025-09-02 14:50:40,931 log 31335 127960644318912 Not Found: /favicon.ico
+INFO 2025-09-02 14:50:47,055 basehttp 31335 127960644318912 "GET /search/llm/?search_query=Cullanueva&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12554
+WARNING 2025-09-02 14:50:47,294 log 31335 127960644318912 Not Found: /favicon.ico
+WARNING 2025-09-02 14:51:48,010 log 31335 127960564627136 Not Found: /favicon.ico
+INFO 2025-09-02 16:50:23,390 basehttp 31335 127960564627136 "GET /search/documents/?search_query=BDO&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 302 0
+INFO 2025-09-02 16:50:23,399 basehttp 31335 127960564627136 "GET /login/?next=/search/documents/%3Fsearch_query%3DBDO%26client_filter%3D%26date_from%3D%26date_to%3D%26fuzzy%3Dtrue%26view%3D HTTP/1.1" 200 10696
+INFO 2025-09-02 16:50:23,580 basehttp 31335 127960564627136 "GET /static/css/base.css HTTP/1.1" 200 7712
+WARNING 2025-09-02 16:50:23,599 basehttp 31335 127960546793152 "GET /static/img/chat_placeholder.png HTTP/1.1" 404 1831
+INFO 2025-09-02 16:50:23,600 basehttp 31335 127960555185856 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+WARNING 2025-09-02 16:50:23,600 basehttp 31335 127960644318912 "GET /static/img/search_placeholder.png HTTP/1.1" 404 1837
+INFO 2025-09-02 16:50:23,626 basehttp 31335 127960555185856 "GET /static/img/background_fowse.png HTTP/1.1" 200 11957
+INFO 2025-09-02 16:50:23,700 basehttp 31335 127960564627136 "GET /static/js/base.js HTTP/1.1" 304 0
+WARNING 2025-09-02 16:50:23,710 log 31335 127960555185856 Not Found: /favicon.ico
+WARNING 2025-09-02 16:50:23,710 basehttp 31335 127960555185856 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2025-09-02 16:50:28,540 basehttp 31335 127960555185856 "POST /login/?next=/search/documents/%3Fsearch_query%3DBDO%26client_filter%3D%26date_from%3D%26date_to%3D%26fuzzy%3Dtrue%26view%3D HTTP/1.1" 302 0
+INFO 2025-09-02 16:50:28,693 basehttp 31335 127960555185856 "GET /documents/ HTTP/1.1" 200 28456
+INFO 2025-09-02 16:50:28,780 basehttp 31335 127960555185856 "GET /static/css/search_form.css HTTP/1.1" 200 502
+WARNING 2025-09-02 16:50:28,955 log 31335 127960555185856 Not Found: /favicon.ico
+WARNING 2025-09-02 16:50:28,955 basehttp 31335 127960555185856 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2025-09-02 16:50:31,830 basehttp 31335 127960555185856 "GET /search/documents/?search_query=BDO&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 22025
+WARNING 2025-09-02 16:50:32,011 log 31335 127960555185856 Not Found: /favicon.ico
+INFO 2025-09-03 09:41:22,296 autoreload 305819 123460769263744 Watching for file changes with StatReloader
+INFO 2025-09-03 09:42:11,662 basehttp 305819 123455514080960 "GET / HTTP/1.1" 200 8233
+INFO 2025-09-03 09:42:12,513 basehttp 305819 123455514080960 "GET /static/css/base.css HTTP/1.1" 200 7712
+INFO 2025-09-03 09:42:12,563 basehttp 305819 123455502542528 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+INFO 2025-09-03 09:42:13,029 basehttp 305819 123455502542528 "GET /static/js/base.js HTTP/1.1" 304 0
+INFO 2025-09-03 09:42:13,034 basehttp 305819 123455502542528 "GET /static/img/background_fowse.png HTTP/1.1" 200 11957
+WARNING 2025-09-03 09:42:13,124 basehttp 305819 123455278151360 "GET /static/img/search_placeholder.png HTTP/1.1" 404 1837
+WARNING 2025-09-03 09:42:13,125 basehttp 305819 123455494149824 "GET /static/img/chat_placeholder.png HTTP/1.1" 404 1831
+WARNING 2025-09-03 09:42:13,202 log 305819 123455502542528 Not Found: /favicon.ico
+WARNING 2025-09-03 09:42:13,202 basehttp 305819 123455502542528 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2025-09-03 09:42:17,101 basehttp 305819 123455502542528 "GET /login/ HTTP/1.1" 200 10696
+WARNING 2025-09-03 09:42:17,222 basehttp 305819 123455502542528 "GET /static/img/chat_placeholder.png HTTP/1.1" 404 1831
+WARNING 2025-09-03 09:42:17,224 basehttp 305819 123455514080960 "GET /static/img/search_placeholder.png HTTP/1.1" 404 1837
+INFO 2025-09-03 09:42:37,106 basehttp 305819 123455494149824 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-09-03 09:42:37,365 basehttp 305819 123455494149824 "GET /documents/ HTTP/1.1" 200 28456
+INFO 2025-09-03 09:42:37,437 basehttp 305819 123455494149824 "GET /static/css/search_form.css HTTP/1.1" 200 502
+INFO 2025-09-03 09:42:37,732 basehttp 305819 123455494149824 "GET /static/js/search_form.js HTTP/1.1" 200 5396
+WARNING 2025-09-03 09:42:37,862 log 305819 123455494149824 Not Found: /favicon.ico
+WARNING 2025-09-03 09:42:37,863 basehttp 305819 123455494149824 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2025-09-03 09:42:42,859 basehttp 305819 123455494149824 "GET /search/llm/?search_query=yeh&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 18589
+INFO 2025-09-03 09:43:13,522 basehttp 305819 123455494149824 "GET /search/llm/?search_query=chimpanzee&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12554
+INFO 2025-09-03 15:19:17,496 basehttp 305819 123455278151360 "GET /static/js/search_form.js HTTP/1.1" 200 5396
+WARNING 2025-09-03 15:19:17,730 log 305819 123455278151360 Not Found: /favicon.ico
+INFO 2025-09-03 15:19:25,560 basehttp 305819 123455494149824 "GET /search/documents/?search_query=AIRLINE&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 302 0
+INFO 2025-09-03 15:19:25,564 basehttp 305819 123455494149824 "GET /login/?next=/search/documents/%3Fsearch_query%3DAIRLINE%26client_filter%3D%26date_from%3D%26date_to%3D%26fuzzy%3Dtrue%26view%3D HTTP/1.1" 200 10696
+INFO 2025-09-03 15:19:25,751 basehttp 305819 123455494149824 "GET /static/js/base.js HTTP/1.1" 304 0
+INFO 2025-09-03 15:19:25,754 basehttp 305819 123455278151360 "GET /static/css/base.css HTTP/1.1" 200 7712
+INFO 2025-09-03 15:19:25,764 basehttp 305819 123455278151360 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+WARNING 2025-09-03 15:19:25,764 basehttp 305819 123455494149824 "GET /static/img/chat_placeholder.png HTTP/1.1" 404 1831
+WARNING 2025-09-03 15:19:25,767 basehttp 305819 123455502542528 "GET /static/img/search_placeholder.png HTTP/1.1" 404 1837
+INFO 2025-09-03 15:19:25,846 basehttp 305819 123455514080960 "GET /static/img/background_fowse.png HTTP/1.1" 200 11957
+WARNING 2025-09-03 15:19:25,853 log 305819 123455278151360 Not Found: /favicon.ico
+WARNING 2025-09-03 15:19:25,854 basehttp 305819 123455278151360 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2025-09-03 15:19:29,957 basehttp 305819 123455278151360 "POST /login/?next=/search/documents/%3Fsearch_query%3DAIRLINE%26client_filter%3D%26date_from%3D%26date_to%3D%26fuzzy%3Dtrue%26view%3D HTTP/1.1" 302 0
+INFO 2025-09-03 15:19:29,991 basehttp 305819 123455278151360 "GET /documents/ HTTP/1.1" 200 28456
+INFO 2025-09-03 15:19:30,073 basehttp 305819 123455278151360 "GET /static/css/search_form.css HTTP/1.1" 200 502
+WARNING 2025-09-03 15:19:30,180 log 305819 123455278151360 Not Found: /favicon.ico
+WARNING 2025-09-03 15:19:30,180 basehttp 305819 123455278151360 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2025-09-03 15:19:33,230 basehttp 305819 123455278151360 "GET /search/documents/?search_query=AIRLINE&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 21805
+WARNING 2025-09-03 15:19:33,476 log 305819 123455278151360 Not Found: /favicon.ico
+INFO 2025-09-03 15:19:41,289 basehttp 305819 123455514080960 "GET /documents/ HTTP/1.1" 200 28456
+INFO 2025-09-03 15:19:46,855 basehttp 305819 123455514080960 "GET /search/llm/?search_query=AIRLINE&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 21761
+INFO 2025-09-03 16:00:43,590 autoreload 1183488 130841416646784 Watching for file changes with StatReloader
+INFO 2025-09-03 16:01:12,200 basehttp 1183488 130836160575168 "GET / HTTP/1.1" 302 0
+INFO 2025-09-03 16:01:12,544 basehttp 1183488 130836160575168 "GET /documents/ HTTP/1.1" 200 28456
+INFO 2025-09-03 16:01:12,730 basehttp 1183488 130836160575168 "GET /static/css/search_form.css HTTP/1.1" 200 502
+INFO 2025-09-03 16:01:12,730 basehttp 1183488 130836149036736 "GET /static/css/base.css HTTP/1.1" 200 7712
+INFO 2025-09-03 16:01:12,732 basehttp 1183488 130836140644032 "GET /static/js/search_form.js HTTP/1.1" 200 5396
+INFO 2025-09-03 16:01:12,790 basehttp 1183488 130836149036736 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+WARNING 2025-09-03 16:01:13,243 log 1183488 130836149036736 Not Found: /favicon.ico
+INFO 2025-09-03 16:01:22,473 basehttp 1183488 130836160575168 "GET /documents/ HTTP/1.1" 200 28456
+WARNING 2025-09-03 16:01:22,721 log 1183488 130836140644032 Not Found: /favicon.ico
+INFO 2025-09-03 16:01:29,621 basehttp 1183488 130836160575168 "GET /search/llm/?search_query=PHILIPPINES&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15672
+WARNING 2025-09-03 16:01:29,819 log 1183488 130836160575168 Not Found: /favicon.ico
+WARNING 2025-09-03 16:01:37,118 log 1183488 130836160575168 Not Found: /favicon.ico
+INFO 2025-09-03 16:01:40,890 basehttp 1183488 130836160575168 "GET /search/llm/?search_query=janwari&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 23789
+WARNING 2025-09-03 16:02:05,279 log 1183488 130836160575168 Not Found: /favicon.ico
