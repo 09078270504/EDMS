@@ -1036,7 +1036,7 @@ def convert_enhanced_fuzzy_results(fuzzy_results):
 def document_detail(request, document_id):
     document = get_object_or_404(Document, id=document_id)
     
-    metadata_path = search_engine._get_metadata_path(document)
+    metadata_path = search_engine._get_metadata_path(document) # type: ignore
     metadata = {}
     
     if metadata_path and os.path.exists(metadata_path):
@@ -1046,7 +1046,7 @@ def document_detail(request, document_id):
         except Exception as e:
             print(f"Error loading metadata: {e}")
     
-    ocr_path = search_engine._get_ocr_path(document)
+    ocr_path = search_engine._get_ocr_path(document) # type: ignore
     ocr_preview = ""
     
     if ocr_path and os.path.exists(ocr_path):
@@ -1064,7 +1064,7 @@ def document_detail(request, document_id):
         'file_paths': {
             'metadata': metadata_path,
             'ocr': ocr_path,
-            'original': search_engine._get_original_path(document)
+            'original': search_engine._get_original_path(document) # type: ignore
         }
     }
     
