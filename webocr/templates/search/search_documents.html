@@ -70,7 +70,7 @@
           </span>
         {% endif %}
 
-        <a href="{% url 'search_form' %}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm transition">
+        <a href="{% url 'search_form' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full text-sm transition">
           New Search
         </a>
       </div>
@@ -325,10 +325,6 @@
             Try with Fuzzy Search
           </button>
           {% endif %}
-          <a href="{% url 'search_form' %}"
-             class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition">
-            New Search
-          </a>
         </div>
       </div>
     {% endif %}
