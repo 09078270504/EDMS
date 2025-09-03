@@ -1,0 +1,12 @@
+{
+    "document_type": "Service Contract",
+    "client_name": "Ayala Land Inc",
+    "names": ["Ayala Land", "ALI", "Ayala Land Inc", "Ayala Land Incorporated"],
+    "invoice_numbers": ["CONTRACT-ALI-2024-SC-001", "SC001"],
+    "financial": ["PHP 125,000.00", "125000", "One Hundred Twenty-Five Thousand Pesos"],
+    "dates": ["February 01, 2024", "2024-02-01", "Feb 1, 2024"],
+    "emails": ["contracts@ayalaland.com.ph", "procurement@ali.com.ph"],
+    "phones": ["+63-2-8848-3888", "02-8848-3888", "8848-3888"],
+    "addresses": ["31st Floor, Tower One & Exchange Plaza, Ayala Triangle, Ayala Center, Makati City"],
+    "keywords": ["maintenance", "HVAC", "air conditioning", "service agreement", "quarterly"]
+}

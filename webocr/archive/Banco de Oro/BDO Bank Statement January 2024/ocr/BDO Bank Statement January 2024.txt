@@ -1,0 +1,39 @@
+BANCO DE ORO UNIBANK, INC.
+We find ways
+
+STATEMENT OF ACCOUNT
+
+Account Name: CRUZ, MARIA CLARA T
+Account Number: 1234-5678-9012
+Statement Period: January 1-31, 2024
+Statement Date: January 31, 2024
+
+Branch: BDO Makati Avenue Branch
+Address: 7899 Makati Avenue, Makati City
+
+BEGINNING BALANCE as of January 1, 2024: PHP 75,420.50
+
+DEPOSITS:
+Jan 02  Salary Credit - Company XYZ     PHP 35,000.00
+Jan 15  Online Transfer - GCash         PHP 5,000.00
+Jan 22  Check Deposit                   PHP 12,500.00
+
+WITHDRAWALS:
+Jan 03  ATM Withdrawal                  PHP 5,000.00
+Jan 10  Online Bill Payment - Meralco   PHP 3,850.00
+Jan 18  Debit Card Purchase            PHP 2,500.00
+Jan 25  ATM Withdrawal                  PHP 8,000.00
+
+CHARGES:
+Jan 31  Monthly Service Fee             PHP 150.00
+Jan 31  SMS Banking Fee                 PHP 25.00
+
+ENDING BALANCE as of January 31, 2024: PHP 89,245.67
+
+AVAILABLE BALANCE: PHP 89,245.67
+
+For inquiries: 02-8631-8000 or customercare@bdo.com.ph
+Online Banking: www.bdo.com.ph
+
+IMPORTANT: Please review your statement carefully.
+Report any discrepancy within 30 days.

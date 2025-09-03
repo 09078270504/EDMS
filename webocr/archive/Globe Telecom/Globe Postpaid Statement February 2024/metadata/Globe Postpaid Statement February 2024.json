@@ -1,0 +1,12 @@
+{
+    "document_type": "Postpaid Bill",
+    "client_name": "Globe Telecom",
+    "names": ["Globe", "Globe Telecom", "Globe Telecommunications", "GLOBE"],
+    "invoice_numbers": ["GLOBE-2024-02-456789", "456789"],
+    "financial": ["PHP 2,150.00", "2150", "Two Thousand One Hundred Fifty Pesos"],
+    "dates": ["February 15, 2024", "2024-02-15", "Feb 15, 2024"],
+    "emails": ["billing@globe.com.ph", "customer.care@globe.com.ph"],
+    "phones": ["211", "02-8730-1000", "+63-2-8730-1000"],
+    "addresses": ["The Globe Tower, 32nd Street corner 7th Avenue, BGC, Taguig City"],
+    "keywords": ["postpaid", "mobile plan", "data", "unlimited", "roaming", "broadband"]
+}

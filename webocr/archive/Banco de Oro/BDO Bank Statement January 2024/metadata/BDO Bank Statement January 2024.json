@@ -1,0 +1,12 @@
+{
+    "document_type": "Bank Statement", 
+    "client_name": "Banco de Oro",
+    "names": ["BDO", "Banco de Oro", "BDO Unibank", "Banco de Oro Unibank"],
+    "invoice_numbers": ["STMT-2024-01-987654", "987654"],
+    "financial": ["PHP 89,245.67", "89245.67", "Eighty-Nine Thousand Two Hundred Forty-Five Pesos and 67 Centavos"],
+    "dates": ["January 31, 2024", "2024-01-31", "Jan 31, 2024"],
+    "emails": ["customercare@bdo.com.ph", "bankstatement@bdo.com.ph"],
+    "phones": ["02-8631-8000", "+63-2-8631-8000", "8631-8000"],
+    "addresses": ["BDO Corporate Center, 7899 Makati Avenue, Makati City"],
+    "keywords": ["savings account", "deposits", "withdrawals", "bank charges", "interest"]
+}

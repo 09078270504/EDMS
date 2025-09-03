@@ -1,0 +1,12 @@
+{
+    "document_type": "Official Receipt",
+    "client_name": "Mercury Drug Corporation", 
+    "names": ["Mercury Drug", "Mercury", "Mercury Drugstore", "Mercuy Drug"],
+    "invoice_numbers": ["OR-789123", "OR789123"],
+    "financial": ["PHP 850.50", "850.50", "Eight Hundred Fifty Pesos and 50 Centavos"],
+    "dates": ["March 10, 2024", "2024-03-10", "Mar 10, 2024"],
+    "emails": ["customerservice@mercurydrug.com.ph"],
+    "phones": ["02-8888-7777", "+63-2-8888-7777", "8888-7777"],
+    "addresses": ["Mercury Drug Bldg, 7 E. Rodriguez Jr. Ave, Quezon City"],
+    "keywords": ["pharmacy", "medicines", "vitamins", "prescription", "health", "drugstore"]
+}

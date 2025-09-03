@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Temporarily Locked - Archive System</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/account_locked.css' %}">
+    <script src="{% static 'js/account_locked.js' %}"></script>
+</head>
+<body>
+    <div class="lockout-container">
+        <div class="lock-icon">
+            <svg fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+            </svg>
+        </div>
+        
+        <h1>Account Temporarily Locked</h1>
+        
+        <p class="message">
+            Your account has been temporarily locked due to 5 failed login attempts. 
+            This is a security measure to protect your account.
+        </p>
+
+        <div class="countdown">
+            <div class="countdown-timer" id="countdown">05:00</div>
+            <div class="countdown-text">Time remaining until unlock</div>
+        </div>
+
+        <div class="security-tips">
+            <h3>
+                <svg width="16" height="16" fill="currentColor" style="margin-right: 8px;" viewBox="0 0 16 16">
+                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                </svg>
+                Security Tips
+            </h3>
+            <ul>
+                <li>Make sure you're using the correct username and password</li>
+                <li>Check if Caps Lock is enabled</li>
+                <li>Consider resetting your password if you've forgotten it</li>
+                <li>Contact support if you believe this is an error</li>
+            </ul>
+        </div>
+
+        <div class="action-buttons">
+            <a href="{% url 'forgot_password' %}" class="btn btn-primary">Reset Password</a>
+            <a href="/login/" class="btn btn-primary" id="tryAgainBtn" style="display: none;">Try Again</a>
+        </div>
+    </div>
+
+</body>
+</html>
