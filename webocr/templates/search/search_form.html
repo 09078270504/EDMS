@@ -90,28 +90,6 @@
         </form>
     </div>
 
-    <!-- Search Options Quick Toggle -->
-    <div class="flex justify-center mt-4">
-        <div class="flex items-center space-x-4 text-sm">
-            <!-- Fuzzy Search Toggle -->
-            <label class="flex items-center cursor-pointer">
-                <input type="checkbox" id="fuzzyQuickToggle" checked 
-                       class="rounded text-orange-600 focus:ring-orange-500">
-                <span class="ml-2 text-gray-600">Smart matching</span>
-                <div class="relative group ml-1">
-                    <button type="button" class="text-gray-400 hover:text-gray-600">
-                        <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </button>
-                    <div class="invisible group-hover:visible absolute bottom-6 left-0 bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10">
-                        Handles typos and variations
-                    </div>
-                </div>
-            </label>
-        </div>
-    </div>
-
     <!-- Search Mode Description -->
     <div id="searchDescription" class="text-center mt-6 text-sm text-gray-600 max-w-2xl mx-auto">
         <div id="keywordDescription">
@@ -183,30 +161,6 @@
 
         <!-- Filter Form -->
         <div class="space-y-6">
-            <!-- Search Matching Options -->
-            <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                <h4 class="font-semibold text-gray-900 mb-3">Search Matching</h4>
-                <div class="space-y-3">
-                    <label class="flex items-center cursor-pointer">
-                        <input type="checkbox" id="fuzzy_search_modal" checked 
-                               class="rounded text-orange-600 focus:ring-orange-500">
-                        <div class="ml-3">
-                            <span class="text-sm font-medium text-gray-900">Enable smart matching</span>
-                            <p class="text-xs text-gray-600">Handles typos, variations, and partial matches</p>
-                        </div>
-                    </label>
-                    
-                    <div id="fuzzyOptions" class="ml-6 space-y-2">
-                        <div class="text-xs text-gray-600">
-                            <p><strong>Examples:</strong></p>
-                            <p>• "Philipine" will match "Philippine"</p>
-                            <p>• "15000" will match "PHP 15,000.00"</p>
-                            <p>• "OR12345" will match "OR-12345"</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Client Filter -->
             <div>
                 <label class="block text-sm font-medium text-gray-900 mb-3">Client:</label>

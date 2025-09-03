@@ -326,3 +326,34 @@ WARNING 2025-09-03 16:01:29,819 log 1183488 130836160575168 Not Found: /favicon.
 WARNING 2025-09-03 16:01:37,118 log 1183488 130836160575168 Not Found: /favicon.ico
 INFO 2025-09-03 16:01:40,890 basehttp 1183488 130836160575168 "GET /search/llm/?search_query=janwari&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 23789
 WARNING 2025-09-03 16:02:05,279 log 1183488 130836160575168 Not Found: /favicon.ico
+INFO 2025-09-04 07:41:07,703 autoreload 7460 7604 Watching for file changes with StatReloader
+INFO 2025-09-04 07:42:43,372 basehttp 7460 10060 "GET / HTTP/1.1" 200 21984
+INFO 2025-09-04 07:42:43,519 basehttp 7460 10060 "GET /static/js/base.js HTTP/1.1" 304 0
+INFO 2025-09-04 07:42:43,551 basehttp 7460 5108 "GET /static/css/base.css HTTP/1.1" 304 0
+INFO 2025-09-04 07:42:43,684 basehttp 7460 10060 "GET /static/img/background_fowse.png HTTP/1.1" 304 0
+WARNING 2025-09-04 07:42:44,676 log 7460 10060 Not Found: /favicon.ico
+WARNING 2025-09-04 07:42:44,676 basehttp 7460 10060 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2025-09-04 07:42:44,953 basehttp 7460 10060 "GET /login/ HTTP/1.1" 200 25983
+INFO 2025-09-04 07:42:44,978 basehttp 7460 10060 "GET /static/js/login.js HTTP/1.1" 304 0
+INFO 2025-09-04 07:42:47,485 basehttp 7460 10060 "POST /login/ HTTP/1.1" 302 0
+INFO 2025-09-04 07:42:47,593 basehttp 7460 10060 "GET /documents/ HTTP/1.1" 200 27669
+INFO 2025-09-04 07:43:37,368 basehttp 7460 10060 "GET /documents/ HTTP/1.1" 200 26483
+INFO 2025-09-04 07:43:37,474 basehttp 7460 10060 "GET /documents/ HTTP/1.1" 200 26483
+INFO 2025-09-04 07:43:37,613 basehttp 7460 10060 "GET /documents/ HTTP/1.1" 200 26483
+INFO 2025-09-04 07:43:37,791 basehttp 7460 10060 "GET /documents/ HTTP/1.1" 200 26483
+INFO 2025-09-04 07:43:37,875 basehttp 7460 10060 "GET /documents/ HTTP/1.1" 200 26483
+INFO 2025-09-04 07:52:15,894 basehttp 7460 5920 "GET /documents/ HTTP/1.1" 200 26483
+INFO 2025-09-04 07:52:17,069 basehttp 7460 5920 "GET /chat/ HTTP/1.1" 200 13377
+INFO 2025-09-04 07:52:17,097 basehttp 7460 5920 "GET /static/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-09-04 07:52:17,103 basehttp 7460 2680 "GET /static/js/dashboard.js HTTP/1.1" 304 0
+INFO 2025-09-04 07:52:17,732 basehttp 7460 2680 "GET /documents/ HTTP/1.1" 200 26483
+INFO 2025-09-04 07:52:18,017 basehttp 7460 2680 "GET /chat/ HTTP/1.1" 200 13377
+INFO 2025-09-04 07:52:18,588 basehttp 7460 2680 "GET /documents/ HTTP/1.1" 200 26483
+INFO 2025-09-04 07:52:48,264 basehttp 7460 2680 "GET /documents/ HTTP/1.1" 200 26483
+INFO 2025-09-04 07:52:48,386 basehttp 7460 2680 "GET /documents/ HTTP/1.1" 200 26483
+INFO 2025-09-04 07:52:48,520 basehttp 7460 2680 "GET /documents/ HTTP/1.1" 200 26483
+INFO 2025-09-04 07:52:48,622 basehttp 7460 2680 "GET /documents/ HTTP/1.1" 200 26483
+INFO 2025-09-04 07:52:52,933 basehttp 7460 2680 "GET /documents/ HTTP/1.1" 200 25104
+INFO 2025-09-04 07:52:53,031 basehttp 7460 2680 "GET /documents/ HTTP/1.1" 200 25104
+INFO 2025-09-04 07:52:53,160 basehttp 7460 2680 "GET /documents/ HTTP/1.1" 200 25104
+INFO 2025-09-04 07:52:55,922 basehttp 7460 2680 "GET /search/documents/?search_query=asdf&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12897
