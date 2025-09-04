@@ -433,33 +433,35 @@
             </a>
           </div>
 
-          <!-- Chat History Section -->
+          <!-- Chat History Section - Only show on chat pages -->
+          {% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'dashboard_conversation' %}
           <div class="pt-2 flex-1 chat-history-section" style="display: flex; flex-direction: column; min-height: 0;">
             <div class="item-label px-2 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider flex-shrink-0">
               History ({{ conversations|length }} conversations)
             </div>
             <div id="chatHistory" class="space-y-1 overflow-y-auto" style="flex: 1; height: 0;">
               {% if conversations %}
-                {% for conversation in conversations %}
-                  <div class="group relative chat-history-item" data-conversation-id="{{ conversation.id }}" data-conversation-title="{{ conversation.title }}">
-                    <a href="{% url 'dashboard_conversation' conversation.id %}"
-                      class="flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-green-50 text-gray-800 transition-colors text-sm
-                      {% if current_conversation and current_conversation.id == conversation.id %}bg-green-100{% endif %}">
-                      <i class="fa-regular fa-message text-sm shrink-0"></i>
-                      <span class="item-label truncate flex-1">{{ conversation.title }}</span>
-                      <!-- Three dots menu button -->
-                      <button onclick="showContextMenu(event, this.closest('.chat-history-item')); event.preventDefault(); event.stopPropagation();" 
-                        class="opacity-0 group-hover:opacity-100 w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-all rounded hover:bg-gray-100 ml-1 menu-button">
-                        <i class="fa-solid fa-ellipsis text-sm"></i>
-                      </button>
-                    </a>
-                  </div>
-                {% endfor %}
+          {% for conversation in conversations %}
+            <div class="group relative chat-history-item" data-conversation-id="{{ conversation.id }}" data-conversation-title="{{ conversation.title }}">
+              <a href="{% url 'dashboard_conversation' conversation.id %}"
+                class="flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-green-50 text-gray-800 transition-colors text-sm
+                {% if current_conversation and current_conversation.id == conversation.id %}bg-green-100{% endif %}">
+                <i class="fa-regular fa-message text-sm shrink-0"></i>
+                <span class="item-label truncate flex-1">{{ conversation.title }}</span>
+                <!-- Three dots menu button -->
+                <button onclick="showContextMenu(event, this.closest('.chat-history-item')); event.preventDefault(); event.stopPropagation();" 
+            class="opacity-0 group-hover:opacity-100 w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-all rounded hover:bg-gray-100 ml-1 menu-button">
+            <i class="fa-solid fa-ellipsis text-sm"></i>
+                </button>
+              </a>
+            </div>
+          {% endfor %}
               {% else %}
-                <p class="item-label px-2.5 py-2 text-xs text-gray-500">No conversations yet - Send a message to start!</p>
+          <p class="item-label px-2.5 py-2 text-xs text-gray-500">No conversations yet - Send a message to start!</p>
               {% endif %}
             </div>
           </div>
+          {% endif %}
         </nav>
 
         <!-- User -->
