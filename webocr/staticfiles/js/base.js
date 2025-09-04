@@ -15,6 +15,25 @@
 
   if (!sidebar) return;
 
+  // Add smooth transitions to elements
+  const addTransitions = () => {
+    // Add transition styles to sidebar
+    sidebar.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+    
+    // Add transition to page content
+    if (pageContent) {
+      pageContent.style.transition = 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+    }
+    
+    // Add transition to user dropdown
+    if (userDropdown) {
+      userDropdown.style.transition = 'opacity 0.2s ease-in-out, transform 0.2s ease-in-out';
+    }
+  };
+
+  // Initialize transitions
+  addTransitions();
+
   // ---------- helpers ----------
   const getStored = () => {
     try { return localStorage.getItem(STORAGE_KEY) === '1'; } catch (_) { return false; }
@@ -45,8 +64,24 @@
     document.body.classList.remove('overflow-hidden');
   };
 
-  const showDropdown = () => { userDropdown?.classList.remove('hidden'); };
-  const hideDropdown = () => { userDropdown?.classList.add('hidden'); };
+  const showDropdown = () => { 
+    if (userDropdown) {
+      userDropdown.classList.remove('hidden');
+      // Force reflow to ensure transition works
+      userDropdown.offsetHeight;
+      userDropdown.style.opacity = '1';
+      userDropdown.style.transform = 'translateY(0)';
+    }
+  };
+  const hideDropdown = () => { 
+    if (userDropdown) {
+      userDropdown.style.opacity = '0';
+      userDropdown.style.transform = 'translateY(-10px)';
+      setTimeout(() => {
+        userDropdown.classList.add('hidden');
+      }, 200);
+    }
+  };
 
   // ---------- initial state ----------
   const initialCollapsed =
@@ -87,6 +122,10 @@
 
   // ---------- user dropdown ----------
   if (userMenuBtn && userDropdown) {
+    // Initialize dropdown styles
+    userDropdown.style.opacity = '0';
+    userDropdown.style.transform = 'translateY(-10px)';
+    
     userMenuBtn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -98,7 +137,11 @@
           setStored(false);      // persist OPEN
           requestAnimationFrame(showDropdown);
         } else {
-          userDropdown.classList.toggle('hidden');
+          if (userDropdown.classList.contains('hidden')) {
+            showDropdown();
+          } else {
+            hideDropdown();
+          }
         }
       } else {
         // MOBILE
@@ -106,7 +149,11 @@
           openMobile();
           requestAnimationFrame(() => requestAnimationFrame(showDropdown));
         } else {
-          userDropdown.classList.toggle('hidden');
+          if (userDropdown.classList.contains('hidden')) {
+            showDropdown();
+          } else {
+            hideDropdown();
+          }
         }
       }
     });
@@ -331,6 +378,47 @@
     }
   }
 
+  // Smooth panel transition function
+  function smoothPanelTransition(hidePanel, showPanel, activeBtn, inactiveBtn) {
+    // First fade out the current panel
+    if (hidePanel && !hidePanel.classList.contains('hidden')) {
+      hidePanel.style.opacity = '0';
+      hidePanel.style.transform = 'translateY(10px)';
+      
+      setTimeout(() => {
+        hidePanel.classList.add('hidden');
+        
+        // Then show and fade in the new panel
+        if (showPanel) {
+          showPanel.classList.remove('hidden');
+          showPanel.style.opacity = '0';
+          showPanel.style.transform = 'translateY(-10px)';
+          
+          // Force reflow
+          showPanel.offsetHeight;
+          
+          showPanel.style.opacity = '1';
+          showPanel.style.transform = 'translateY(0)';
+        }
+      }, 150);
+    } else {
+      // If no panel to hide, just show the new one
+      if (showPanel) {
+        showPanel.classList.remove('hidden');
+        showPanel.style.opacity = '0';
+        showPanel.style.transform = 'translateY(-10px)';
+        
+        requestAnimationFrame(() => {
+          showPanel.style.opacity = '1';
+          showPanel.style.transform = 'translateY(0)';
+        });
+      }
+    }
+    
+    // Update button states
+    setActiveButton(activeBtn, inactiveBtn);
+  }
+
   // Initialize chat/search panels
   function initializePanels() {
     const chatPanel = document.getElementById("chatPanel");
@@ -338,9 +426,18 @@
     const chatButton = document.getElementById("chatButton");
     const searchButton = document.getElementById("searchButton");
 
+    // Add transitions to panels
     if (chatPanel) {
-      // Show Chat panel by default
+      chatPanel.style.transition = 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out';
+      chatPanel.style.opacity = '1';
+      chatPanel.style.transform = 'translateY(0)';
       chatPanel.classList.remove("hidden");
+    }
+    
+    if (searchPanel) {
+      searchPanel.style.transition = 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out';
+      searchPanel.style.opacity = '0';
+      searchPanel.style.transform = 'translateY(-10px)';
     }
 
     function setActiveButton(activeBtn, inactiveBtn) {
@@ -353,26 +450,17 @@
       inactiveBtn.classList.add('text-gray-600', 'bg-transparent');
     }
 
-    if (chatButton) {
+    if (chatButton && searchButton) {
+      // Set initial active state
+      setActiveButton(chatButton, searchButton);
+      
       // Add event listeners for Chat/Search buttons
       chatButton.addEventListener("click", function() {
-        // Show Chat, hide Search
-        if (searchPanel) searchPanel.classList.add("hidden");
-        if (chatPanel) chatPanel.classList.remove("hidden");
-
-        // Set Chat as active, Search as inactive
-        setActiveButton(chatButton, searchButton);
+        smoothPanelTransition(searchPanel, chatPanel, chatButton, searchButton);
       });
-    }
 
-    if (searchButton) {
       searchButton.addEventListener("click", function() {
-        // Show Search, hide Chat
-        if (chatPanel) chatPanel.classList.add("hidden");
-        if (searchPanel) searchPanel.classList.remove("hidden");
-
-        // Set Search as active, Chat as inactive
-        setActiveButton(searchButton, chatButton);
+        smoothPanelTransition(chatPanel, searchPanel, searchButton, chatButton);
       });
     }
   }
