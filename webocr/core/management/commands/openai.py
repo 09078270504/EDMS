@@ -1,5 +1,5 @@
 #commands/openai.py - my first ever file processing. peace -- Quinn --
-#perfect but expensive :<
+#perfect but expensive :()
 # To run just type "python manage.py openai", the whole file processing code is already included in this code.
 import os
 import shutil

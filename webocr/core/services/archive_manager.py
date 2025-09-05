@@ -11,7 +11,6 @@ import pytz
 
 # Philippines timezone
 PH_TZ = pytz.timezone('Asia/Manila')
-
 def get_ph_time():
     """Get current Philippines time"""
     return timezone.now().astimezone(PH_TZ)

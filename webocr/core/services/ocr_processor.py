@@ -1,4 +1,4 @@
-#services/ocr_processor.py - for ocr extraction
+#services/ocr_processor.py - for ocr extraction using qwen2vl and easyocr
 import os
 import io
 import gc
@@ -34,7 +34,6 @@ logger = logging.getLogger(__name__)
 
 # Philippines timezone
 PH_TZ = pytz.timezone('Asia/Manila')
-
 def get_ph_time():
     """Get current Philippines time"""
     return timezone.now().astimezone(PH_TZ)

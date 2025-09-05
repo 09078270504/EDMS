@@ -1,4 +1,4 @@
-#services/metadata.py for metadata extraction
+#services/metadata.py for metadata extraction and document type detection
 import json
 import spacy
 from dateutil import parser as date_parser

@@ -1,4 +1,4 @@
-#services/document_processor.py - orchestrator for the whole processing
+#services/document_processor.py - orchestrator for document processing
 import os
 import re
 import shutil

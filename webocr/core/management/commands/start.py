@@ -1,4 +1,4 @@
-#commands/start.py - main command to start processing
+#commands/start.py - main command to start the processing
 import os
 import time
 import logging
