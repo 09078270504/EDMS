@@ -208,6 +208,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing search form...');
+    
     const keywordBtn = document.getElementById('keywordSearchBtn');
     const llmBtn = document.getElementById('llmSearchBtn');
     const searchForm = document.getElementById('searchForm');
@@ -216,19 +218,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const fuzzyModalToggle = document.getElementById('fuzzy_search_modal');
     const fuzzyHidden = document.getElementById('fuzzy_hidden');
     
+    console.log('Elements found:', {
+        keywordBtn: !!keywordBtn,
+        llmBtn: !!llmBtn,
+        searchForm: !!searchForm,
+        searchInput: !!searchInput
+    });
+    
     // Sync fuzzy toggles
     function syncFuzzyToggles() {
-        const fuzzyEnabled = fuzzyQuickToggle.checked;
+        const fuzzyEnabled = fuzzyQuickToggle ? fuzzyQuickToggle.checked : true;
         if (fuzzyModalToggle) {
             fuzzyModalToggle.checked = fuzzyEnabled;
         }
-        fuzzyHidden.value = fuzzyEnabled ? 'true' : 'false';
+        if (fuzzyHidden) {
+            fuzzyHidden.value = fuzzyEnabled ? 'true' : 'false';
+        }
     }
     
-    fuzzyQuickToggle.addEventListener('change', syncFuzzyToggles);
+    if (fuzzyQuickToggle) {
+        fuzzyQuickToggle.addEventListener('change', syncFuzzyToggles);
+    }
     if (fuzzyModalToggle) {
         fuzzyModalToggle.addEventListener('change', function() {
-            fuzzyQuickToggle.checked = this.checked;
+            if (fuzzyQuickToggle) {
+                fuzzyQuickToggle.checked = this.checked;
+            }
             syncFuzzyToggles();
         });
     }
@@ -284,8 +299,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    keywordBtn.addEventListener('click', () => setSearchMode('keyword'));
-    llmBtn.addEventListener('click', () => setSearchMode('llm'));
+    if (keywordBtn && llmBtn) {
+        keywordBtn.addEventListener('click', () => {
+            console.log('Keyword button clicked');
+            setSearchMode('keyword');
+        });
+        llmBtn.addEventListener('click', () => {
+            console.log('AI Search button clicked');
+            setSearchMode('llm');
+        });
+    } else {
+        console.error('Search mode buttons not found:', { keywordBtn, llmBtn });
+    }
     
     // Clear functionality
     const clearBtn = document.getElementById('clearBtn');

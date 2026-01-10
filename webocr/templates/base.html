@@ -10,25 +10,26 @@
   <meta name="csrf-token" content="{{ csrf_token }}">
   {% block styles %}{% endblock %}
   <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/neon.css' %}">
 </head>
-<body class="bg-white">
+<body class="neon-theme">
     {% if not user.is_authenticated %}
     <!-- Navbar -->
-    <nav class="bg-white text-green-600 p-4 z-10 w-full top-0 left-0">
+    <nav class="neon-nav p-4 z-10 w-full top-0 left-0">
       <div class="container mx-auto flex justify-between items-center">
         <div class="flex items-center space-x-2">
-          <img src="{% static 'img/fowse.png' %}" class="h-10 inline-block" alt="Fowse Logo" />
-          <h1 class="text-xl font-bold text-green-600">Fowse</h1>
+          <img src="{% static 'img/fowse.png' %}" class="h-10 inline-block neon-logo" alt="Fowse Logo" />
+          <h1 class="text-xl font-bold" style="color: var(--accent-1)">Fowse</h1>
         </div>
       </div>
     </nav>
     <!-- Scrollable Content -->
       <!-- Hero Section -->
       <section
-        class="relative flex items-center justify-center"
+        class="hero relative flex items-center justify-center"
         style="
-              background-color: white;
-              background-image: url('{% static 'img/background_fowse.png' %}');
+              background-color: transparent;
+              background-image: radial-gradient(600px 300px at 20% 20%, rgba(124,58,237,0.18), transparent 60%), url('{% static 'img/background_fowse.png' %}');
               background-size: contain 90%;
               background-position: center;
               background-repeat: no-repeat;
@@ -41,17 +42,16 @@
         <!-- Hero card -->
         <div class="absolute inset-x-0 bottom-1/4 flex items-center justify-center text-center max-w-5xl mx-auto">
           <div>
-            <h1 class="text-6xl font-semibold text-black mb-4 whitespace-nowrap text-center">
+            <h1 class="text-6xl font-semibold mb-4 whitespace-nowrap text-center title">
               All Your Docs, One Smart Search
             </h1>
-            <p class="text-gray-600 mb-8 text-lg leading-relaxed max-w-xl mx-auto">
-              <span class="font-bold text-black">Built for seamless internal use,</span>
-              <span class="font-semibold text-black"> Fowse</span>
+            <p class="subtitle mb-8 text-lg leading-relaxed max-w-xl mx-auto">
+              <span class="font-bold">Built for seamless internal use,</span>
+              <span class="font-semibold"> Fowse</span>
               enables you to instantly locate, verify, and manage documents with AI precision.
             </p>
             <a href="{% url 'login' %}"
-              class="px-16 py-3 bg-green-600 text-white rounded-full font-semibold 
-          shadow-sm hover:bg-green-700 transition"
+              class="glow-btn px-16 py-3 font-semibold transition"
               style="box-shadow: 0 2px 4px rgba(0,0,0,0.25);">
               Log in
             </a>
@@ -59,17 +59,17 @@
         </div>
         <!-- Features Section -->
         <!-- Left Column (Text) -->
-          <div class="flex items-start justify-center border-b-2 py-16 pt-4">
+          <div class="flex items-start justify-center py-16 pt-4">
             <div class="w-full md:w-1/2 px-4 flex flex-col items-center justify-center text-center mx-auto">
-              <h2 class="text-4xl font-semibold text-gray-800 mb-4">
-                Discover what makes <span class="text-green-600">Fowse</span> the easiest way to
-                <span class="text-green-600">manage</span> your documents.
+              <h2 class="text-4xl font-semibold mb-4">
+                Discover what makes <span style="color: var(--accent-1)">Fowse</span> the easiest way to
+                <span style="color: var(--accent-3)">manage</span> your documents.
               </h2>
-                 <div class="inline-flex items-center bg-white rounded-full p-1 mt-6 border border-gray-300">
-                      <button id="chatButton" class="px-8 py-3 text-white bg-green-600 rounded-full font-semibold transition-all duration-300">
+                 <div class="inline-flex items-center rounded-full p-1 mt-6" style="background: var(--neon-surface); border: 1px solid var(--neon-border)">
+                      <button id="chatButton" class="glow-btn px-8 py-3 rounded-full font-semibold transition-all duration-300">
                           Chat
                       </button>
-                      <button id="searchButton" class="px-8 py-3 text-gray-600 bg-transparent rounded-full font-semibold transition-all duration-300">
+                      <button id="searchButton" class="glow-outline px-8 py-3 rounded-full font-semibold transition-all duration-300">
                           Search
                       </button>
                 </div>
@@ -131,17 +131,17 @@
         </div>
 
       <!-- Another Section -->
-      <section class="bg-white py-10 border-2 border-solid border-gray-200">
+      <section class="py-10 neon-section">
         <div class="mx-auto max-w-6xl px-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-stretch">
 
             <!-- Card: Search Filter -->
-            <article class="flex flex-col rounded-3xl border border-gray-300 bg-gray-50 p-6 md:p-8 shadow-sm min-h-[420px]">
+            <article class="flex flex-col rounded-3xl p-6 md:p-8 min-h-[420px] neon-card">
               <header class="flex items-start gap-4">
-                <i class="fa-solid fa-filter text-black text-6xl md:text-7xl leading-none"></i>
+                <i class="fa-solid fa-filter text-6xl md:text-7xl leading-none" style="color: var(--accent-3)"></i>
                 <div>
-                  <h3 class="text-2xl md:text-3xl font-semibold text-gray-900">Search Filter</h3>
-                  <p class="mt-2 text-gray-600 max-w-sm">
+                  <h3 class="text-2xl md:text-3xl font-semibold">Search Filter</h3>
+                  <p class="mt-2 max-w-sm" style="color: var(--muted-text)">
                     Narrow it down fast. Sort by tags, dates, or file types to find exactly what you need.
                   </p>
                 </div>
@@ -151,7 +151,7 @@
               <div class="mt-8 flex-1">
                 <div class="relative mx-auto w-full max-w-[560px]">
                   <!-- Placeholder container -->
-                  <div class="rounded-2xl bg-white p-2 md:p-3 ring-2 ring-gray-200">
+                  <div class="rounded-2xl p-2 md:p-3" style="background: var(--neon-surface); border: 1px solid var(--neon-border)">
                     <!-- Image inside container -->
                     <div class="aspect-[16/9] w-full overflow-hidden rounded-xl bg-white shadow-lg">
                       <img
@@ -170,12 +170,12 @@
             </article>
 
             <!-- Card: Intelligent Chat -->
-            <article class="flex flex-col rounded-3xl border border-gray-300 bg-gray-50 p-6 md:p-8 shadow-sm min-h-[420px]">
+            <article class="flex flex-col rounded-3xl p-6 md:p-8 min-h-[420px] neon-card">
               <header class="flex items-start gap-4">
-                <i class="fa-solid fa-comments text-black text-6xl md:text-7xl leading-none"></i>
+                <i class="fa-solid fa-comments text-6xl md:text-7xl leading-none" style="color: var(--accent-4)"></i>
                 <div>
-                  <h3 class="text-2xl md:text-3xl font-semibold text-gray-900">Intelligent Chat</h3>
-                  <p class="mt-2 text-gray-600 max-w-sm">
+                  <h3 class="text-2xl md:text-3xl font-semibold">Intelligent Chat</h3>
+                  <p class="mt-2 max-w-sm" style="color: var(--muted-text)">
                     Skip the digging. Just ask Fowse and get summaries, answers, or insights straight from your documents.
                   </p>
                 </div>
@@ -415,7 +415,7 @@
         </div>
 
         <!-- Apps in Nav -->
-        <nav class="px-2 py-2" style="height: calc(100vh - 140px); display: flex; flex-direction: column;"> <!-- px-2 py-3→px-2 py-2, using calculated height -->
+        <nav class="px-2 py-2 flex-1 overflow-y-auto" style="display: flex; flex-direction: column;"> <!-- Made scrollable, removed fixed height -->
           <!-- Navigation buttons -->
           <div class="space-y-1 flex-shrink-0">
             <a href="{% url 'search_form' %}"
@@ -465,7 +465,7 @@
         </nav>
 
         <!-- User -->
-        <div class="px-2 py-3 border-t-2 border-gray-300 flex-shrink-0"> <!-- py-2→py-1, added flex-shrink-0 -->
+        <div class="px-2 py-3 border-t-2 border-gray-300 user-profile-section"> <!-- sticky profile section -->
           <div class="group relative w-full overflow-visible">
             <button id="userMenuButton"
                     class="group relative flex items-center gap-2.5 px-2.5 py-1.5 w-full rounded-md hover:bg-green-50 text-gray-800 transition-colors"> <!-- py-2→py-1.5 -->

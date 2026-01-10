@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, FileResponse, Http404
 from django.views.decorators.http import require_GET
 from django.contrib.auth import login, logout, get_user_model, authenticate
 from django.contrib.auth.forms import PasswordChangeForm
@@ -28,6 +28,7 @@ from .services.llm_search import answer_from_context
 import json
 import os
 import re
+from pathlib import Path
 from datetime import timedelta
 
 # ===========================
@@ -87,6 +88,55 @@ class EnhancedTwoStageSearchEngine:
         self.fuzzy_limit = getattr(settings, 'FUZZY_SEARCH_LIMIT', 10)  # Max fuzzy results per stage
         self.enable_fuzzy = getattr(settings, 'ENABLE_FUZZY_SEARCH', True)
         
+    def stage_0_search(self, query, client_filter=None):
+        """
+        Stage 0: Quick search in document names and client names (database fields)
+        This is faster than file-based searches and catches exact document name matches
+        """
+        print(f"Stage 0: Searching document/client names for '{query}'")
+        
+        documents = Document.objects.all()
+        if client_filter:
+            documents = documents.filter(client_name__icontains=client_filter)
+        
+        exact_matches = []
+        search_terms = query.lower().split()
+        
+        # Search for documents where query matches document_name or client_name
+        for doc in documents:
+            doc_name_lower = doc.document_name.lower()
+            client_name_lower = doc.client_name.lower()
+            combined_text = f"{doc_name_lower} {client_name_lower}"
+            
+            # Check if any search term matches
+            matches = sum(1 for term in search_terms if term in combined_text)
+            
+            if matches > 0:
+                # High score for document name matches (these are very relevant)
+                score = matches * 10  # Higher weight for name matches
+                
+                # Try to load metadata for preview
+                metadata = {}
+                metadata_path = self._get_metadata_path(doc)
+                if metadata_path and os.path.exists(metadata_path):
+                    try:
+                        with open(metadata_path, 'r', encoding='utf-8') as f:
+                            metadata = json.load(f)
+                    except:
+                        pass
+                
+                matched_fields = [{
+                    'field': 'document_name' if any(term in doc_name_lower for term in search_terms) else 'client_name',
+                    'matches': matches,
+                    'sample_data': doc.document_name if any(term in doc_name_lower for term in search_terms) else doc.client_name
+                }]
+                
+                result = self._create_stage1_result(doc, metadata, score, matched_fields, 'exact')
+                exact_matches.append(result)
+        
+        print(f"Stage 0 found {len(exact_matches)} name matches")
+        return exact_matches
+    
     def stage_1_search(self, query, client_filter=None, use_fuzzy=True):
         """
         Stage 1: Search metadata with exact matching + fuzzy search
@@ -114,9 +164,16 @@ class EnhancedTwoStageSearchEngine:
                 # Exact matching (existing logic)
                 exact_score, exact_fields = self._search_metadata_exact(metadata, search_terms)
                 
-                if exact_score > 0:
+                # Require minimum score for exact match (at least 2 word matches or 1 high-value field)
+                if exact_score >= 3:  # At least 3 points (e.g., 1 word in weighted field or 3 words in low-weight fields)
                     result = self._create_stage1_result(doc, metadata, exact_score, exact_fields, 'exact')
                     exact_matches.append(result)
+                elif exact_score > 0 and use_fuzzy and self.enable_fuzzy:
+                    # Low score exact matches get re-scored as fuzzy to verify relevance
+                    fuzzy_score, fuzzy_fields = self._search_metadata_fuzzy(metadata, query, search_terms)
+                    if fuzzy_score >= self.fuzzy_threshold:
+                        result = self._create_stage1_result(doc, metadata, fuzzy_score, fuzzy_fields, 'fuzzy')
+                        fuzzy_candidates.append(result)
                 elif use_fuzzy and self.enable_fuzzy:
                     # Fuzzy matching for documents without exact matches
                     fuzzy_score, fuzzy_fields = self._search_metadata_fuzzy(metadata, query, search_terms)
@@ -215,9 +272,18 @@ class EnhancedTwoStageSearchEngine:
         return fuzzy_results[:self.fuzzy_limit]
     
     def _search_metadata_exact(self, metadata, search_terms):
-        """Existing exact metadata search logic"""
+        """Exact metadata search with stopword filtering"""
         matched_fields = []
         total_score = 0
+        
+        # Common stopwords to ignore in searches
+        stopwords = {'the', 'is', 'at', 'which', 'on', 'a', 'an', 'and', 'or', 'but', 'in', 'with', 'to', 'for', 'of', 'as', 'by', 'from', 'this', 'that', 'it'}
+        
+        # Filter out stopwords and very short words (less than 2 chars)
+        filtered_terms = [term for term in search_terms if term not in stopwords and len(term) >= 2]
+        
+        if not filtered_terms:
+            return 0, []  # No meaningful terms to search
         
         field_weights = {
             'names': 3, 'invoice_numbers': 4, 'financial': 2, 'emails': 2,
@@ -235,7 +301,7 @@ class EnhancedTwoStageSearchEngine:
                 field_text = str(field_data)
             
             field_text_lower = field_text.lower()
-            field_matches = sum(1 for term in search_terms if term in field_text_lower)
+            field_matches = sum(1 for term in filtered_terms if term in field_text_lower)
             
             if field_matches > 0:
                 weight = field_weights.get(field_name, 1)
@@ -288,12 +354,19 @@ class EnhancedTwoStageSearchEngine:
         return total_score, matched_fields
     
     def _search_ocr_text_exact(self, ocr_text, search_terms):
-        """Existing exact OCR search logic"""
+        """Exact OCR search with stopword filtering"""
+        # Filter out stopwords and very short words
+        stopwords = {'the', 'is', 'at', 'which', 'on', 'a', 'an', 'and', 'or', 'but', 'in', 'with', 'to', 'for', 'of', 'as', 'by', 'from', 'this', 'that', 'it'}
+        filtered_terms = [term for term in search_terms if term not in stopwords and len(term) >= 2]
+        
+        if not filtered_terms:
+            return 0, []
+        
         ocr_lower = ocr_text.lower()
         matched_snippets = []
         total_score = 0
         
-        for term in search_terms:
+        for term in filtered_terms:
             if term in ocr_lower:
                 total_score += 1
                 snippets = self._extract_snippets(ocr_text, term)
@@ -502,13 +575,21 @@ class EnhancedTwoStageSearchEngine:
         }
     
     # Keep all your existing helper methods (_get_metadata_path, _get_ocr_path, etc.)
+    def _get_archive_root(self):
+        """Resolve the archive root using settings (falls back to relative path)."""
+        # settings.ARCHIVE_FOLDER already points to BASE_DIR.parent / 'archive'
+        archive_root = getattr(settings, 'ARCHIVE_FOLDER', None)
+        if archive_root:
+            return Path(archive_root)
+        return Path('archive')
+
     def _get_metadata_path(self, doc):
         if hasattr(doc, 'metadata_path') and doc.metadata_path:
             return doc.metadata_path
         
         base_name = os.path.splitext(doc.document_name)[0]
         client_name = getattr(doc, 'client_name', 'unknown')
-        return f"archive/{client_name}/{base_name}/metadata/{base_name}.json"
+        return str(self._get_archive_root() / client_name / base_name / 'metadata' / f"{base_name}.json")
     
     def _get_ocr_path(self, doc):
         if hasattr(doc, 'ocr_path') and doc.ocr_path:
@@ -516,7 +597,7 @@ class EnhancedTwoStageSearchEngine:
         
         base_name = os.path.splitext(doc.document_name)[0]
         client_name = getattr(doc, 'client_name', 'unknown')
-        return f"archive/{client_name}/{base_name}/ocr/{base_name}.txt"
+        return str(self._get_archive_root() / client_name / base_name / 'ocr' / f"{base_name}.txt")
     
     def _get_original_path(self, doc):
         if hasattr(doc, 'original_path') and doc.original_path:
@@ -524,7 +605,7 @@ class EnhancedTwoStageSearchEngine:
         
         base_name = os.path.splitext(doc.document_name)[0]
         client_name = getattr(doc, 'client_name', 'unknown')
-        return f"archive/{client_name}/{base_name}/original/{base_name}.pdf"
+        return str(self._get_archive_root() / client_name / base_name / 'original' / f"{base_name}.pdf")
     
     def _extract_snippets(self, text, search_term, context_chars=150):
         snippets = []
@@ -897,25 +978,51 @@ def search_documents(request):
         search_performed = True
         print(f"Starting enhanced search: '{search_query}' (fuzzy: {enable_fuzzy})")
         
-        # Stage 1: Enhanced metadata search with fuzzy
-        stage_1_results = enhanced_search_engine.stage_1_search(
-            search_query, client_filter, use_fuzzy=enable_fuzzy
+        # Stage 0: Quick database search for document/client names
+        stage_0_results = enhanced_search_engine.stage_0_search(
+            search_query, client_filter
         )
         
-        if stage_1_results:
-            results = convert_enhanced_stage_1_results(stage_1_results)
+        if stage_0_results:
+            results = convert_enhanced_stage_1_results(stage_0_results)
             total_results = len(results)
-            search_stage_used = 1
-            search_type = 'metadata'
+            search_stage_used = 0
+            search_type = 'document_name'
+            search_modes_used.append(f"{len(stage_0_results)} name match(es)")
+        
+        # Stage 1: Enhanced metadata search with fuzzy (skip if Stage 0 found strong matches)
+        if not stage_0_results or len(stage_0_results) < 3:
+            stage_1_results = enhanced_search_engine.stage_1_search(
+                search_query, client_filter, use_fuzzy=enable_fuzzy
+            )
             
-            # Track which search modes found results
-            exact_count = len([r for r in stage_1_results if r.get('match_type') == 'exact'])
-            fuzzy_count = len([r for r in stage_1_results if r.get('match_type') == 'fuzzy'])
-            
-            if exact_count > 0:
-                search_modes_used.append(f"{exact_count} exact")
-            if fuzzy_count > 0:
-                search_modes_used.append(f"{fuzzy_count} fuzzy")
+            if stage_1_results:
+                # Merge Stage 0 and Stage 1 results if both exist
+                if stage_0_results:
+                    combined_results = stage_0_results + stage_1_results
+                    # Remove duplicates by document ID
+                    seen_ids = set()
+                    unique_results = []
+                    for r in combined_results:
+                        doc_id = r.get('document_id')
+                        if doc_id not in seen_ids:
+                            seen_ids.add(doc_id)
+                            unique_results.append(r)
+                    stage_1_results = unique_results
+                
+                results = convert_enhanced_stage_1_results(stage_1_results)
+                total_results = len(results)
+                search_stage_used = 1
+                search_type = 'metadata'
+                
+                # Track which search modes found results
+                exact_count = len([r for r in stage_1_results if r.get('match_type') == 'exact'])
+                fuzzy_count = len([r for r in stage_1_results if r.get('match_type') == 'fuzzy'])
+                
+                if exact_count > 0:
+                    search_modes_used.append(f"{exact_count} exact")
+                if fuzzy_count > 0:
+                    search_modes_used.append(f"{fuzzy_count} fuzzy")
                 
         else:
             print("No Stage 1 matches - trying Stage 2 with fuzzy search")
@@ -1036,7 +1143,7 @@ def convert_enhanced_fuzzy_results(fuzzy_results):
 def document_detail(request, document_id):
     document = get_object_or_404(Document, id=document_id)
     
-    metadata_path = search_engine._get_metadata_path(document) # type: ignore
+    metadata_path = enhanced_search_engine._get_metadata_path(document) # type: ignore
     metadata = {}
     
     if metadata_path and os.path.exists(metadata_path):
@@ -1046,7 +1153,7 @@ def document_detail(request, document_id):
         except Exception as e:
             print(f"Error loading metadata: {e}")
     
-    ocr_path = search_engine._get_ocr_path(document) # type: ignore
+    ocr_path = enhanced_search_engine._get_ocr_path(document) # type: ignore
     ocr_preview = ""
     
     if ocr_path and os.path.exists(ocr_path):
@@ -1064,11 +1171,51 @@ def document_detail(request, document_id):
         'file_paths': {
             'metadata': metadata_path,
             'ocr': ocr_path,
-            'original': search_engine._get_original_path(document) # type: ignore
+            'original': enhanced_search_engine._get_original_path(document) # type: ignore
         }
     }
     
     return render(request, 'search/document_detail.html', context)
+
+
+@login_required
+def download_original(request, document_id):
+    """Serve the original PDF for a document."""
+    document = get_object_or_404(Document, id=document_id)
+    
+    # Use the database path directly (most reliable)
+    if document.original_file_path:
+        path_str = document.original_file_path
+    else:
+        # Fallback to constructing path
+        path_str = enhanced_search_engine._get_original_path(document)  # type: ignore
+    
+    # Resolve relative to archive root
+    archive_root = getattr(settings, 'ARCHIVE_FOLDER', Path('archive'))
+    path_obj = Path(archive_root).parent / path_str if not Path(path_str).is_absolute() else Path(path_str)
+
+    if not path_obj.exists():
+        raise Http404(f"File not found: {path_obj}")
+
+    return FileResponse(open(path_obj, "rb"), as_attachment=False, filename=path_obj.name)
+
+
+@login_required
+def download_ocr_text(request, document_id):
+    """Serve the OCR text as plain text so users can copy it."""
+    document = get_object_or_404(Document, id=document_id)
+    path_str = enhanced_search_engine._get_ocr_path(document)  # type: ignore
+    path_obj = Path(path_str)
+
+    if not path_obj.exists():
+        raise Http404("File not found")
+
+    with open(path_obj, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    response = HttpResponse(content, content_type="text/plain; charset=utf-8")
+    response["Content-Disposition"] = f'inline; filename="{path_obj.name}"'
+    return response
 
 
 @login_required
@@ -1215,12 +1362,24 @@ def llm_search_documents(request):
         search_performed = True
         
         try:
-            # Use enhanced search engine for better context gathering
-            stage_1_results = enhanced_search_engine.stage_1_search(
-                search_query, client_filter, use_fuzzy=enable_fuzzy
+            # Stage 0: Quick document name search
+            stage_0_results = enhanced_search_engine.stage_0_search(
+                search_query, client_filter
             )
-            docs_for_context = stage_1_results
-
+            docs_for_context = stage_0_results
+            
+            # Stage 1: Use enhanced search engine for better context gathering
+            if not docs_for_context or len(docs_for_context) < 3:
+                stage_1_results = enhanced_search_engine.stage_1_search(
+                    search_query, client_filter, use_fuzzy=enable_fuzzy
+                )
+                
+                # Merge results if both stages found documents
+                if stage_0_results and stage_1_results:
+                    docs_for_context = stage_0_results + stage_1_results
+                elif stage_1_results:
+                    docs_for_context = stage_1_results
+            
             # Fallback to enhanced stage 2 if needed
             if not docs_for_context:
                 stage_2_results = enhanced_search_engine.stage_2_search(

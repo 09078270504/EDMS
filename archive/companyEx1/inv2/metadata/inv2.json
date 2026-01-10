@@ -1,0 +1,61 @@
+{
+  "doc_type": "general",
+  "title": "CLEANING PERIOD INCLUDED 01/05/2023-31/05/2023",
+  "ids": {
+    "document_no": "n-toxic"
+  },
+  "parties": {
+    "issuer": {
+      "name": "PERIOD INC",
+      "tin": null
+    },
+    "recipient": {
+      "name": "Page",
+      "tin": null
+    },
+    "other": []
+  },
+  "dates": {
+    "issue_date": "01/05/2023"
+  },
+  "amounts": {
+    "currency": "USD",
+    "total": 89500.0,
+    "subtotal": null,
+    "tax": null
+  },
+  "line_items": [],
+  "payment_terms": null,
+  "addresses": {},
+  "contacts": {},
+  "status": "processed",
+  "tags": [
+    "general"
+  ],
+  "extracted_entities": {
+    "people": [
+      "Page",
+      "INVOICE",
+      "DATE",
+      "OF ISSUE"
+    ],
+    "companies": [
+      "PERIOD INC"
+    ],
+    "locations": [],
+    "projects": []
+  },
+  "notes": [],
+  "confidence": 0.95,
+  "extraction_method": "fast_pattern",
+  "processing_time": 0.002116,
+  "model_used": "Enhanced-7B",
+  "processing_info": {
+    "category": "companyEx1",
+    "classification": "successful",
+    "document_name": "inv2",
+    "original_filename": "inv2.pdf",
+    "processed_at": "2026-01-09T15:13:02.408781+08:00",
+    "processed_at_ph_formatted": "2026-01-09 15:13:02"
+  }
+}

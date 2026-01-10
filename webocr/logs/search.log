@@ -990,3 +990,775 @@ INFO 2025-09-04 09:32:52,258 basehttp 10160 3704 "GET / HTTP/1.1" 302 0
 INFO 2025-09-04 09:32:52,356 basehttp 10160 3704 "GET /documents/ HTTP/1.1" 200 24554
 INFO 2025-09-04 09:32:54,152 basehttp 10160 3704 "GET /chat/ HTTP/1.1" 200 13323
 INFO 2025-09-04 09:32:54,606 basehttp 10160 3704 "GET /documents/ HTTP/1.1" 200 24554
+INFO 2026-01-03 14:48:52,945 autoreload 30144 2812 Watching for file changes with StatReloader
+INFO 2026-01-03 14:52:32,899 autoreload 29844 1896 Watching for file changes with StatReloader
+INFO 2026-01-03 14:56:04,363 autoreload 29844 1896 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\views.py changed, reloading.
+INFO 2026-01-03 14:56:14,844 autoreload 29532 22236 Watching for file changes with StatReloader
+INFO 2026-01-03 15:09:25,590 autoreload 25944 20832 Watching for file changes with StatReloader
+INFO 2026-01-03 15:11:12,525 autoreload 29532 22236 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\views.py changed, reloading.
+INFO 2026-01-03 15:11:12,986 autoreload 25944 20832 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\views.py changed, reloading.
+INFO 2026-01-03 15:11:19,298 autoreload 30312 19292 Watching for file changes with StatReloader
+INFO 2026-01-03 15:11:19,598 autoreload 16416 29868 Watching for file changes with StatReloader
+INFO 2026-01-03 15:31:16,249 autoreload 2032 6644 Watching for file changes with StatReloader
+INFO 2026-01-03 15:32:24,387 basehttp 2032 9420 "GET / HTTP/1.1" 200 21984
+INFO 2026-01-03 15:32:25,078 basehttp 2032 29556 "GET /static/img/background_fowse.png HTTP/1.1" 200 11957
+INFO 2026-01-03 15:32:25,096 basehttp 2032 9420 "GET /static/css/base.css HTTP/1.1" 200 7712
+INFO 2026-01-03 15:32:25,116 basehttp 2032 28212 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+INFO 2026-01-03 15:32:25,237 basehttp 2032 13932 "GET /static/js/base.js HTTP/1.1" 200 13687
+WARNING 2026-01-03 15:32:26,507 log 2032 13932 Not Found: /favicon.ico
+WARNING 2026-01-03 15:32:26,509 basehttp 2032 13932 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2026-01-03 15:32:35,076 basehttp 2032 27212 "GET /login/ HTTP/1.1" 200 25983
+INFO 2026-01-03 15:32:35,132 basehttp 2032 27212 "GET /static/js/login.js HTTP/1.1" 200 1566
+INFO 2026-01-03 15:32:48,992 basehttp 2032 27292 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-03 15:32:49,041 basehttp 2032 27292 "GET /documents/ HTTP/1.1" 200 24562
+INFO 2026-01-03 15:32:49,098 basehttp 2032 27292 "GET /static/css/search_form.css HTTP/1.1" 200 502
+INFO 2026-01-03 15:32:49,099 basehttp 2032 21136 "GET /static/js/search_form.js HTTP/1.1" 200 5396
+INFO 2026-01-03 15:34:38,700 basehttp 2032 30552 "GET /search/documents/?search_query=Ayala&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12357
+INFO 2026-01-03 15:35:04,886 basehttp 2032 30688 "GET /search/documents/?search_query=Service+Contract+&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12381
+INFO 2026-01-03 15:35:29,435 basehttp 2032 29820 "GET /documents/ HTTP/1.1" 200 24562
+INFO 2026-01-03 15:35:37,228 basehttp 2032 23084 "GET /search/documents/?search_query=Bank+Statement&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12375
+INFO 2026-01-03 15:36:13,640 basehttp 2032 27212 "GET /search/documents/?search_query=STATEMENT+OF+ACCOUNT&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12387
+INFO 2026-01-03 18:49:29,917 autoreload 25840 29428 Watching for file changes with StatReloader
+INFO 2026-01-03 18:52:42,216 basehttp 25840 23280 "GET / HTTP/1.1" 200 21984
+INFO 2026-01-03 18:52:47,619 basehttp 25840 31360 "GET / HTTP/1.1" 200 21984
+INFO 2026-01-03 19:51:12,112 basehttp 25840 28916 "GET / HTTP/1.1" 200 21984
+INFO 2026-01-03 19:51:14,604 basehttp 25840 20540 "GET /login/ HTTP/1.1" 200 25983
+WARNING 2026-01-03 19:51:14,708 log 25840 28916 Not Found: /favicon.ico
+WARNING 2026-01-03 19:51:14,711 basehttp 25840 28916 "GET /favicon.ico HTTP/1.1" 404 6156
+WARNING 2026-01-03 19:51:14,761 log 25840 28916 Not Found: /favicon.ico
+WARNING 2026-01-03 19:51:14,762 basehttp 25840 28916 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2026-01-03 19:51:17,456 basehttp 25840 28916 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-03 19:51:17,738 basehttp 25840 28916 "GET /documents/ HTTP/1.1" 200 24562
+INFO 2026-01-03 19:51:32,963 basehttp 25840 18212 "GET /search/documents/?search_query=Invoice+&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12363
+INFO 2026-01-03 19:51:37,726 basehttp 25840 30356 "GET /search/documents/?search_query=Invoice+&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12363
+INFO 2026-01-03 19:51:58,779 basehttp 25840 19112 "GET /documents/ HTTP/1.1" 200 24562
+INFO 2026-01-03 19:52:01,372 basehttp 25840 19112 "GET /search/documents/?search_query=WWW.ExcelDataPro.com&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12387
+INFO 2026-01-03 20:43:37,918 autoreload 20832 28524 Watching for file changes with StatReloader
+INFO 2026-01-03 20:54:46,729 basehttp 20832 30552 "GET / HTTP/1.1" 200 21984
+WARNING 2026-01-03 20:54:50,171 log 20832 29936 Not Found: /favicon.ico
+WARNING 2026-01-03 20:54:50,173 basehttp 20832 29936 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2026-01-03 20:55:09,498 basehttp 20832 1992 "GET /login/ HTTP/1.1" 200 25983
+INFO 2026-01-03 20:55:11,837 basehttp 20832 1992 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-03 20:55:12,055 basehttp 20832 1992 "GET /documents/ HTTP/1.1" 200 24562
+INFO 2026-01-03 20:55:32,799 basehttp 20832 28760 "GET /search/documents/?search_query=VAT+Invoice+Template+With+Discount+For+GCC+Countries&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12451
+INFO 2026-01-03 20:55:56,758 basehttp 20832 27040 "GET /documents/ HTTP/1.1" 200 24562
+INFO 2026-01-03 20:55:59,295 basehttp 20832 20716 "GET /search/documents/?search_query=WWW.ExcelDataPro.com&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12387
+INFO 2026-01-03 20:56:10,283 basehttp 20832 27672 "GET /documents/ HTTP/1.1" 200 24562
+INFO 2026-01-03 20:56:12,394 basehttp 20832 27672 "GET /search/documents/?search_query=13750.0&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12361
+INFO 2026-01-03 20:56:31,980 basehttp 20832 30952 "GET /documents/ HTTP/1.1" 200 24562
+INFO 2026-01-03 20:56:34,214 basehttp 20832 30952 "GET /search/documents/?search_query=ExcelDataPro&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12371
+INFO 2026-01-03 21:10:52,610 autoreload 20832 28524 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\database\views.py changed, reloading.
+INFO 2026-01-03 21:11:11,958 autoreload 26568 6004 Watching for file changes with StatReloader
+INFO 2026-01-03 21:12:22,274 basehttp 26568 17712 "GET /documents/ HTTP/1.1" 200 24562
+INFO 2026-01-03 21:12:24,988 basehttp 26568 17712 "GET /search/documents/?search_query=VAT+Invoice+Template+With+Discount+For+GCC+Countries&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12451
+WARNING 2026-01-03 21:12:55,594 log 26568 27264 Not Found: /documents/search/
+WARNING 2026-01-03 21:12:55,598 basehttp 26568 27264 "GET /documents/search/?q=ExcelDataPro HTTP/1.1" 404 6189
+WARNING 2026-01-03 21:12:57,414 log 26568 27264 Not Found: /favicon.ico
+WARNING 2026-01-03 21:12:57,417 basehttp 26568 27264 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2026-01-03 21:40:58,552 autoreload 26568 6004 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\database\views.py changed, reloading.
+INFO 2026-01-03 21:41:22,455 autoreload 11216 16352 Watching for file changes with StatReloader
+INFO 2026-01-03 21:43:07,444 basehttp 11216 12544 "GET / HTTP/1.1" 200 21984
+WARNING 2026-01-03 21:43:10,037 log 11216 11192 Not Found: /favicon.ico
+WARNING 2026-01-03 21:43:10,039 basehttp 11216 11192 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2026-01-03 21:43:34,041 basehttp 11216 27812 "GET /login/ HTTP/1.1" 200 25983
+INFO 2026-01-03 21:43:36,936 basehttp 11216 27812 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-03 21:43:36,975 basehttp 11216 27812 "GET /documents/ HTTP/1.1" 200 24562
+INFO 2026-01-03 21:43:40,958 basehttp 11216 27812 "GET /search/documents/?search_query=WWW.ExcelDataPro.com&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12387
+INFO 2026-01-03 21:43:44,330 basehttp 11216 27068 "GET /search/documents/?search_query=WWW.ExcelDataPro.com&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12387
+INFO 2026-01-03 21:43:45,040 basehttp 11216 27068 "GET /search/documents/?search_query=WWW.ExcelDataPro.com&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12387
+INFO 2026-01-03 21:43:45,388 basehttp 11216 27068 "GET /search/documents/?search_query=WWW.ExcelDataPro.com&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12387
+INFO 2026-01-03 21:43:58,460 basehttp 11216 29892 "GET /documents/ HTTP/1.1" 200 24562
+INFO 2026-01-03 21:44:01,444 basehttp 11216 30000 "GET /search/documents/?search_query=VAT+Invoice+Template+With+Discount+For+GCC+Countries&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12451
+INFO 2026-01-08 01:02:06,850 autoreload 13404 8072 Watching for file changes with StatReloader
+INFO 2026-01-08 01:03:46,944 basehttp 13404 7240 "GET / HTTP/1.1" 200 21984
+WARNING 2026-01-08 01:03:47,950 log 13404 23808 Not Found: /favicon.ico
+WARNING 2026-01-08 01:03:47,951 basehttp 13404 23808 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2026-01-08 01:03:55,855 basehttp 13404 23808 "GET /login/ HTTP/1.1" 200 25983
+ERROR 2026-01-08 01:03:57,809 log 13404 6028 Internal Server Error: /login/
+Traceback (most recent call last):
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: core_loginattempt
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\views.py", line 607, in login_view
+    attempt = LoginAttempt.objects.get(ip_address=ip_address, username=username)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\db\models\query.py", line 635, in get
+    num = len(clone)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\db\models\query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\db\models\query.py", line 1886, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: core_loginattempt
+ERROR 2026-01-08 01:03:57,816 basehttp 13404 6028 "POST /login/ HTTP/1.1" 500 154858
+INFO 2026-01-08 01:07:06,869 autoreload 23712 12776 Watching for file changes with StatReloader
+INFO 2026-01-08 01:07:18,509 basehttp 23712 19796 "GET / HTTP/1.1" 200 21984
+INFO 2026-01-08 01:07:22,920 basehttp 23712 19796 "GET /login/ HTTP/1.1" 200 25983
+INFO 2026-01-08 01:07:24,479 basehttp 23712 19796 "POST /login/ HTTP/1.1" 200 26210
+INFO 2026-01-08 01:07:30,358 basehttp 23712 19796 "GET /forgot-password/ HTTP/1.1" 200 23825
+INFO 2026-01-08 01:07:32,719 basehttp 23712 19796 "GET /login/ HTTP/1.1" 200 25983
+INFO 2026-01-08 01:07:36,168 basehttp 23712 19796 "GET /forgot-password/ HTTP/1.1" 200 23825
+INFO 2026-01-08 01:07:41,862 basehttp 23712 19796 "GET /login/ HTTP/1.1" 200 25983
+INFO 2026-01-08 01:08:59,984 basehttp 23712 26660 "GET /login/ HTTP/1.1" 200 25983
+INFO 2026-01-08 01:09:05,236 basehttp 23712 26660 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-08 01:09:05,408 basehttp 23712 26660 "GET /documents/ HTTP/1.1" 200 24562
+INFO 2026-01-08 01:09:36,744 basehttp 23712 18488 "GET /search/documents/?search_query=VAT+Invoice+Template+With+Discount+For+GCC+Countries&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12451
+INFO 2026-01-08 01:09:43,663 basehttp 23712 28048 "GET /documents/ HTTP/1.1" 200 24562
+INFO 2026-01-08 01:09:47,571 basehttp 23712 2876 "GET /search/documents/?search_query=Invoice&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12361
+INFO 2026-01-08 01:19:37,253 basehttp 23712 19640 "GET / HTTP/1.1" 302 0
+INFO 2026-01-08 01:19:37,295 basehttp 23712 19640 "GET /documents/ HTTP/1.1" 200 24562
+INFO 2026-01-08 01:20:58,132 basehttp 23712 17416 "GET /search/documents/?search_query=Invoice&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12361
+INFO 2026-01-08 01:28:19,752 autoreload 12656 15388 Watching for file changes with StatReloader
+INFO 2026-01-08 01:28:34,588 basehttp 12656 28364 "GET / HTTP/1.1" 302 0
+INFO 2026-01-08 01:28:34,632 basehttp 12656 28364 "GET /documents/ HTTP/1.1" 200 25456
+INFO 2026-01-08 01:28:41,762 basehttp 12656 28364 "GET /search/documents/?search_query=Invoice&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 17782
+WARNING 2026-01-08 01:28:49,798 log 12656 28624 Not Found: /search/documents/archive/Philippine Airlines/Philippine Airlines Invoice OR-12345/original/Philippine Airlines Invoice OR-12345.pdf
+WARNING 2026-01-08 01:28:49,799 basehttp 12656 28624 "GET /search/documents/archive/Philippine%20Airlines/Philippine%20Airlines%20Invoice%20OR-12345/original/Philippine%20Airlines%20Invoice%20OR-12345.pdf HTTP/1.1" 404 6530
+INFO 2026-01-08 01:28:54,507 basehttp 12656 26876 "GET /document/7/ HTTP/1.1" 200 8455
+INFO 2026-01-08 01:28:57,706 basehttp 12656 26876 "GET /search/documents/ HTTP/1.1" 200 9139
+WARNING 2026-01-08 01:29:02,966 log 12656 26876 Not Found: /search/documents/archive/Philippine Airlines/PAL Invoice INV-2024-001 January/original/PAL Invoice INV-2024-001 January.pdf
+WARNING 2026-01-08 01:29:02,967 basehttp 12656 26876 "GET /search/documents/archive/Philippine%20Airlines/PAL%20Invoice%20INV-2024-001%20January/original/PAL%20Invoice%20INV-2024-001%20January.pdf HTTP/1.1" 404 6506
+INFO 2026-01-08 01:33:45,442 basehttp 12656 19976 "GET /documents/ HTTP/1.1" 200 25456
+INFO 2026-01-08 01:33:47,899 basehttp 12656 19976 "GET /search/documents/?search_query=VAT+Invoice+Template+With+Discount+For+GCC+Countries&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 21010
+INFO 2026-01-08 01:33:54,142 basehttp 12656 19976 "GET /document/7/ HTTP/1.1" 200 8455
+WARNING 2026-01-08 01:33:58,443 log 12656 19976 Not Found: /search/documents/archive/Philippine Airlines/Philippine Airlines Invoice OR-12345/original/Philippine Airlines Invoice OR-12345.pdf
+WARNING 2026-01-08 01:33:58,443 basehttp 12656 19976 "GET /search/documents/archive/Philippine%20Airlines/Philippine%20Airlines%20Invoice%20OR-12345/original/Philippine%20Airlines%20Invoice%20OR-12345.pdf HTTP/1.1" 404 6530
+INFO 2026-01-08 01:34:21,982 basehttp 12656 19976 "GET /admin/ HTTP/1.1" 200 9218
+INFO 2026-01-08 01:34:22,242 basehttp 12656 27300 "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+INFO 2026-01-08 01:34:22,243 basehttp 12656 19976 "GET /static/admin/css/base.css HTTP/1.1" 200 21310
+INFO 2026-01-08 01:34:22,249 basehttp 12656 12308 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2929
+INFO 2026-01-08 01:34:22,249 basehttp 12656 1568 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2694
+INFO 2026-01-08 01:34:22,262 basehttp 12656 13404 "GET /static/admin/css/responsive.css HTTP/1.1" 200 18559
+INFO 2026-01-08 01:34:22,290 basehttp 12656 13404 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2026-01-08 01:34:22,290 basehttp 12656 1568 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2026-01-08 01:34:22,326 basehttp 12656 9412 "GET /static/admin/js/theme.js HTTP/1.1" 200 1943
+INFO 2026-01-08 01:34:22,326 basehttp 12656 27300 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+ERROR 2026-01-08 01:34:29,860 log 12656 26688 Internal Server Error: /admin/database/user/
+Traceback (most recent call last):
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\contrib\admin\templatetags\base.py", line 45, in render
+    return super().render(context)
+           ~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\library.py", line 271, in render
+    new_context = context.new(_dict)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\context.py", line 265, in new
+    new_context = super().new(values)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\context.py", line 110, in new
+    new_context = copy(self)
+  File "C:\Python314\Lib\copy.py", line 82, in copy
+    return copier(x)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\context.py", line 158, in __copy__
+    duplicate = super().__copy__()
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\context.py", line 39, in __copy__
+    duplicate.dicts = self.dicts[:]
+    ^^^^^^^^^^^^^^^
+AttributeError: 'super' object has no attribute 'dicts' and no __dict__ for setting new attributes
+ERROR 2026-01-08 01:34:29,868 basehttp 12656 26688 "GET /admin/database/user/ HTTP/1.1" 500 462330
+INFO 2026-01-08 01:34:39,649 basehttp 12656 26688 "GET /admin/ HTTP/1.1" 200 9218
+ERROR 2026-01-08 01:34:55,649 log 12656 26688 Internal Server Error: /admin/database/document/
+Traceback (most recent call last):
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\contrib\admin\templatetags\base.py", line 45, in render
+    return super().render(context)
+           ~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\library.py", line 271, in render
+    new_context = context.new(_dict)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\context.py", line 265, in new
+    new_context = super().new(values)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\context.py", line 110, in new
+    new_context = copy(self)
+  File "C:\Python314\Lib\copy.py", line 82, in copy
+    return copier(x)
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\context.py", line 158, in __copy__
+    duplicate = super().__copy__()
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\venv\Lib\site-packages\django\template\context.py", line 39, in __copy__
+    duplicate.dicts = self.dicts[:]
+    ^^^^^^^^^^^^^^^
+AttributeError: 'super' object has no attribute 'dicts' and no __dict__ for setting new attributes
+ERROR 2026-01-08 01:34:55,653 basehttp 12656 26688 "GET /admin/database/document/ HTTP/1.1" 500 462873
+INFO 2026-01-09 13:46:18,646 autoreload 13284 10892 Watching for file changes with StatReloader
+INFO 2026-01-09 13:47:03,068 basehttp 13284 30716 "GET / HTTP/1.1" 200 21984
+WARNING 2026-01-09 13:47:03,783 log 13284 30716 Not Found: /favicon.ico
+WARNING 2026-01-09 13:47:03,783 basehttp 13284 30716 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2026-01-09 13:47:05,034 basehttp 13284 30716 "GET /login/ HTTP/1.1" 200 25983
+INFO 2026-01-09 13:47:06,500 basehttp 13284 30716 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-09 13:47:06,568 basehttp 13284 30716 "GET /documents/ HTTP/1.1" 200 25456
+INFO 2026-01-09 13:47:10,357 basehttp 13284 30716 "GET /search/documents/?search_query=invoice&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 17782
+INFO 2026-01-09 13:47:20,553 basehttp 13284 30716 "GET /document/6/ HTTP/1.1" 200 8443
+INFO 2026-01-09 13:47:24,056 basehttp 13284 30716 "GET /search/documents/ HTTP/1.1" 200 9139
+INFO 2026-01-09 15:13:42,665 basehttp 13284 4092 "GET /documents/ HTTP/1.1" 200 25456
+INFO 2026-01-09 15:13:46,314 basehttp 13284 4092 "GET /search/documents/?search_query=cleaning&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 20953
+INFO 2026-01-09 15:26:20,996 basehttp 13284 25096 "GET /document/1/ HTTP/1.1" 200 8453
+INFO 2026-01-09 20:01:09,506 autoreload 9484 24600 Watching for file changes with StatReloader
+INFO 2026-01-09 20:01:25,781 basehttp 9484 27752 "GET / HTTP/1.1" 200 21984
+WARNING 2026-01-09 20:01:26,162 log 9484 27752 Not Found: /favicon.ico
+WARNING 2026-01-09 20:01:26,163 basehttp 9484 27752 "GET /favicon.ico HTTP/1.1" 404 6156
+INFO 2026-01-09 20:01:29,880 basehttp 9484 23020 "GET /login/ HTTP/1.1" 200 25983
+INFO 2026-01-09 20:01:31,450 basehttp 9484 23020 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-09 20:01:31,542 basehttp 9484 23020 "GET /documents/ HTTP/1.1" 200 25456
+INFO 2026-01-09 20:01:39,634 basehttp 9484 28188 "GET /search/documents/?search_query=Fast+photography&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15202
+INFO 2026-01-09 20:01:47,524 basehttp 9484 28188 "GET /documents/ HTTP/1.1" 200 25456
+INFO 2026-01-09 20:01:52,162 basehttp 9484 27844 "GET /search/documents/?search_query=inv3&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 18074
+INFO 2026-01-09 20:03:22,931 basehttp 9484 14200 "GET /documents/ HTTP/1.1" 200 25456
+INFO 2026-01-09 20:03:27,762 basehttp 9484 14200 "GET /search/documents/?search_query=company&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 36696
+WARNING 2026-01-09 20:06:11,442 log 9484 25396 Not Found: /search/documents/archive/Philippine Airlines/Philippine Airlines Invoice OR-12345/original/Philippine Airlines Invoice OR-12345.pdf
+WARNING 2026-01-09 20:06:11,443 basehttp 9484 25396 "GET /search/documents/archive/Philippine%20Airlines/Philippine%20Airlines%20Invoice%20OR-12345/original/Philippine%20Airlines%20Invoice%20OR-12345.pdf HTTP/1.1" 404 6530
+INFO 2026-01-09 20:16:39,942 autoreload 4060 9616 Watching for file changes with StatReloader
+INFO 2026-01-09 20:16:52,295 basehttp 4060 2008 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 20:16:52,346 basehttp 4060 2008 "GET /documents/ HTTP/1.1" 200 25553
+INFO 2026-01-09 20:17:13,523 basehttp 4060 28412 "GET /search/documents/?search_query=Fast+photography&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15202
+INFO 2026-01-09 20:17:54,537 basehttp 4060 7084 "GET /documents/ HTTP/1.1" 200 25553
+INFO 2026-01-09 20:17:58,990 basehttp 4060 7084 "GET /search/documents/?search_query=inv3&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 18074
+INFO 2026-01-09 20:20:57,955 autoreload 12624 25016 Watching for file changes with StatReloader
+INFO 2026-01-09 20:21:10,271 basehttp 12624 6360 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 20:21:10,320 basehttp 12624 6360 "GET /documents/ HTTP/1.1" 200 25553
+INFO 2026-01-09 20:21:18,279 basehttp 12624 6360 "GET /search/documents/?search_query=Fast+photography&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15202
+INFO 2026-01-09 20:21:30,107 basehttp 12624 6360 "GET /documents/ HTTP/1.1" 200 25553
+INFO 2026-01-09 20:21:32,002 basehttp 12624 6360 "GET /search/documents/?search_query=inv3&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 18074
+INFO 2026-01-09 20:25:21,387 autoreload 12624 25016 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\views.py changed, reloading.
+INFO 2026-01-09 20:25:25,381 autoreload 19432 17964 Watching for file changes with StatReloader
+INFO 2026-01-09 20:25:47,941 basehttp 19432 16500 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 20:25:47,986 basehttp 19432 16500 "GET /documents/ HTTP/1.1" 200 25553
+INFO 2026-01-09 20:25:55,748 basehttp 19432 4784 "GET /search/documents/?search_query=photography&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15035
+INFO 2026-01-09 20:26:04,944 basehttp 19432 18452 "GET /document/10/ HTTP/1.1" 200 8350
+INFO 2026-01-09 20:26:13,688 basehttp 19432 3128 "GET /document/10/ HTTP/1.1" 200 8350
+INFO 2026-01-09 20:26:23,631 basehttp 19432 12808 "GET /document/10/ HTTP/1.1" 200 8350
+INFO 2026-01-09 20:26:32,995 basehttp 19432 7148 "GET /documents/ HTTP/1.1" 200 25553
+INFO 2026-01-09 20:26:36,989 basehttp 19432 7148 "GET /search/documents/?search_query=inv1&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15085
+INFO 2026-01-09 20:26:41,608 basehttp 19432 16664 "GET /document/10/ HTTP/1.1" 200 8350
+INFO 2026-01-09 20:27:33,133 basehttp 19432 26020 "GET /search/documents/?search_query=inv1&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15085
+INFO 2026-01-09 20:29:25,943 basehttp 19432 16708 "GET /documents/ HTTP/1.1" 200 25553
+INFO 2026-01-09 20:29:28,901 basehttp 19432 16708 "GET /search/documents/?search_query=BOP&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15083
+INFO 2026-01-09 20:29:33,167 basehttp 19432 16708 "GET /documents/ HTTP/1.1" 200 25553
+INFO 2026-01-09 20:29:34,971 basehttp 19432 16708 "GET /search/documents/?search_query=ss&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15018
+INFO 2026-01-09 20:31:08,738 autoreload 19432 17964 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\views.py changed, reloading.
+INFO 2026-01-09 20:31:12,058 autoreload 10124 24736 Watching for file changes with StatReloader
+INFO 2026-01-09 20:31:27,245 basehttp 10124 27820 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 20:31:27,293 basehttp 10124 27820 "GET /documents/ HTTP/1.1" 200 25553
+INFO 2026-01-09 20:31:33,046 basehttp 10124 8356 "GET /search/documents/?search_query=inv&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15039
+INFO 2026-01-09 20:31:48,169 autoreload 10124 24736 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\urls.py changed, reloading.
+INFO 2026-01-09 20:31:50,572 autoreload 7648 14028 Watching for file changes with StatReloader
+INFO 2026-01-09 20:32:07,949 basehttp 7648 26588 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 20:32:07,996 basehttp 7648 26588 "GET /documents/ HTTP/1.1" 200 25553
+INFO 2026-01-09 20:32:11,304 basehttp 7648 26588 "GET /search/documents/?search_query=in&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 14960
+INFO 2026-01-09 20:32:13,000 basehttp 7648 26588 "GET /document/10/original/ HTTP/1.1" 200 99592
+INFO 2026-01-09 20:32:31,719 basehttp 7648 5564 "GET /search/documents/?search_query=company&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12361
+INFO 2026-01-09 20:32:38,007 basehttp 7648 5564 "GET /document/10/ HTTP/1.1" 200 8350
+INFO 2026-01-09 20:32:48,348 basehttp 7648 5564 "GET /document/10/original/ HTTP/1.1" 200 99592
+INFO 2026-01-09 20:33:57,394 basehttp 7648 5564 "GET /document/10/ HTTP/1.1" 200 8350
+INFO 2026-01-09 20:34:14,166 basehttp 7648 5564 "GET /document/10/original/ HTTP/1.1" 200 99592
+INFO 2026-01-09 20:35:40,986 autoreload 7648 14028 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\views.py changed, reloading.
+INFO 2026-01-09 20:35:43,687 autoreload 18448 22968 Watching for file changes with StatReloader
+INFO 2026-01-09 20:36:20,197 autoreload 18448 22968 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\urls.py changed, reloading.
+INFO 2026-01-09 20:36:22,442 autoreload 28436 26524 Watching for file changes with StatReloader
+INFO 2026-01-09 20:36:36,056 basehttp 28436 11252 "GET /document/10/original/ HTTP/1.1" 200 99592
+INFO 2026-01-09 20:38:30,729 basehttp 28436 11440 "GET /search/documents/?search_query=in&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15203
+INFO 2026-01-09 20:38:32,279 basehttp 28436 11440 "GET /search/documents/?search_query=in&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15203
+INFO 2026-01-09 20:38:34,213 basehttp 28436 11440 "GET /document/10/ocr/ HTTP/1.1" 200 445
+INFO 2026-01-09 20:38:47,187 basehttp 28436 11320 "GET /documents/ HTTP/1.1" 200 25553
+INFO 2026-01-09 20:38:49,171 basehttp 28436 11320 "GET /search/documents/?search_query=inv&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15205
+INFO 2026-01-09 20:39:32,390 basehttp 28436 22840 "GET /document/10/original/ HTTP/1.1" 200 99592
+INFO 2026-01-09 20:39:37,911 basehttp 28436 22840 "GET /document/10/ocr/ HTTP/1.1" 200 445
+INFO 2026-01-09 20:39:51,147 basehttp 28436 22840 "GET /documents/ HTTP/1.1" 200 25553
+INFO 2026-01-09 20:40:00,001 basehttp 28436 22840 "GET /search/documents/?search_query=inv&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15205
+INFO 2026-01-09 20:40:03,478 basehttp 28436 22840 "GET /document/10/original/ HTTP/1.1" 200 99592
+INFO 2026-01-09 20:40:07,244 basehttp 28436 23488 "GET /document/10/ocr/ HTTP/1.1" 200 445
+INFO 2026-01-09 20:40:33,546 basehttp 28436 23488 "GET /documents/ HTTP/1.1" 200 25553
+INFO 2026-01-09 20:44:21,916 basehttp 28436 19940 "GET /search/documents/?search_query=in&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15203
+INFO 2026-01-09 20:47:21,521 autoreload 19392 17056 Watching for file changes with StatReloader
+INFO 2026-01-09 20:47:35,473 basehttp 19392 24820 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 20:47:35,522 basehttp 19392 24820 "GET /documents/ HTTP/1.1" 200 25733
+INFO 2026-01-09 20:47:59,008 basehttp 19392 28604 "GET /search/documents/?search_query=VAT+Invoice+Template+With+Discount+For+GCC+Countries&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 17993
+INFO 2026-01-09 20:48:07,068 basehttp 19392 28604 "GET /document/12/original/ HTTP/1.1" 200 251722
+INFO 2026-01-09 20:48:13,024 basehttp 19392 28604 "GET /document/12/ocr/ HTTP/1.1" 200 1351
+INFO 2026-01-09 20:50:38,773 basehttp 19392 28604 "GET /documents/ HTTP/1.1" 200 25733
+INFO 2026-01-09 20:50:41,515 basehttp 19392 28604 "GET /search/documents/?search_query=bank&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 17892
+INFO 2026-01-09 20:51:17,478 basehttp 19392 28604 "GET /documents/ HTTP/1.1" 200 25733
+INFO 2026-01-09 20:51:19,690 basehttp 19392 28604 "GET /search/documents/?search_query=WWW.ExcelDataPro.com&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12387
+INFO 2026-01-09 20:53:32,794 autoreload 26880 14216 Watching for file changes with StatReloader
+INFO 2026-01-09 20:53:44,979 basehttp 26880 4688 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 20:53:45,080 basehttp 26880 4688 "GET /documents/ HTTP/1.1" 200 25733
+INFO 2026-01-09 20:54:13,462 basehttp 26880 4688 "GET /search/documents/?search_query=WWW.ExcelDataPro.com&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15268
+INFO 2026-01-09 20:54:19,733 basehttp 26880 4688 "GET /document/13/ocr/ HTTP/1.1" 200 615
+WARNING 2026-01-09 20:55:08,046 log 26880 5528 Not Found: /document/13/original/
+WARNING 2026-01-09 20:55:08,047 basehttp 26880 5528 "GET /document/13/original/ HTTP/1.1" 404 5305
+WARNING 2026-01-09 20:55:12,542 log 26880 5528 Not Found: /document/13/original/
+WARNING 2026-01-09 20:55:12,543 basehttp 26880 5528 "GET /document/13/original/ HTTP/1.1" 404 5305
+INFO 2026-01-09 20:55:15,760 basehttp 26880 9524 "GET /document/13/ocr/ HTTP/1.1" 200 615
+INFO 2026-01-09 20:55:18,719 basehttp 26880 9524 "GET /document/13/ HTTP/1.1" 200 8400
+INFO 2026-01-09 20:55:23,492 basehttp 26880 27828 "GET /documents/ HTTP/1.1" 200 25733
+INFO 2026-01-09 20:55:25,831 basehttp 26880 27828 "GET /search/documents/?search_query=inv&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15197
+INFO 2026-01-09 20:55:55,939 basehttp 26880 26652 "GET /documents/ HTTP/1.1" 200 25733
+INFO 2026-01-09 20:55:57,629 basehttp 26880 26652 "GET /search/documents/?search_query=CLEANING+PERIOD&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15209
+INFO 2026-01-09 20:56:01,240 basehttp 26880 13776 "GET /document/12/original/ HTTP/1.1" 200 251722
+INFO 2026-01-09 20:56:25,745 basehttp 26880 13776 "GET /documents/ HTTP/1.1" 200 25733
+INFO 2026-01-09 20:56:27,295 basehttp 26880 13776 "GET /search/documents/?search_query=Fast+photography&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 20787
+INFO 2026-01-09 20:56:38,045 basehttp 26880 13776 "GET /documents/ HTTP/1.1" 200 25733
+INFO 2026-01-09 20:56:39,799 basehttp 26880 13776 "GET /search/documents/?search_query=photography&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15201
+INFO 2026-01-09 20:56:43,250 basehttp 26880 13776 "GET /document/10/original/ HTTP/1.1" 200 99592
+INFO 2026-01-09 20:56:57,151 basehttp 26880 16744 "GET /documents/ HTTP/1.1" 200 25733
+INFO 2026-01-09 20:56:59,285 basehttp 26880 16744 "GET /search/documents/?search_query=bank&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 17892
+INFO 2026-01-09 20:57:20,095 basehttp 26880 16744 "GET /documents/ HTTP/1.1" 200 25733
+INFO 2026-01-09 20:57:21,544 basehttp 26880 16744 "GET /search/documents/?search_query=AT+Invoice+Template+With+Discount+For+GCC+Countries&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 20857
+WARNING 2026-01-09 20:57:24,470 log 26880 16744 Not Found: /document/13/original/
+WARNING 2026-01-09 20:57:24,470 basehttp 26880 16744 "GET /document/13/original/ HTTP/1.1" 404 5305
+INFO 2026-01-09 20:59:49,253 basehttp 26880 12624 "GET /document/13/original/ HTTP/1.1" 200 49070
+INFO 2026-01-09 22:04:12,568 basehttp 26880 7576 "GET /document/13/original/ HTTP/1.1" 302 0
+INFO 2026-01-09 22:04:12,642 basehttp 26880 7576 "GET /login/?next=/document/13/original/ HTTP/1.1" 200 25983
+INFO 2026-01-09 22:04:16,107 basehttp 26880 7576 "POST /login/?next=/document/13/original/ HTTP/1.1" 302 0
+INFO 2026-01-09 22:04:16,133 basehttp 26880 7576 "GET /documents/ HTTP/1.1" 200 25733
+INFO 2026-01-09 22:04:18,899 basehttp 26880 7576 "GET /search/documents/?search_query=inv&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15197
+INFO 2026-01-09 22:04:20,458 basehttp 26880 13280 "GET /document/13/original/ HTTP/1.1" 200 49070
+INFO 2026-01-09 22:04:25,679 basehttp 26880 13280 "GET /document/13/ocr/ HTTP/1.1" 200 615
+INFO 2026-01-09 22:10:28,222 autoreload 26680 25204 Watching for file changes with StatReloader
+INFO 2026-01-09 22:10:41,584 basehttp 26680 2120 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 22:10:41,636 basehttp 26680 2120 "GET /documents/ HTTP/1.1" 200 25818
+INFO 2026-01-09 22:10:51,240 basehttp 26680 2120 "GET /search/documents/?search_query=USDA&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15212
+WARNING 2026-01-09 22:10:57,178 log 26680 2120 Not Found: /document/14/original/
+WARNING 2026-01-09 22:10:57,181 basehttp 26680 2120 "GET /document/14/original/ HTTP/1.1" 404 5305
+INFO 2026-01-09 22:11:03,134 basehttp 26680 2120 "GET /document/14/ocr/ HTTP/1.1" 200 1646
+INFO 2026-01-09 22:11:21,616 basehttp 26680 2120 "GET /document/14/ HTTP/1.1" 200 8437
+INFO 2026-01-09 22:12:16,633 basehttp 26680 26940 "GET /document/14/ocr/ HTTP/1.1" 200 1646
+INFO 2026-01-09 22:17:10,726 autoreload 3880 19784 Watching for file changes with StatReloader
+INFO 2026-01-09 22:17:25,858 basehttp 3880 25504 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 22:17:25,906 basehttp 3880 25504 "GET /documents/ HTTP/1.1" 200 25818
+INFO 2026-01-09 22:17:32,013 basehttp 3880 25504 "GET /search/documents/?search_query=USDA&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15212
+WARNING 2026-01-09 22:17:34,828 log 3880 25504 Not Found: /document/14/original/
+WARNING 2026-01-09 22:17:34,829 basehttp 3880 25504 "GET /document/14/original/ HTTP/1.1" 404 5305
+WARNING 2026-01-09 22:17:46,990 log 3880 2784 Not Found: /document/14/original/
+WARNING 2026-01-09 22:17:46,990 basehttp 3880 2784 "GET /document/14/original/ HTTP/1.1" 404 5305
+WARNING 2026-01-09 22:17:48,006 log 3880 2784 Not Found: /document/14/original/
+WARNING 2026-01-09 22:17:48,007 basehttp 3880 2784 "GET /document/14/original/ HTTP/1.1" 404 5305
+WARNING 2026-01-09 22:17:48,138 log 3880 2784 Not Found: /document/14/original/
+WARNING 2026-01-09 22:17:48,139 basehttp 3880 2784 "GET /document/14/original/ HTTP/1.1" 404 5305
+WARNING 2026-01-09 22:17:48,285 log 3880 2784 Not Found: /document/14/original/
+WARNING 2026-01-09 22:17:48,286 basehttp 3880 2784 "GET /document/14/original/ HTTP/1.1" 404 5305
+WARNING 2026-01-09 22:17:48,504 log 3880 2784 Not Found: /document/14/original/
+WARNING 2026-01-09 22:17:48,505 basehttp 3880 2784 "GET /document/14/original/ HTTP/1.1" 404 5305
+INFO 2026-01-09 22:17:57,239 basehttp 3880 2784 "GET /document/14/ocr/ HTTP/1.1" 200 1645
+WARNING 2026-01-09 22:18:04,604 log 3880 2784 Not Found: /document/14/original/
+WARNING 2026-01-09 22:18:04,605 basehttp 3880 2784 "GET /document/14/original/ HTTP/1.1" 404 5305
+INFO 2026-01-09 22:22:35,641 autoreload 22848 13356 Watching for file changes with StatReloader
+INFO 2026-01-09 22:22:51,200 basehttp 22848 3280 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 22:22:51,250 basehttp 22848 3280 "GET /documents/ HTTP/1.1" 200 25818
+INFO 2026-01-09 22:22:54,521 basehttp 22848 3048 "GET /search/documents/?search_query=USDA&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15212
+INFO 2026-01-09 22:22:56,154 basehttp 22848 3048 "GET /document/14/original/ HTTP/1.1" 200 130592
+INFO 2026-01-09 22:23:00,214 basehttp 22848 3048 "GET /document/14/ocr/ HTTP/1.1" 200 1645
+INFO 2026-01-09 22:27:03,087 autoreload 17400 20340 Watching for file changes with StatReloader
+INFO 2026-01-09 22:27:21,272 basehttp 17400 6424 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 22:27:21,328 basehttp 17400 6424 "GET /documents/ HTTP/1.1" 200 25917
+INFO 2026-01-09 22:27:26,482 basehttp 17400 18844 "GET /search/documents/?search_query=PUP&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 31584
+INFO 2026-01-09 22:27:35,215 basehttp 17400 18844 "GET /document/19/original/ HTTP/1.1" 200 49546
+INFO 2026-01-09 22:27:57,173 basehttp 17400 24440 "GET /document/19/ocr/ HTTP/1.1" 200 767
+INFO 2026-01-09 22:41:35,749 basehttp 17400 27368 "GET /documents/ HTTP/1.1" 200 25917
+INFO 2026-01-09 22:43:23,267 basehttp 17400 27060 "GET /documents/ HTTP/1.1" 200 25917
+WARNING 2026-01-09 22:45:23,584 log 17400 1420 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-09 22:45:23,585 basehttp 17400 1420 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6692
+INFO 2026-01-09 22:45:58,679 basehttp 17400 26372 "GET /search/documents/?search_query=s&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 39708
+WARNING 2026-01-09 22:45:58,758 log 17400 26372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-09 22:45:58,759 basehttp 17400 26372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6692
+WARNING 2026-01-09 22:46:04,212 log 17400 26372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-09 22:46:04,213 basehttp 17400 26372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6692
+WARNING 2026-01-09 22:46:04,239 log 17400 26372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-09 22:46:04,240 basehttp 17400 26372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6692
+INFO 2026-01-09 22:47:17,966 basehttp 17400 26372 "GET /documents/ HTTP/1.1" 200 26455
+INFO 2026-01-09 22:47:18,035 basehttp 17400 26040 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+INFO 2026-01-09 22:47:18,040 basehttp 17400 26372 "GET /static/css/search_form.css HTTP/1.1" 200 502
+INFO 2026-01-09 22:47:18,050 basehttp 17400 24220 "GET /static/css/base.css HTTP/1.1" 200 7712
+WARNING 2026-01-09 22:47:18,068 log 17400 6568 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-09 22:47:18,069 basehttp 17400 6568 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6692
+INFO 2026-01-09 22:47:18,124 basehttp 17400 27036 "GET /static/js/base.js HTTP/1.1" 200 13687
+INFO 2026-01-09 22:47:18,161 basehttp 17400 6568 "GET /static/js/search_form.js HTTP/1.1" 200 5396
+WARNING 2026-01-09 22:47:27,160 log 17400 6568 Not Found: /favicon.ico
+WARNING 2026-01-09 22:47:27,161 basehttp 17400 6568 "GET /favicon.ico HTTP/1.1" 404 6581
+INFO 2026-01-09 22:48:37,389 basehttp 17400 5924 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-09 22:48:37,421 basehttp 17400 2436 "GET /static/css/base.css HTTP/1.1" 200 7712
+INFO 2026-01-09 22:48:37,431 basehttp 17400 5924 "GET /static/css/search_form.css HTTP/1.1" 200 502
+INFO 2026-01-09 22:48:37,442 basehttp 17400 12316 "GET /static/js/base.js HTTP/1.1" 200 13687
+INFO 2026-01-09 22:48:37,442 basehttp 17400 3448 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+WARNING 2026-01-09 22:48:37,471 log 17400 23076 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-09 22:48:37,472 basehttp 17400 23076 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6692
+INFO 2026-01-09 22:48:37,522 basehttp 17400 23076 "GET /static/js/search_form.js HTTP/1.1" 200 5396
+WARNING 2026-01-09 22:48:47,868 log 17400 23076 Not Found: /favicon.ico
+WARNING 2026-01-09 22:48:47,869 basehttp 17400 23076 "GET /favicon.ico HTTP/1.1" 404 6581
+INFO 2026-01-09 22:48:59,861 basehttp 17400 23076 "GET /search/llm/?search_query=PUP&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 31553
+WARNING 2026-01-09 22:48:59,933 log 17400 23076 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-09 22:48:59,935 basehttp 17400 23076 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6692
+INFO 2026-01-09 22:50:01,026 autoreload 17400 20340 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\webocr\settings.py changed, reloading.
+INFO 2026-01-09 22:50:06,097 autoreload 26980 18128 Watching for file changes with StatReloader
+INFO 2026-01-09 22:50:26,513 basehttp 26980 28200 "GET /search/llm/?search_query=PUP&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 31525
+WARNING 2026-01-09 22:50:26,599 log 26980 28200 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-09 22:50:26,600 basehttp 26980 28200 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6692
+INFO 2026-01-09 22:50:36,807 basehttp 26980 11212 "GET /documents/ HTTP/1.1" 200 26614
+WARNING 2026-01-09 22:50:36,907 log 26980 11212 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-09 22:50:36,910 basehttp 26980 11212 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6692
+INFO 2026-01-09 22:50:49,612 basehttp 26980 7112 "GET /search/llm/?search_query=is+there+any+document+of+PUP%3F&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15183
+WARNING 2026-01-09 22:50:49,685 log 26980 7112 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-01-09 22:50:49,686 basehttp 26980 7112 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 6692
+INFO 2026-01-09 22:52:44,898 autoreload 26980 18128 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\services\llm_search.py changed, reloading.
+INFO 2026-01-09 22:52:48,761 autoreload 17352 16184 Watching for file changes with StatReloader
+INFO 2026-01-09 23:23:29,923 autoreload 19300 4404 Watching for file changes with StatReloader
+INFO 2026-01-09 23:23:53,224 basehttp 19300 5500 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 23:23:53,294 basehttp 19300 5500 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-09 23:49:26,387 autoreload 26112 26444 Watching for file changes with StatReloader
+INFO 2026-01-09 23:49:47,426 basehttp 26112 24256 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 23:49:47,488 basehttp 26112 24256 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-09 23:52:08,850 autoreload 16632 16668 Watching for file changes with StatReloader
+INFO 2026-01-09 23:52:38,193 basehttp 16632 13816 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 23:52:38,268 basehttp 16632 13816 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-09 23:52:38,319 basehttp 16632 13816 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 23:52:38,469 basehttp 16632 13816 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-09 23:52:38,533 basehttp 16632 13816 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 23:52:38,704 basehttp 16632 13816 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-09 23:55:08,848 autoreload 25860 27840 Watching for file changes with StatReloader
+INFO 2026-01-09 23:55:26,369 basehttp 25860 20248 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 23:55:26,430 basehttp 25860 20248 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-09 23:58:49,164 autoreload 13848 13276 Watching for file changes with StatReloader
+INFO 2026-01-09 23:59:03,576 basehttp 13848 11440 "GET / HTTP/1.1" 302 0
+INFO 2026-01-09 23:59:03,621 basehttp 13848 11440 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 00:02:11,139 autoreload 27048 26676 Watching for file changes with StatReloader
+INFO 2026-01-10 00:02:47,449 basehttp 27048 15668 "GET / HTTP/1.1" 302 0
+INFO 2026-01-10 00:02:47,569 basehttp 27048 15668 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 00:16:57,928 basehttp 27048 15668 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 31470
+INFO 2026-01-10 00:44:13,651 autoreload 27048 26676 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\services\llm_search.py changed, reloading.
+INFO 2026-01-10 00:44:23,729 autoreload 25896 26612 Watching for file changes with StatReloader
+INFO 2026-01-10 00:44:44,164 autoreload 25896 26612 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\services\llm_search.py changed, reloading.
+INFO 2026-01-10 00:44:46,520 autoreload 20184 24524 Watching for file changes with StatReloader
+INFO 2026-01-10 00:45:01,444 basehttp 20184 15276 "GET / HTTP/1.1" 200 21984
+INFO 2026-01-10 00:45:11,714 basehttp 20184 18856 "GET /login/ HTTP/1.1" 200 25983
+INFO 2026-01-10 00:45:13,298 basehttp 20184 18856 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-10 00:45:13,313 basehttp 20184 18856 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 01:02:08,217 autoreload 18876 18584 Watching for file changes with StatReloader
+INFO 2026-01-10 01:02:32,197 basehttp 18876 18416 "GET / HTTP/1.1" 302 0
+INFO 2026-01-10 01:02:32,244 basehttp 18876 18416 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 01:03:00,871 basehttp 18876 26760 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 31376
+INFO 2026-01-10 01:03:32,665 basehttp 18876 26760 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 01:03:42,300 basehttp 18876 26760 "GET /search/documents/?search_query=how+many+documents+are+here+under+PUP%3F&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 28974
+INFO 2026-01-10 01:04:25,863 autoreload 18876 18584 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\services\llm_search.py changed, reloading.
+INFO 2026-01-10 01:04:33,125 autoreload 24120 27132 Watching for file changes with StatReloader
+INFO 2026-01-10 01:05:08,259 basehttp 24120 6984 "GET / HTTP/1.1" 302 0
+INFO 2026-01-10 01:05:08,326 basehttp 24120 6984 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 01:05:47,853 basehttp 24120 11024 "GET /search/llm/?search_query=what+are+the+documents+under+PUP+about%3F&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 31529
+INFO 2026-01-10 01:06:11,190 basehttp 24120 11024 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 13:49:56,903 autoreload 18608 27704 Watching for file changes with StatReloader
+INFO 2026-01-10 13:51:12,501 basehttp 18608 17652 "GET / HTTP/1.1" 200 21984
+INFO 2026-01-10 13:51:12,845 basehttp 18608 21796 "GET /static/img/background_fowse.png HTTP/1.1" 200 11957
+INFO 2026-01-10 13:51:12,851 basehttp 18608 27400 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+INFO 2026-01-10 13:51:12,883 basehttp 18608 17652 "GET /static/css/base.css HTTP/1.1" 200 7712
+INFO 2026-01-10 13:51:12,956 basehttp 18608 2692 "GET /static/js/base.js HTTP/1.1" 200 13687
+WARNING 2026-01-10 13:51:13,460 log 18608 19564 Not Found: /favicon.ico
+WARNING 2026-01-10 13:51:13,461 basehttp 18608 19564 "GET /favicon.ico HTTP/1.1" 404 6581
+INFO 2026-01-10 13:51:22,044 basehttp 18608 19564 "GET /login/ HTTP/1.1" 200 25983
+INFO 2026-01-10 13:51:22,115 basehttp 18608 19564 "GET /static/js/login.js HTTP/1.1" 200 1566
+INFO 2026-01-10 13:51:23,659 basehttp 18608 3488 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-10 13:51:23,674 basehttp 18608 3488 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 13:51:23,735 basehttp 18608 3488 "GET /static/css/search_form.css HTTP/1.1" 200 502
+INFO 2026-01-10 13:51:23,766 basehttp 18608 2852 "GET /static/js/search_form.js HTTP/1.1" 200 5396
+INFO 2026-01-10 13:51:54,600 basehttp 18608 2852 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 31342
+INFO 2026-01-10 13:52:32,392 basehttp 18608 2852 "GET /document/19/original/ HTTP/1.1" 200 49546
+INFO 2026-01-10 13:52:39,520 basehttp 18608 2852 "GET /document/19/ HTTP/1.1" 200 8427
+INFO 2026-01-10 15:10:42,284 autoreload 13164 20100 Watching for file changes with StatReloader
+INFO 2026-01-10 15:11:24,235 basehttp 13164 24188 "GET / HTTP/1.1" 302 0
+INFO 2026-01-10 15:11:24,433 basehttp 13164 24188 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:12:00,990 basehttp 13164 22492 "GET /search/llm/?search_query=invoice&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15113
+INFO 2026-01-10 15:13:25,207 autoreload 13164 20100 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\services\llm_search.py changed, reloading.
+INFO 2026-01-10 15:13:28,512 autoreload 21900 7232 Watching for file changes with StatReloader
+INFO 2026-01-10 15:13:50,270 autoreload 21900 7232 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\services\llm_search.py changed, reloading.
+INFO 2026-01-10 15:13:52,029 autoreload 29776 29328 Watching for file changes with StatReloader
+INFO 2026-01-10 15:14:44,765 autoreload 29776 29328 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\services\llm_search.py changed, reloading.
+INFO 2026-01-10 15:14:46,073 autoreload 30532 16968 Watching for file changes with StatReloader
+INFO 2026-01-10 15:15:23,639 autoreload 30532 16968 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\services\llm_search.py changed, reloading.
+INFO 2026-01-10 15:15:24,793 autoreload 22104 27548 Watching for file changes with StatReloader
+INFO 2026-01-10 15:16:09,028 basehttp 22104 29216 "GET / HTTP/1.1" 302 0
+INFO 2026-01-10 15:16:09,188 basehttp 22104 29216 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:17:05,841 basehttp 22104 6092 "GET /search/llm/?search_query=photography&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15083
+INFO 2026-01-10 15:19:11,790 basehttp 22104 30452 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:19:34,097 basehttp 22104 11884 "GET /search/llm/?search_query=is+there+any+document+with+photography+&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 18085
+INFO 2026-01-10 15:19:53,747 basehttp 22104 23576 "GET /document/13/original/ HTTP/1.1" 200 49070
+INFO 2026-01-10 15:20:10,273 basehttp 22104 6392 "GET /document/10/original/ HTTP/1.1" 200 99592
+INFO 2026-01-10 15:20:44,082 basehttp 22104 30688 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:21:12,345 basehttp 22104 356 "GET /search/llm/?search_query=is+there+a+document+of+%22Fast+Photography%22&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 41355
+INFO 2026-01-10 15:23:27,591 basehttp 22104 30304 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:23:38,007 basehttp 22104 30304 "GET /search/documents/?search_query=are+there+any+documents+under+inv%3F&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 28871
+INFO 2026-01-10 15:23:53,101 basehttp 22104 30304 "GET /search/llm/?search_query=are+there+any+documents+under+inv%3F&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 28680
+INFO 2026-01-10 15:24:16,715 basehttp 22104 25992 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:24:32,141 basehttp 22104 1696 "GET /search/llm/?search_query=can+you+provide+me+all+the+list+of+the+clients%3F&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 36803
+INFO 2026-01-10 15:26:04,764 basehttp 22104 1696 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:26:46,699 basehttp 22104 5148 "GET /search/llm/?search_query=what+are+the+contents+about+the+documents+under+PUP_DCPET33&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 32181
+INFO 2026-01-10 15:30:18,437 autoreload 22104 27548 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\database\models.py changed, reloading.
+INFO 2026-01-10 15:30:23,390 autoreload 21636 30020 Watching for file changes with StatReloader
+INFO 2026-01-10 15:36:59,178 autoreload 27196 30488 Watching for file changes with StatReloader
+INFO 2026-01-10 15:37:11,129 basehttp 27196 29744 "GET / HTTP/1.1" 302 0
+INFO 2026-01-10 15:37:11,182 basehttp 27196 29744 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:37:16,459 basehttp 27196 21320 "GET /search/documents/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 31584
+INFO 2026-01-10 15:37:56,655 basehttp 27196 3096 "GET /search/llm/?search_query=what+is+the+inv3+all+about%3F&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15081
+INFO 2026-01-10 15:38:09,261 basehttp 27196 3096 "GET /document/13/original/ HTTP/1.1" 200 49070
+INFO 2026-01-10 15:39:23,082 basehttp 27196 3096 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:39:40,330 basehttp 27196 3096 "GET /search/llm/?search_query=what+is+the+CompanyEx1+all+about%3F&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15045
+INFO 2026-01-10 15:43:19,426 autoreload 27196 30488 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\webocr\settings.py changed, reloading.
+INFO 2026-01-10 15:43:23,245 autoreload 7252 23952 Watching for file changes with StatReloader
+INFO 2026-01-10 15:43:41,058 autoreload 7252 23952 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\webocr\settings.py changed, reloading.
+INFO 2026-01-10 15:43:42,991 autoreload 18968 30532 Watching for file changes with StatReloader
+INFO 2026-01-10 15:44:15,364 basehttp 18968 16228 "GET / HTTP/1.1" 302 0
+INFO 2026-01-10 15:44:15,480 basehttp 18968 16228 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:44:23,085 basehttp 18968 16228 "GET /search/documents/?search_query=INV&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 20607
+INFO 2026-01-10 15:44:47,493 basehttp 18968 16228 "GET /search/documents/?search_query=inv3&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12355
+INFO 2026-01-10 15:46:27,887 autoreload 18968 30532 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\views.py changed, reloading.
+INFO 2026-01-10 15:46:29,978 autoreload 29012 16904 Watching for file changes with StatReloader
+INFO 2026-01-10 15:46:46,323 autoreload 29012 16904 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\views.py changed, reloading.
+INFO 2026-01-10 15:46:48,260 autoreload 24396 30468 Watching for file changes with StatReloader
+INFO 2026-01-10 15:47:09,971 autoreload 24396 30468 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\views.py changed, reloading.
+INFO 2026-01-10 15:47:11,794 autoreload 27360 27024 Watching for file changes with StatReloader
+INFO 2026-01-10 15:47:28,056 autoreload 27360 27024 C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\views.py changed, reloading.
+INFO 2026-01-10 15:47:30,208 autoreload 28112 9500 Watching for file changes with StatReloader
+INFO 2026-01-10 15:48:14,968 basehttp 28112 12460 "GET / HTTP/1.1" 302 0
+INFO 2026-01-10 15:48:15,046 basehttp 28112 12460 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:48:17,831 basehttp 28112 19492 "GET /search/documents/?search_query=inv&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 20626
+INFO 2026-01-10 15:48:22,049 basehttp 28112 19492 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:48:24,472 basehttp 28112 19492 "GET /search/documents/?search_query=inv3&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 17471
+INFO 2026-01-10 15:48:30,956 basehttp 28112 19492 "GET /document/11/ HTTP/1.1" 200 8343
+INFO 2026-01-10 15:48:35,824 basehttp 28112 19492 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:48:40,776 basehttp 28112 19492 "GET /search/llm/?search_query=inv3&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 11830
+INFO 2026-01-10 15:50:15,676 autoreload 29332 28088 Watching for file changes with StatReloader
+INFO 2026-01-10 15:50:24,687 basehttp 29332 30352 "GET / HTTP/1.1" 302 0
+INFO 2026-01-10 15:50:24,744 basehttp 29332 30352 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:50:49,117 basehttp 29332 29380 "GET /search/llm/?search_query=inv3&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 17610
+INFO 2026-01-10 15:51:39,798 basehttp 29332 29380 "GET /documents/ HTTP/1.1" 302 0
+INFO 2026-01-10 15:51:39,961 basehttp 29332 29380 "GET /login/?next=/documents/ HTTP/1.1" 200 25983
+INFO 2026-01-10 15:51:42,093 basehttp 29332 29380 "POST /login/?next=/documents/ HTTP/1.1" 302 0
+INFO 2026-01-10 15:51:42,105 basehttp 29332 29380 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:51:57,469 basehttp 29332 29380 "GET /search/llm/?search_query=provide+me+the+content+of+inv3+under+the+client+BOP&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 36377
+INFO 2026-01-10 15:52:11,001 basehttp 29332 29380 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:52:29,438 basehttp 29332 29380 "GET /search/llm/?search_query=provide+me+the+contents+of+PUP&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 39022
+INFO 2026-01-10 15:53:48,923 basehttp 29332 29380 "GET /documents/ HTTP/1.1" 200 26614
+INFO 2026-01-10 15:54:05,480 basehttp 29332 29380 "GET /search/llm/?search_query=what+is+the+documents+under+USDA&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 18027
+INFO 2026-01-10 16:04:59,925 basehttp 29332 22104 "GET /search/llm/?search_query=what+is+the+documents+under+USDA&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 17693
+INFO 2026-01-10 16:05:00,084 basehttp 29332 22104 "GET /static/css/neon.css HTTP/1.1" 200 5077
+INFO 2026-01-10 16:05:14,575 basehttp 29332 22104 "GET /documents/ HTTP/1.1" 200 26686
+INFO 2026-01-10 16:05:14,610 basehttp 29332 22104 "GET /static/css/neon.css HTTP/1.1" 304 0
+INFO 2026-01-10 16:19:58,311 basehttp 29332 27664 "GET /documents/ HTTP/1.1" 200 26686
+INFO 2026-01-10 16:19:58,357 basehttp 29332 27664 "GET /static/css/neon.css HTTP/1.1" 200 6639
+INFO 2026-01-10 16:53:59,597 basehttp 29332 31340 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25444
+INFO 2026-01-10 16:53:59,642 basehttp 29332 31340 "GET /static/css/neon.css HTTP/1.1" 304 0
+INFO 2026-01-10 17:02:53,288 basehttp 29332 9736 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25518
+INFO 2026-01-10 17:02:53,326 basehttp 29332 9736 "GET /static/css/neon.css HTTP/1.1" 200 6639
+INFO 2026-01-10 17:04:48,190 basehttp 29332 10056 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25482
+INFO 2026-01-10 17:04:48,244 basehttp 29332 10056 "GET /static/css/neon.css HTTP/1.1" 200 6639
+INFO 2026-01-10 17:07:26,017 basehttp 29332 30492 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25444
+INFO 2026-01-10 17:07:26,059 basehttp 29332 30492 "GET /static/css/neon.css HTTP/1.1" 200 7021
+INFO 2026-01-10 17:07:53,817 basehttp 29332 30900 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25526
+INFO 2026-01-10 17:07:53,839 basehttp 29332 30900 "GET /static/css/neon.css HTTP/1.1" 304 0
+INFO 2026-01-10 17:09:58,693 basehttp 29332 30908 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25479
+INFO 2026-01-10 17:09:58,719 basehttp 29332 30908 "GET /static/css/neon.css HTTP/1.1" 200 6977
+INFO 2026-01-10 17:11:06,483 autoreload 12556 12708 Watching for file changes with StatReloader
+INFO 2026-01-10 17:11:32,487 basehttp 12556 31260 "GET / HTTP/1.1" 302 0
+INFO 2026-01-10 17:11:32,594 basehttp 12556 31260 "GET /documents/ HTTP/1.1" 200 26668
+INFO 2026-01-10 17:11:32,726 basehttp 12556 31260 "GET /static/css/neon.css HTTP/1.1" 304 0
+INFO 2026-01-10 17:12:02,074 basehttp 12556 31260 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25493
+INFO 2026-01-10 17:12:02,318 basehttp 12556 31260 "GET /static/css/neon.css HTTP/1.1" 304 0
+INFO 2026-01-10 17:13:04,801 basehttp 12556 22296 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25426
+INFO 2026-01-10 17:13:04,965 basehttp 12556 22296 "GET /static/css/neon.css HTTP/1.1" 200 7051
+INFO 2026-01-10 17:14:21,248 basehttp 12556 30168 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25464
+INFO 2026-01-10 17:14:21,273 basehttp 12556 30168 "GET /static/css/neon.css HTTP/1.1" 200 7212
+INFO 2026-01-10 17:15:32,527 basehttp 12556 29392 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25426
+INFO 2026-01-10 17:15:32,982 basehttp 12556 27524 "GET /static/css/neon.css HTTP/1.1" 200 7212
+INFO 2026-01-10 17:15:32,982 basehttp 12556 29392 "GET /static/css/base.css HTTP/1.1" 200 7712
+INFO 2026-01-10 17:15:32,993 basehttp 12556 23644 "GET /static/img/fowse.png HTTP/1.1" 200 38694
+INFO 2026-01-10 17:15:33,877 basehttp 12556 27764 "GET /static/js/base.js HTTP/1.1" 200 13687
+WARNING 2026-01-10 17:15:44,061 log 12556 27764 Not Found: /favicon.ico
+WARNING 2026-01-10 17:15:44,061 basehttp 12556 27764 "GET /favicon.ico HTTP/1.1" 404 6581
+INFO 2026-01-10 17:40:29,308 basehttp 12556 24068 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25464
+INFO 2026-01-10 17:40:29,404 basehttp 12556 24068 "GET /static/css/neon.css HTTP/1.1" 200 7592
+INFO 2026-01-10 17:42:14,162 basehttp 12556 31668 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25508
+INFO 2026-01-10 17:42:14,189 basehttp 12556 31668 "GET /static/css/neon.css HTTP/1.1" 200 7805
+INFO 2026-01-10 17:47:54,319 basehttp 12556 29536 "GET /documents/ HTTP/1.1" 200 26668
+INFO 2026-01-10 17:47:54,360 basehttp 12556 29536 "GET /static/css/neon.css HTTP/1.1" 304 0

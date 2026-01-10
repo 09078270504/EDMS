@@ -4,10 +4,10 @@
 {% block page_title %}Search Results{% endblock %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto">
+<div class="max-w-6xl mx-auto">
 
   <!-- Search Header with Results Info -->
-  <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+  <div class="neon-card rounded-lg p-6 mb-6">
     <div class="flex justify-between items-center mb-4">
       <div>
         <h2 class="text-xl font-semibold text-gray-900">
@@ -70,7 +70,7 @@
           </span>
         {% endif %}
 
-        <a href="{% url 'search_form' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full text-sm transition">
+        <a href="{% url 'search_form' %}" class="glow-btn text-white px-4 py-2 rounded-full text-sm transition">
           New Search
         </a>
       </div>
@@ -79,7 +79,7 @@
 
     <!-- Fuzzy Search Toggle Control -->
     {% if search_performed and search_type != 'llm_enhanced' %}
-    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+    <div class="flex items-center justify-between p-3 neon-card rounded-lg">
       <div class="flex items-center space-x-3">
         <span class="text-sm font-medium text-gray-700">Search Options:</span>
         
@@ -88,7 +88,7 @@
           <label class="flex items-center cursor-pointer">
             <input type="checkbox" id="fuzzyToggle" {% if fuzzy_enabled %}checked{% endif %}
                    class="rounded text-green-600 focus:ring-green-500">
-            <span class="ml-2 text-sm text-gray-600">Enable fuzzy search</span>
+            <span class="ml-2 text-sm" style="color: var(--muted-text)">Enable fuzzy search</span>
           </label>
           <div class="relative group">
             <button class="text-gray-400 hover:text-gray-600">
@@ -122,12 +122,12 @@
 
     <!-- AI Answer Panel -->
     {% if llm_answer %}
-      <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-4">
+      <div class="neon-card rounded-lg p-6 mb-4">
         <div class="flex items-center gap-2 mb-3">
           <svg class="h-5 w-5 text-blue-700" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
           </svg>
-          <h3 class="text-blue-800 font-semibold text-lg">AI Answer</h3>
+          <h3 class="font-semibold text-lg" style="color: var(--accent-1)">AI Answer</h3>
           {% if fuzzy_enabled %}
             <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded">Enhanced with fuzzy search</span>
           {% endif %}
@@ -148,7 +148,7 @@
   {% if search_performed %}
     {% if results %}
       <!-- Results List - Simplified Table -->
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="neon-card rounded-lg overflow-hidden">
         {% if llm_answer %}
         <div class="px-6 py-3 bg-gray-50 border-b border-gray-200">
           <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wider">
@@ -158,7 +158,7 @@
         {% endif %}
         
         <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
+          <table class="min-w-full divide-y">
             <thead class="bg-gray-50">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -172,26 +172,26 @@
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="divide-y">
               {% for document in results %}
-              <tr class="hover:bg-gray-50 transition-colors">
+              <tr class="transition-colors">
                 <!-- Document Name -->
                 <td class="px-6 py-4">
                   <div class="flex flex-col">
-                    <div class="text-sm font-medium text-gray-900">
+                    <div class="text-sm font-medium">
                       {{ document.metadata.invoice_number|default:document.filename }}
                     </div>
-                    <div class="text-sm text-gray-500">
+                    <div class="text-sm" style="color: var(--muted-text)">
                       {{ document.document_type|default:'Document' }}
                     </div>
 
                     <!-- Match Type Indicator -->
                     {% if document.match_type == 'exact' %}
-                      <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 mt-1 w-fit">
+                      <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full neon-pill green mt-1 w-fit">
                         Exact Match
                       </span>
                     {% elif document.match_type == 'fuzzy' %}
-                      <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800 mt-1 w-fit">
+                      <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full neon-pill mt-1 w-fit">
                         Also for you 
                       </span>
                     {% endif %}
@@ -245,10 +245,14 @@
                       View Details
                     </a>
 
-                    {% if document.file_paths.original %}
-                    <a href="{{ document.file_paths.original }}" target="_blank"
+                    {% if document.id %}
+                    <a href="{% url 'download_original' document.id %}" target="_blank"
                        class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded text-xs transition text-center">
                       Open PDF
+                    </a>
+                    <a href="{% url 'download_ocr_text' document.id %}" target="_blank"
+                       class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-xs transition text-center">
+                      Open Text
                     </a>
                     {% endif %}
                   </div>

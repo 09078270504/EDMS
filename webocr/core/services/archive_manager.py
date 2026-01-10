@@ -145,17 +145,19 @@ class ArchiveManager:
                 if not category_path.is_dir():
                     continue
                    
-                # Find PDF files in category
+                # Find PDF and image files in category
                 pdf_files = []
+                supported_exts = {'.pdf', '.png', '.jpg', '.jpeg', '.tiff', '.bmp'}
                 for file_path in category_path.iterdir():
-                    if file_path.is_file() and file_path.suffix.lower() == '.pdf':
+                    if file_path.is_file() and file_path.suffix.lower() in supported_exts:
                         pdf_files.append({
                             'filename': file_path.name,
                             'full_path': str(file_path),
-                            'size': file_path.stat().st_size
+                            'size': file_path.stat().st_size,
+                            'is_image': file_path.suffix.lower() != '.pdf'
                         })
 
-                # Only include categories with PDF files
+                # Only include categories with supported files
                 if pdf_files:
                     categories.append({
                         'category_name': category_path.name,

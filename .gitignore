@@ -5,3 +5,5 @@ __pycache__/
 .env.production
 logs/auth.log
 logs/security.log
+db.sqlite3
+staticfiles/

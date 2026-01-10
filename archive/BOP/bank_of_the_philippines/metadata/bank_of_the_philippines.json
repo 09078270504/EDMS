@@ -1,0 +1,62 @@
+{
+  "doc_type": "general",
+  "title": "VAT Invoice Template With Discount For GCC Countries",
+  "ids": {},
+  "parties": {
+    "issuer": {
+      "name": null,
+      "tin": null
+    },
+    "recipient": {
+      "name": "Page",
+      "tin": null
+    },
+    "other": []
+  },
+  "dates": {
+    "issue_date": "29-12-2017"
+  },
+  "amounts": {
+    "currency": "PHP",
+    "total": 13750.0,
+    "subtotal": null,
+    "tax": null
+  },
+  "line_items": [],
+  "payment_terms": null,
+  "addresses": {},
+  "contacts": {
+    "emails": [
+      "info@exceldatapro.com"
+    ],
+    "email": "info@exceldatapro.com"
+  },
+  "status": "processed",
+  "tags": [
+    "general"
+  ],
+  "extracted_entities": {
+    "people": [
+      "Page",
+      "WWW",
+      "ExcelDataPro",
+      "Far"
+    ],
+    "companies": [],
+    "locations": [],
+    "projects": []
+  },
+  "notes": [],
+  "confidence": 0.9,
+  "extraction_method": "fast_pattern",
+  "processing_time": 0.021655,
+  "model_used": "Enhanced-7B",
+  "processing_info": {
+    "category": "BOP",
+    "classification": "successful",
+    "document_name": "bank_of_the_philippines",
+    "original_filename": "Bank of the Philippines.pdf",
+    "processed_at": "2026-01-03T18:19:25.376355+08:00",
+    "processed_at_ph_formatted": "2026-01-03 18:19:25"
+  }
+}

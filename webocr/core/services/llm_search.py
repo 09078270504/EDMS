@@ -4,31 +4,38 @@
 import os
 import torch
 from django.conf import settings
-from transformers import AutoProcessor, Qwen2VLForConditionalGeneration
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
 # Configuration
 MODEL_NAME = getattr(settings, 'LLM_MODEL_NAME', "Qwen/Qwen2-VL-7B-Instruct")
 MAX_NEW_TOKENS = getattr(settings, 'LLM_MAX_TOKENS', 256)
 USE_MOCK_LLM = getattr(settings, 'USE_MOCK_LLM', False)  # For development/testing
 
-# Global model storage
+# Global model storage (in-memory cache)
 _model = None
 _processor = None
 _model_loading = False
+_model_load_time = None
 
 def _load_model():
     """
-    Load the Qwen2-VL model with optimized settings
+    Load the LLM model with optimized caching
+    - First load: Downloads model (~3GB) and caches to disk (~30-60 sec)
+    - Subsequent loads: Loads from disk cache (~5-10 sec)
+    - After first load: Model stays in memory (instant access)
     """
-    global _model, _processor, _model_loading
+    global _model, _processor, _model_loading, _model_load_time
     
+    # Check if model is already loaded in memory (instant)
     if _model is not None:
+        print(f"✓ Using cached model (loaded {_model_load_time})")
         return _model, _processor
     
     if _model_loading:
         # Prevent multiple simultaneous loads
         import time
-        for _ in range(30):  # Wait up to 30 seconds
+        print("⏳ Waiting for model to finish loading...")
+        for _ in range(60):  # Wait up to 60 seconds
             if _model is not None:
                 return _model, _processor
             time.sleep(1)
@@ -37,13 +44,26 @@ def _load_model():
     _model_loading = True
     
     try:
-        print(f"Loading LLM model: {MODEL_NAME}")
+        import time
+        start_time = time.time()
+        print(f"📥 Loading LLM model: {MODEL_NAME}")
+        
+        # Check if accelerate is available for device_map
+        try:
+            import accelerate
+            has_accelerate = True
+        except ImportError:
+            has_accelerate = False
+            print("Warning: accelerate library not found. Install with: pip install accelerate")
         
         # Configuration for different deployment scenarios
         model_kwargs = {
-            "trust_remote_code": True,
-            "device_map": "auto"
+            "trust_remote_code": True
         }
+        
+        # Only use device_map if accelerate is available
+        if has_accelerate:
+            model_kwargs["device_map"] = "auto"
         
         # Memory optimization settings
         if torch.cuda.is_available():
@@ -52,30 +72,44 @@ def _load_model():
             # Use 4-bit quantization if low on VRAM (less than 16GB)
             if total_memory < 16 * 1024**3:  # 16GB in bytes
                 print("Using 4-bit quantization for memory efficiency")
-                model_kwargs.update({
-                    "load_in_4bit": True,
-                    "bnb_4bit_use_double_quant": True,
-                    "bnb_4bit_quant_type": "nf4",
-                    "bnb_4bit_compute_dtype": torch.bfloat16
-                })
+                if has_accelerate:
+                    model_kwargs.update({
+                        "load_in_4bit": True,
+                        "bnb_4bit_use_double_quant": True,
+                        "bnb_4bit_quant_type": "nf4",
+                        "bnb_4bit_compute_dtype": torch.bfloat16
+                    })
+                else:
+                    print("Warning: 4-bit quantization requires accelerate library")
+                    model_kwargs["dtype"] = torch.bfloat16
             else:
-                model_kwargs["torch_dtype"] = torch.bfloat16
+                model_kwargs["dtype"] = torch.bfloat16
         else:
             # CPU fallback
-            model_kwargs["torch_dtype"] = torch.float32
+            model_kwargs["dtype"] = torch.float32
             print("Warning: Using CPU inference - this will be slow")
         
         # Load model and processor
-        _model = Qwen2VLForConditionalGeneration.from_pretrained(
+        _model = AutoModelForCausalLM.from_pretrained(
             MODEL_NAME, 
             **model_kwargs
         )
-        _processor = AutoProcessor.from_pretrained(
+        
+        # Move to GPU if available and not using device_map
+        if torch.cuda.is_available() and not has_accelerate:
+            print("Moving model to CUDA device")
+            _model = _model.cuda()
+        
+        _processor = AutoTokenizer.from_pretrained(
             MODEL_NAME, 
             trust_remote_code=True
         )
         
-        print("LLM model loaded successfully")
+        # Record load time and log success
+        _model_load_time = time.strftime("%Y-%m-%d %H:%M:%S")
+        load_duration = time.time() - start_time
+        print(f"✓ LLM model loaded successfully in {load_duration:.1f}s")
+        print(f"💾 Model cached in memory - future queries will be instant!")
         return _model, _processor
         
     finally:
@@ -119,27 +153,35 @@ def answer_from_context(question: str, contexts: str, temperature: float = 0.2) 
         ]
         
         # Apply chat template and tokenize
-        inputs = processor.apply_chat_template(
+        text = processor.apply_chat_template(
             messages, 
             add_generation_prompt=True, 
-            tokenize=True, 
-            return_tensors="pt"
+            tokenize=False
+        )
+        
+        # Tokenize with proper attention mask
+        model_inputs = processor(
+            text,
+            return_tensors="pt",
+            padding=True,
+            truncation=True,
+            max_length=2048
         ).to(model.device)
         
         # Generate response
         with torch.inference_mode():
             outputs = model.generate(
-                inputs,
+                **model_inputs,
                 do_sample=(temperature > 0),
                 temperature=temperature if temperature > 0 else None,
                 top_p=0.9,
                 max_new_tokens=MAX_NEW_TOKENS,
-                eos_token_id=processor.tokenizer.eos_token_id,
-                pad_token_id=processor.tokenizer.eos_token_id
+                eos_token_id=processor.eos_token_id,
+                pad_token_id=processor.pad_token_id if processor.pad_token_id is not None else processor.eos_token_id
             )
         
         # Decode response
-        full_text = processor.tokenizer.decode(outputs[0], skip_special_tokens=True)
+        full_text = processor.decode(outputs[0], skip_special_tokens=True)
         
         # Extract only the assistant's response
         if "assistant" in full_text:
@@ -198,19 +240,45 @@ def test_llm_connection():
         return "disconnected"
 
 def get_model_info():
-    """Get information about the currently loaded model"""
-    global _model, _processor
+    """Get information about the currently loaded model and cache status"""
+    global _model, _processor, _model_load_time
     
     info = {
         "model_name": MODEL_NAME,
         "max_tokens": MAX_NEW_TOKENS,
         "using_mock": USE_MOCK_LLM,
         "model_loaded": _model is not None,
+        "model_cached": _model is not None,
+        "cache_time": _model_load_time if _model_load_time else "Not loaded yet",
         "cuda_available": torch.cuda.is_available()
     }
     
     if torch.cuda.is_available():
         info["cuda_device_count"] = torch.cuda.device_count()
+        info["cuda_device_name"] = torch.cuda.get_device_name(0)
         info["cuda_memory_allocated"] = f"{torch.cuda.memory_allocated() / 1024**3:.2f} GB"
+        info["cuda_memory_reserved"] = f"{torch.cuda.memory_reserved() / 1024**3:.2f} GB"
     
     return info
+
+def clear_model_cache():
+    """Clear the model from memory to free up resources"""
+    global _model, _processor, _model_load_time
+    
+    if _model is not None:
+        print("🧹 Clearing model cache...")
+        del _model
+        del _processor
+        _model = None
+        _processor = None
+        _model_load_time = None
+        
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            print("✓ GPU cache cleared")
+        
+        print("✓ Model cache cleared successfully")
+        return True
+    else:
+        print("No model loaded in cache")
+        return False

@@ -1,0 +1,56 @@
+{
+  "doc_type": "general",
+  "title": "January 5, 2026",
+  "ids": {},
+  "parties": {
+    "issuer": {
+      "name": null,
+      "tin": null
+    },
+    "recipient": {
+      "name": "Page",
+      "tin": null
+    },
+    "other": []
+  },
+  "dates": {
+    "issue_date": "January 5, 2026"
+  },
+  "amounts": {
+    "currency": "PHP",
+    "total": null,
+    "subtotal": null,
+    "tax": null
+  },
+  "line_items": [],
+  "payment_terms": null,
+  "addresses": {},
+  "contacts": {},
+  "status": "processed",
+  "tags": [
+    "general"
+  ],
+  "extracted_entities": {
+    "people": [
+      "Page",
+      "January",
+      "Re"
+    ],
+    "companies": [],
+    "locations": [],
+    "projects": []
+  },
+  "notes": [],
+  "confidence": 0.7,
+  "extraction_method": "fast_pattern",
+  "processing_time": 0.001001,
+  "model_used": "Enhanced-7B",
+  "processing_info": {
+    "category": "PUP_DCPET33",
+    "classification": "successful",
+    "document_name": "villanueva_excuse_letter_ina",
+    "original_filename": "Villanueva - Excuse Letter - INA.pdf",
+    "processed_at": "2026-01-09T22:26:32.296613+08:00",
+    "processed_at_ph_formatted": "2026-01-09 22:26:32"
+  }
+}

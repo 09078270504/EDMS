@@ -28,6 +28,8 @@ urlpatterns = [
     
     # Document URLs
     path('document/<int:document_id>/', views.document_detail, name='document_detail'),
+    path('document/<int:document_id>/original/', views.download_original, name='download_original'),
+    path('document/<int:document_id>/ocr/', views.download_ocr_text, name='download_ocr_text'),
     path('documents/view/', views.documents_view, name='documents_view'),
     
     # API URLs

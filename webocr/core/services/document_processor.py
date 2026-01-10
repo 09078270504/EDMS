@@ -22,6 +22,9 @@ from core.services.ocr_processor import OCRProcessor, cleanup_models
 from core.services.metadata import QwenExtractor, cleanup_qwen_models
 from core.services.archive_manager import ArchiveManager
 
+# Import database model
+from database.models import Document
+
 logger = logging.getLogger(__name__)
 
 # Philippines timezone
@@ -109,14 +112,26 @@ class DocumentProcessor:
         except Exception as e:
             logger.warning(f"[{format_ph_time()}] ⚠️ OCR processor pre-warm failed: {e}")
         
-        # Pre-load text extractor
+        # # Pre-load text extractor
+        # try:
+        #     _ = self.text_extractor  # This will trigger lazy loading
+        #     extractor_warm_time = get_ph_time()
+        #     logger.info(f"[{format_ph_time(extractor_warm_time)}] ✅ Text extractor pre-warmed")
+        # except Exception as e:
+        #     logger.warning(f"[{format_ph_time()}] ⚠️ Text extractor pre-warm failed: {e}")
+        
+                # Pre-load text extractor (skip on CPU by default to avoid long blocking loads)
         try:
-            _ = self.text_extractor  # This will trigger lazy loading
-            extractor_warm_time = get_ph_time()
-            logger.info(f"[{format_ph_time(extractor_warm_time)}] ✅ Text extractor pre-warmed")
+            prewarm_qwen = os.environ.get("PREWARM_QWEN", "false").lower() in ("1", "true", "yes")
+            if self.device == "cpu" and not prewarm_qwen:
+                logger.info(f"[{format_ph_time()}] ⚠️ Skipping Qwen text extractor pre-warm on CPU (set PREWARM_QWEN=1 to force).")
+            else:
+                _ = self.text_extractor  # This will trigger lazy loading
+                extractor_warm_time = get_ph_time()
+                logger.info(f"[{format_ph_time(extractor_warm_time)}] ✅ Text extractor pre-warmed")
         except Exception as e:
             logger.warning(f"[{format_ph_time()}] ⚠️ Text extractor pre-warm failed: {e}")
-        
+
         warm_time = time.time() - start_time
         warm_complete_time = get_ph_time()
         logger.info(f"[{format_ph_time(warm_complete_time)}] 🎯 Model pre-warming completed in {warm_time:.1f}s")
@@ -338,7 +353,7 @@ class DocumentProcessor:
                 }
                 
                 # Archive
-                self.archive_manager.create_archive_structure(
+                archive_paths = self.archive_manager.create_archive_structure(
                     category_name=category_name,
                     document_name=doc_stem,
                     pdf_path=file_path,
@@ -346,6 +361,16 @@ class DocumentProcessor:
                     metadata=unified,
                     classification=classification
                 )
+                
+                # Create database entry for searchability
+                self._create_document_record(
+                    category_name=category_name,
+                    document_name=doc_stem,
+                    archive_paths=archive_paths,
+                    filename=filename,
+                    classification=classification
+                )
+                
                 self.archive_manager.cleanup_upload_file(file_path)
                 
                 archive_time = time.time() - archive_start
@@ -429,12 +454,21 @@ class DocumentProcessor:
             }
             
             # Quick archive
-            self.archive_manager.create_archive_structure(
+            archive_paths = self.archive_manager.create_archive_structure(
                 category_name=category_name,
                 document_name=doc_stem,
                 pdf_path=file_path,
                 ocr_text="OCR failed - extracted from filename",
                 metadata=unified,
+                classification=classification
+            )
+            
+            # Create database entry for searchability
+            self._create_document_record(
+                category_name=category_name,
+                document_name=doc_stem,
+                archive_paths=archive_paths,
+                filename=filename,
                 classification=classification
             )
             self.archive_manager.cleanup_upload_file(file_path)
@@ -1068,6 +1102,44 @@ class DocumentProcessor:
             result = result[:4000]
         
         return result
+
+    def _create_document_record(self, category_name: str, document_name: str, archive_paths: dict, filename: str, classification: str):
+        """Create a Document database record so the file becomes searchable."""
+        try:
+            # Extract filenames from paths
+            metadata_path = archive_paths.get('metadata_file_path', '')
+            ocr_path = archive_paths.get('ocr_file_path', '')
+            original_path = archive_paths.get('original_file_path', '')
+            
+            metadata_filename = Path(metadata_path).name if metadata_path else f"{document_name}.json"
+            ocr_filename = Path(ocr_path).name if ocr_path else f"{document_name}.txt"
+            
+            # Use relative path for original_file_path
+            archive_root = Path(getattr(settings, 'ARCHIVE_FOLDER', Path.cwd() / 'archive'))
+            if original_path:
+                original_path_obj = Path(original_path)
+                try:
+                    relative_original = original_path_obj.relative_to(archive_root.parent)
+                    original_file_path = str(relative_original)
+                except ValueError:
+                    original_file_path = str(original_path_obj)
+            else:
+                original_file_path = f"archive/{category_name}/{document_name}/original/{filename}"
+            
+            # Create or update document record
+            Document.objects.update_or_create(
+                client_name=category_name,
+                document_name=document_name,
+                defaults={
+                    'metadata_filename': metadata_filename,
+                    'ocr_filename': ocr_filename,
+                    'original_file_path': original_file_path,
+                    'status': 'completed'
+                }
+            )
+            logger.info(f"[{format_ph_time()}] 💾 Database record created for {category_name}/{document_name}")
+        except Exception as e:
+            logger.error(f"[{format_ph_time()}] ❌ Failed to create database record for {document_name}: {e}")
 
     # Backward compatibility methods
     def process_category_parallel(self, category_name: str) -> dict:

@@ -436,9 +436,10 @@ RATELIMIT_USE_CACHE = 'default'
 
 # For Development
 if DEBUG:
-   # Use smaller model or mock for faster development
-   # LLM_MODEL_NAME = 'Qwen/Qwen2-1.5B-Instruct'  # Smaller model
-   USE_MOCK_LLM = True  # Enable mock by default in development
+   # Use smaller model for development - 1.5B is perfect for RTX 2050 + 7GB RAM
+   LLM_MODEL_NAME = 'Qwen/Qwen2-1.5B-Instruct'  # Smaller model (3-4GB VRAM, fast)
+   # Alternative: 'Qwen/Qwen2-7B-Instruct' requires 12GB+ (too heavy for your device)
+   USE_MOCK_LLM = False  # Enable real LLM with 1.5B model
   
    # Enable more verbose logging
    LOGGING['loggers']['core.services.llm_search']['level'] = 'DEBUG'
@@ -505,10 +506,11 @@ TEMPLATES = [
 ENABLE_FUZZY_SEARCH = os.environ.get('ENABLE_FUZZY_SEARCH', 'True').lower() == 'true'
 
 # Minimum similarity score for fuzzy matches (0-100)
-# 70 = Good balance between accuracy and recall
-# 80 = More strict, fewer false positives
-# 60 = More lenient, more potential matches
-FUZZY_SEARCH_THRESHOLD = int(os.environ.get('FUZZY_SEARCH_THRESHOLD', '70'))
+# 85 = Very strict, high precision (recommended for production)
+# 80 = Strict, fewer false positives
+# 70 = Balanced
+# 60 = Lenient, more potential matches
+FUZZY_SEARCH_THRESHOLD = int(os.environ.get('FUZZY_SEARCH_THRESHOLD', '80'))
 
 # Maximum number of fuzzy results per search stage
 FUZZY_SEARCH_LIMIT = int(os.environ.get('FUZZY_SEARCH_LIMIT', '10'))
@@ -527,8 +529,8 @@ FUZZY_MAX_TEXT_LENGTH = int(os.environ.get('FUZZY_MAX_TEXT_LENGTH', '5000'))  # 
 
 # Development settings
 if DEBUG:
-    # More lenient settings for development
-    FUZZY_SEARCH_THRESHOLD = 60
-    FUZZY_SEARCH_LIMIT = 15
+    # Use production settings for consistent results
+    FUZZY_SEARCH_THRESHOLD = 80  # Strict matching for accuracy
+    FUZZY_SEARCH_LIMIT = 10
 
 

@@ -48,8 +48,21 @@ class Document(models.Model):
     # for query performance
     class Meta:
         ordering = ['-upload_date']
-        indexes = (
-            models.Index(fields=['client_name']),
-            models.Index(fields=['status']),
-            models.Index(fields=['upload_date']),
-        )
+        indexes = [
+            # Existing indexes
+            models.Index(fields=['client_name'], name='idx_client_name'),
+            models.Index(fields=['status'], name='idx_status'),
+            models.Index(fields=['upload_date'], name='idx_upload_date'),
+            
+            # New optimized indexes for search
+            models.Index(fields=['document_name'], name='idx_document_name'),
+            models.Index(fields=['client_name', 'status'], name='idx_client_status'),
+            models.Index(fields=['client_name', 'upload_date'], name='idx_client_date'),
+            models.Index(fields=['status', 'upload_date'], name='idx_status_date'),
+            
+            # Composite index for common query patterns
+            models.Index(fields=['client_name', 'document_name'], name='idx_client_doc'),
+        ]
+        # Additional optimization
+        verbose_name = 'Document'
+        verbose_name_plural = 'Documents'
