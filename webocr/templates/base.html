@@ -14,131 +14,124 @@
 </head>
 <body class="neon-theme">
     {% if not user.is_authenticated %}
+    {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'forgot_password' %}
     <!-- Navbar -->
     <nav class="neon-nav p-4 z-10 w-full top-0 left-0">
       <div class="container mx-auto flex justify-between items-center">
         <div class="flex items-center space-x-2">
-          <img src="{% static 'img/fowse.png' %}" class="h-10 inline-block neon-logo" alt="Fowse Logo" />
-          <h1 class="text-xl font-bold" style="color: var(--accent-1)">Fowse</h1>
+          <img src="{% static 'img/fowse.png' %}?v=2" class="h-10 inline-block neon-logo" alt="Fowse Logo" />
+          <h1 class="text-xl font-bold" style="color: var(--accent-1)">Arkayb</h1>
         </div>
       </div>
     </nav>
-    <!-- Scrollable Content -->
-      <!-- Hero Section -->
-      <section
-        class="hero relative flex items-center justify-center"
-        style="
-              background-color: transparent;
-              background-image: radial-gradient(600px 300px at 20% 20%, rgba(124,58,237,0.18), transparent 60%), url('{% static 'img/background_fowse.png' %}');
-              background-size: contain 90%;
-              background-position: center;
-              background-repeat: no-repeat;
-              height: calc(100vh - 64px);
-              opacity: 0.3;
-              background-attachment: local;
-        "
-      >
-      </section>
-        <!-- Hero card -->
-        <div class="absolute inset-x-0 bottom-1/4 flex items-center justify-center text-center max-w-5xl mx-auto">
+
+
+     
+<div class="pt-16">
+     
+      <!-- Hero Section with Card -->
+      <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <!-- Background -->
+        <div class="absolute inset-0 z-0"
+          style="
+            background-color: transparent;
+            background-image: radial-gradient(600px 300px at 20% 20%, rgba(124,58,237,0.18), transparent 60%), url('{% static 'img/background_fowse.png' %}');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.3;
+          ">
+        </div>
+
+
+        <!-- Hero Card - Centered -->
+        <div class="relative z-10 flex items-center justify-center text-center max-w-5xl mx-auto px-4">
           <div>
-            <h1 class="text-6xl font-semibold mb-4 whitespace-nowrap text-center title">
+            <h1 class="text-4xl md:text-6xl font-semibold mb-4 whitespace-normal md:whitespace-nowrap text-center title">
               All Your Docs, One Smart Search
             </h1>
-            <p class="subtitle mb-8 text-lg leading-relaxed max-w-xl mx-auto">
+            <p class="subtitle mb-8 text-base md:text-lg leading-relaxed max-w-xl mx-auto">
               <span class="font-bold">Built for seamless internal use,</span>
-              <span class="font-semibold"> Fowse</span>
+              <span class="font-semibold"> Arkayb</span>
               enables you to instantly locate, verify, and manage documents with AI precision.
             </p>
             <a href="{% url 'login' %}"
-              class="glow-btn px-16 py-3 font-semibold transition"
+              class="glow-btn inline-block px-12 md:px-16 py-3 font-semibold transition"
               style="box-shadow: 0 2px 4px rgba(0,0,0,0.25);">
               Log in
             </a>
           </div>
         </div>
-        <!-- Features Section -->
-        <!-- Left Column (Text) -->
-          <div class="flex items-start justify-center py-16 pt-4">
-            <div class="w-full md:w-1/2 px-4 flex flex-col items-center justify-center text-center mx-auto">
-              <h2 class="text-4xl font-semibold mb-4">
-                Discover what makes <span style="color: var(--accent-1)">Fowse</span> the easiest way to
-                <span style="color: var(--accent-3)">manage</span> your documents.
-              </h2>
-                 <div class="inline-flex items-center rounded-full p-1 mt-6" style="background: var(--neon-surface); border: 1px solid var(--neon-border)">
-                      <button id="chatButton" class="glow-btn px-8 py-3 rounded-full font-semibold transition-all duration-300">
-                          Chat
-                      </button>
-                      <button id="searchButton" class="glow-outline px-8 py-3 rounded-full font-semibold transition-all duration-300">
-                          Search
-                      </button>
-                </div>
+      </section>
+
+
+      <!-- Features Section -->
+      <section class="py-16 px-4">
+        <div class="container mx-auto max-w-6xl">
+          <!-- Section Header -->
+          <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-semibold mb-4">
+              Discover what makes <span style="color: var(--accent-1)">Arkayb</span> the easiest way to
+              <span style="color: var(--accent-3)">manage</span> your documents.
+            </h2>
+           
+            <!-- Toggle Buttons -->
+            <div class="inline-flex items-center rounded-full p-1 mt-6"
+                 style="background: var(--neon-surface); border: 1px solid var(--neon-border)">
+              <button id="chatButton" class="glow-btn px-8 py-3 rounded-full font-semibold transition-all duration-300">
+                Chat
+              </button>
+              <button id="searchButton" class="glow-outline px-8 py-3 rounded-full font-semibold transition-all duration-300">
+                Search
+              </button>
             </div>
           </div>
 
-        <div class="flex flex-col md:flex-row">
-          <!-- Left Column: Text Content -->
-          <div class="w-full md:w-1/2">
+
+          <!-- Single Column Centered Layout -->
+          <div class="max-w-4xl mx-auto">
+           
             <!-- Chat Panel Content -->
-            <div id="chatPanelText" class="p-6 md:p-8 border-b-2 md:border-b-0 md:border-r-2">
-              <h1 class="text-black mb-6 text-xl md:text-2xl font-semibold text-left">
+            <div id="chatPanelText" class="neon-card p-6 md:p-8 rounded-3xl">
+              <h3 class="mb-6 text-2xl md:text-3xl font-semibold" style="color: var(--accent-1);">
                 Context-aware document chat
-              </h1>
-              <ul class="list-disc pl-5 text-black text-left space-y-2">
-                <li><span class="font-bold">Document Chat:</span> Chat directly with your documents to quickly extract key details, summaries, and explanations.</li>
-                <li><span class="font-bold">Context-aware assistance:</span> Fowse Chat understands the context of your files, letting you refine queries and surface exactly the information you need.</li>
-                <li><span class="font-bold">Flexible interaction:</span> Get quick summaries, detailed insights, or step-by-step explanations to fit your workflow.</li>
+              </h3>
+              <ul class="list-disc pl-5 space-y-3" style="color: var(--muted-text);">
+                <li><span class="font-bold" style="color: var(--neon-text);">Document Chat:</span> Chat directly with your documents to quickly extract key details, summaries, and explanations.</li>
+                <li><span class="font-bold" style="color: var(--neon-text);">Context-aware assistance:</span> Arkayb Chat understands the context of your files, letting you refine queries and surface exactly the information you need.</li>
+                <li><span class="font-bold" style="color: var(--neon-text);">Flexible interaction:</span> Get quick summaries, detailed insights, or step-by-step explanations to fit your workflow.</li>
               </ul>
             </div>
+
 
             <!-- Search Panel Content - Initially hidden -->
-            <div id="searchPanelText" class="p-6 md:p-8 border-b md:border-b-0 md:border-r hidden">
-              <h1 class="text-black mb-6 text-xl md:text-2xl font-semibold text-left">
+            <div id="searchPanelText" class="neon-card p-6 md:p-8 rounded-3xl hidden">
+              <h3 class="mb-6 text-2xl md:text-3xl font-semibold" style="color: var(--accent-1);">
                 Intelligent document search
-              </h1>
-              <ul class="list-disc pl-5 text-black text-left space-y-2">
-                <li><span class="font-bold">Fast Search:</span> Find documents instantly using natural language queries and advanced filtering options.</li>
-                <li><span class="font-bold">Smart Filtering:</span> Narrow results with filters, tags, and
-                metadata so you always land on the exact file you need.</li>
-                <li><span class="font-bold">Scalable Performance:</span> Whether you're searching a few files or 
-                thousands, Fowse Search delivers results quickly and reliably.</li>
+              </h3>
+              <ul class="list-disc pl-5 space-y-3" style="color: var(--muted-text);">
+                <li><span class="font-bold" style="color: var(--neon-text);">Fast Search:</span> Find documents instantly using natural language queries and advanced filtering options.</li>
+                <li><span class="font-bold" style="color: var(--neon-text);">Smart Filtering:</span> Narrow results with filters, tags, and metadata so you always land on the exact file you need.</li>
+                <li><span class="font-bold" style="color: var(--neon-text);">Scalable Performance:</span> Whether you're searching a few files or thousands, Arkayb Search delivers results quickly and reliably.</li>
               </ul>
             </div>
-          </div>
 
-          <!-- Right Column: Image Placeholder -->
-          <div class="m-auto">
-            <!-- Content Container for the panels (Chat/Search) -->
-            <div id="contentPanel" class="mt-6">
-              <div id="chatPanel" class="flex justify-center">
-                <div class="w-full max-w-lg aspect-video rounded-2xl overflow-hidden shadow-lg">
-                  <img src="{% static 'img/background_fowse.png' %}" 
-                      alt="Chat Panel" 
-                      class="w-full h-full object-cover">
-                </div>
-              </div>
 
-              <!-- Search Panel -->
-              <div id="searchPanel" class="flex justify-center hidden">
-                <div class="w-full max-w-lg aspect-video rounded-2xl overflow-hidden shadow-lg">
-                  <img src="{% static 'img/background_fowse.png' %}" 
-                      alt="Search Panel" 
-                      class="w-full h-full object-cover">
-                </div>
-              </div>
-            </div>
           </div>
         </div>
+      </section>
 
-      <!-- Another Section -->
-      <section class="py-10 neon-section">
-        <div class="mx-auto max-w-6xl px-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+
+      <!-- Feature Cards Section (Neon Theme) -->
+      <section class="py-16 px-4">
+        <div class="container mx-auto max-w-6xl">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+
 
             <!-- Card: Search Filter -->
-            <article class="flex flex-col rounded-3xl p-6 md:p-8 min-h-[420px] neon-card">
+            <article class="neon-card flex flex-col rounded-3xl p-6 md:p-8 min-h-[420px]">
               <header class="flex items-start gap-4">
-                <i class="fa-solid fa-filter text-6xl md:text-7xl leading-none" style="color: var(--accent-3)"></i>
+                <i class="fa-solid fa-filter text-6xl md:text-7xl" style="color: var(--accent-3)"></i>
                 <div>
                   <h3 class="text-2xl md:text-3xl font-semibold">Search Filter</h3>
                   <p class="mt-2 max-w-sm" style="color: var(--muted-text)">
@@ -147,212 +140,174 @@
                 </div>
               </header>
 
-              <!-- Image block -->
+
               <div class="mt-8 flex-1">
                 <div class="relative mx-auto w-full max-w-[560px]">
-                  <!-- Placeholder container -->
                   <div class="rounded-2xl p-2 md:p-3" style="background: var(--neon-surface); border: 1px solid var(--neon-border)">
-                    <!-- Image inside container -->
-                    <div class="aspect-[16/9] w-full overflow-hidden rounded-xl bg-white shadow-lg">
-                      <img
-                        src="{% static 'img/background_fowse.png' %}"
-                        alt="Advanced Search"
-                        class="h-full w-full object-cover"
-                      />
+                    <div class="aspect-[16/9] w-full overflow-hidden rounded-xl shadow-lg flex items-center justify-center" style="background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(59,130,246,0.1))">
+                      <i class="fa-solid fa-filter text-6xl opacity-20" style="color: var(--accent-3)"></i>
                     </div>
                   </div>
-                  <!-- Floor shadow -->
-                  <div
-                    class="pointer-events-none absolute left-1/2 top-full -mt-3 h-8 w-10/12 -translate-x-1/2 rounded-full bg-black/25 opacity-30 blur-2xl">
-                  </div>
+                  <div class="pointer-events-none absolute left-1/2 top-full -mt-3 h-8 w-10/12 -translate-x-1/2 rounded-full bg-black/25 opacity-30 blur-2xl"></div>
                 </div>
               </div>
             </article>
 
+
             <!-- Card: Intelligent Chat -->
-            <article class="flex flex-col rounded-3xl p-6 md:p-8 min-h-[420px] neon-card">
+            <article class="neon-card flex flex-col rounded-3xl p-6 md:p-8 min-h-[420px]">
               <header class="flex items-start gap-4">
-                <i class="fa-solid fa-comments text-6xl md:text-7xl leading-none" style="color: var(--accent-4)"></i>
+                <i class="fa-solid fa-comments text-6xl md:text-7xl" style="color: var(--accent-4)"></i>
                 <div>
                   <h3 class="text-2xl md:text-3xl font-semibold">Intelligent Chat</h3>
                   <p class="mt-2 max-w-sm" style="color: var(--muted-text)">
-                    Skip the digging. Just ask Fowse and get summaries, answers, or insights straight from your documents.
+                    Skip the digging. Just ask Arkayb and get summaries, answers, or insights straight from your documents.
                   </p>
                 </div>
               </header>
 
+
               <div class="mt-8 flex-1">
                 <div class="relative mx-auto w-full max-w-[560px]">
                   <div class="rounded-2xl bg-white p-2 md:p-3 ring-2 ring-gray-200">
-                    <div class="aspect-[16/9] w-full overflow-hidden rounded-xl bg-white shadow-lg">
-                      <img
-                        src="{% static 'img/background_fowse.png' %}"
-                        alt="Chat Preview"
-                        class="h-full w-full object-cover"
-                      />
+                    <div class="aspect-[16/9] w-full overflow-hidden rounded-xl shadow-lg flex items-center justify-center" style="background: linear-gradient(135deg, rgba(236,72,153,0.1), rgba(139,92,246,0.1))">
+                      <i class="fa-solid fa-comments text-6xl opacity-20" style="color: var(--accent-4)"></i>
                     </div>
                   </div>
-                  <div
-                    class="pointer-events-none absolute left-1/2 top-full -mt-3 h-8 w-10/12 -translate-x-1/2 rounded-full bg-black/25 opacity-30 blur-2xl">
-                  </div>
+                  <div class="pointer-events-none absolute left-1/2 top-full -mt-3 h-8 w-10/12 -translate-x-1/2 rounded-full bg-black/25 opacity-30 blur-2xl"></div>
                 </div>
               </div>
             </article>
+
 
           </div>
         </div>
       </section>
 
-      <!-- More sections can be added here -->
-        <section class="bg-gray-100 py-10">
-          <div class="mx-auto max-w-6xl px-4">
-            <article class="rounded-3xl border border-gray-300 bg-white p-6 md:p-8 shadow-sm">
 
-              <!-- Header -->
-              <header class="flex items-start gap-5">
-                <i class="fa-regular fa-folder-open text-black text-6xl md:text-7xl leading-none"></i>
-                <div>
-                  <h3 class="text-2xl md:text-3xl font-semibold text-gray-900">Grid & List View</h3>
-                  <p class="mt-2 text-gray-600">
-                    Your files, your layout. Switch between grid and list view for the way you like to browse.
-                  </p>
-                </div>
-              </header>
+      <!-- Grid & List View Section -->
+      <section class="bg-gray-100 py-16 px-4">
+        <div class="container mx-auto max-w-6xl">
+          <article class="rounded-3xl border border-gray-300 bg-white p-6 md:p-8 shadow-sm">
+            <header class="flex items-start gap-5">
+              <i class="fa-regular fa-folder-open text-black text-6xl md:text-7xl"></i>
+              <div>
+                <h3 class="text-2xl md:text-3xl font-semibold text-gray-900">Grid & List View</h3>
+                <p class="mt-2 text-gray-600">
+                  Your files, your layout. Switch between grid and list view for the way you like to browse.
+                </p>
+              </div>
+            </header>
 
-              <!-- Stage (rounded container) -->
-              <div class="mt-6">
-                <div class="rounded-2xl border-2 border-gray-200 bg-gray-100 p-3 md:p-4">
-                  <div class="flex flex-col md:flex-row items-start justify-center gap-6">
 
-                    <!-- Grid preview -->
-                    <div class="relative w-full md:w-1/2 max-w-xl">
-                      <div class="rounded-xl overflow-hidden ring-1 ring-gray-200 bg-white">
-                        <div class="aspect-[16/9] w-full">
-                          <img
-                            src="{% static 'img/background_fowse.png' %}"
-                            alt="Grid view"
-                            class="w-full h-full object-cover"
-                          />
-                        </div>
+            <div class="mt-6">
+              <div class="rounded-2xl border-2 border-gray-200 bg-gray-100 p-3 md:p-4">
+                <div class="flex flex-col md:flex-row items-start justify-center gap-6">
+                  <div class="relative w-full md:w-1/2 max-w-xl">
+                    <div class="rounded-xl overflow-hidden ring-1 ring-gray-200">
+                      <div class="aspect-[16/9] w-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+                        <i class="fa-solid fa-th text-6xl text-gray-300"></i>
                       </div>
-                      <!-- soft floor shadow -->
-                      <div class="pointer-events-none absolute left-1/2 top-full -mt-3 h-8 w-10/12 -translate-x-1/2 rounded-full bg-black/25 opacity-30 blur-2xl"></div>
                     </div>
+                    <div class="pointer-events-none absolute left-1/2 top-full -mt-3 h-8 w-10/12 -translate-x-1/2 rounded-full bg-black/25 opacity-30 blur-2xl"></div>
+                  </div>
 
-                    <!-- List preview -->
-                    <div class="relative w-full md:w-1/2 max-w-xl">
-                      <div class="rounded-xl overflow-hidden ring-1 ring-gray-200 bg-white">
-                        <div class="aspect-[16/9] w-full">
-                          <img
-                            src="{% static 'img/background_fowse.png' %}"
-                            alt="List view"
-                            class="w-full h-full object-cover"
-                          />
-                        </div>
+
+                  <div class="relative w-full md:w-1/2 max-w-xl">
+                    <div class="rounded-xl overflow-hidden ring-1 ring-gray-200">
+                      <div class="aspect-[16/9] w-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+                        <i class="fa-solid fa-list text-6xl text-gray-300"></i>
                       </div>
-                      <div class="pointer-events-none absolute left-1/2 top-full -mt-3 h-8 w-10/12 -translate-x-1/2 rounded-full bg-black/25 opacity-30 blur-2xl"></div>
                     </div>
-
+                    <div class="pointer-events-none absolute left-1/2 top-full -mt-3 h-8 w-10/12 -translate-x-1/2 rounded-full bg-black/25 opacity-30 blur-2xl"></div>
                   </div>
                 </div>
               </div>
-            </article>
-          </div>
-        </section>
+            </div>
+          </article>
+        </div>
+      </section>
 
 
-
-      
-      <section class="bg-white py-10 border-2 border-solid border-gray-200">
-        <div class="mx-auto max-w-6xl px-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-stretch">
-
-            <!-- Card: Search Filter -->
+      <!-- OCR & AI Search Section -->
+      <section class="bg-white py-16 px-4 border-t-2 border-gray-200">
+        <div class="container mx-auto max-w-6xl">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+           
+            <!-- OCR Card -->
             <article class="flex flex-col rounded-3xl border border-gray-300 bg-gray-50 p-6 md:p-8 shadow-sm min-h-[420px]">
               <header class="flex items-start gap-4">
-                <i class="fa-regular fa-file-lines text-black text-6xl md:text-7xl leading-none"></i>
+                <i class="fa-regular fa-file-lines text-black text-6xl md:text-7xl"></i>
                 <div>
                   <h3 class="text-2xl md:text-3xl font-semibold text-gray-900">OCR Tooltips</h3>
                   <p class="mt-2 text-gray-600 max-w-sm">
-                    Narrow it down fast. Sort by tags, dates, or file types to find exactly what you need.
+                    Extract text from images and scanned documents with precision OCR technology.
                   </p>
                 </div>
               </header>
 
-              <!-- Image block -->
+
               <div class="mt-8 flex-1">
                 <div class="relative mx-auto w-full max-w-[560px]">
-                  <!-- Placeholder container -->
                   <div class="rounded-2xl bg-white p-2 md:p-3 ring-2 ring-gray-200">
-                    <!-- Image inside container -->
-                    <div class="aspect-[16/9] w-full overflow-hidden rounded-xl bg-white shadow-lg">
-                      <img
-                        src="{% static 'img/background_fowse.png' %}"
-                        alt="Advanced Search"
-                        class="h-full w-full object-cover"
-                      />
+                    <div class="aspect-[16/9] w-full overflow-hidden rounded-xl shadow-lg flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50">
+                      <i class="fa-regular fa-file-lines text-6xl text-gray-300"></i>
                     </div>
                   </div>
-                  <!-- Floor shadow -->
-                  <div
-                    class="pointer-events-none absolute left-1/2 top-full -mt-3 h-8 w-10/12 -translate-x-1/2 rounded-full bg-black/25 opacity-30 blur-2xl">
-                  </div>
+                  <div class="pointer-events-none absolute left-1/2 top-full -mt-3 h-8 w-10/12 -translate-x-1/2 rounded-full bg-black/25 opacity-30 blur-2xl"></div>
                 </div>
               </div>
             </article>
 
-            <!-- Card: Intelligent Chat -->
+
+            <!-- AI Search Card -->
             <article class="flex flex-col rounded-3xl border border-gray-300 bg-gray-50 p-6 md:p-8 shadow-sm min-h-[420px]">
               <header class="flex items-start gap-4">
-                <i class="fa-solid fa-magnifying-glass text-black text-6xl md:text-7xl leading-none"></i>
+                <i class="fa-solid fa-magnifying-glass text-black text-6xl md:text-7xl"></i>
                 <div>
                   <h3 class="text-2xl md:text-3xl font-semibold text-gray-900">AI Search</h3>
                   <p class="mt-2 text-gray-600 max-w-sm">
-                    Skip the digging. Just ask Fowse and get summaries, answers, or insights straight from your documents.
+                    Skip the digging. Just ask Arkayb and get summaries, answers, or insights straight from your documents.
                   </p>
                 </div>
               </header>
 
+
               <div class="mt-8 flex-1">
                 <div class="relative mx-auto w-full max-w-[560px]">
                   <div class="rounded-2xl bg-white p-2 md:p-3 ring-2 ring-gray-200">
-                    <div class="aspect-[16/9] w-full overflow-hidden rounded-xl bg-white shadow-lg">
-                      <img
-                        src="{% static 'img/background_fowse.png' %}"
-                        alt="Chat Preview"
-                        class="h-full w-full object-cover"
-                      />
+                    <div class="aspect-[16/9] w-full overflow-hidden rounded-xl shadow-lg flex items-center justify-center bg-gradient-to-br from-purple-50 to-pink-50">
+                      <i class="fa-solid fa-magnifying-glass text-6xl text-gray-300"></i>
                     </div>
                   </div>
-                  <div
-                    class="pointer-events-none absolute left-1/2 top-full -mt-3 h-8 w-10/12 -translate-x-1/2 rounded-full bg-black/25 opacity-30 blur-2xl">
-                  </div>
+                  <div class="pointer-events-none absolute left-1/2 top-full -mt-3 h-8 w-10/12 -translate-x-1/2 rounded-full bg-black/25 opacity-30 blur-2xl"></div>
                 </div>
               </div>
             </article>
+
 
           </div>
         </div>
       </section>
 
-      <!-- Footer Section -->
-      <footer class="bg-gray-100 text-gray-800 py-12 mt-auto">
-          <div class="container mx-auto px-4 h-full">
-              <div class="grid grid-cols-1 md:grid-cols-4 gap-8 h-full">
-            
-            <!-- Company Info -->
+
+      <!-- Footer -->
+      <footer class="bg-gray-100 text-gray-800 py-12">
+        <div class="container mx-auto px-4">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+           
             <div class="md:col-span-2">
-                <div class="flex items-center space-x-3 mb-4">
+              <div class="flex items-center space-x-3 mb-4">
                 <img src="{% static 'img/fowse.png' %}" class="h-8 w-8" alt="Fowse Logo" />
-                <h3 class="text-xl font-bold">Fowse</h3>
+                <h3 class="text-xl font-bold">Arkayb</h3>
               </div>
-                <p class="text-gray-600 text-md max-w-md">
-                All Your Docs, One Smart Search. Built for seamless internal use, 
-                Fowse enables you to instantly locate, verify, and manage documents with AI precision.
+              <p class="text-gray-600 text-md max-w-md">
+                All Your Docs, One Smart Search. Built for seamless internal use,
+                Arkayb enables you to instantly locate, verify, and manage documents with AI precision.
               </p>
             </div>
 
-            <!-- Quick Links -->
+
             <div>
               <h4 class="font-semibold mb-3">Quick Links</h4>
               <ul class="space-y-1.5">
@@ -363,39 +318,45 @@
               </ul>
             </div>
 
-            <!-- Contact Info -->
+
             <div>
               <h4 class="font-semibold mb-3">Contact</h4>
               <ul class="space-y-1.5 text-gray-600">
-                <li><i class="fa-solid fa-envelope mr-2"></i>support@fowse.com</li>
-                <li><i class="fa-solid fa-phone mr-2"></i>099tutunogtunog</li>
-                <li><i class="fa-solid fa-location-dot mr-2"></i>Mandaluyong, Philippines</li>
-                <li><a href="https://cornersteelsystems.com" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-gray-800 transition"><i class="fa-solid fa-building mr-2"></i>Cornersteel Systems Corporation</a></li>
+                <li><i class="fa-solid fa-envelope mr-2"></i>shaniajarrissevillanueva@gmail.com</li>
+                <li><i class="fa-solid fa-phone mr-2"></i>+63 907 827 0504</li>
+                <li><i class="fa-solid fa-location-dot mr-2"></i>Manila, Philippines</li>
+                <li><a href="https://www.facebook.com/shania.villanueva.2024/" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-gray-800 transition"><i class="fa-solid fa-building mr-2"></i>Shania Villanueva</a></li>
               </ul>
             </div>
-        </div>
+          </div>
 
-            <!-- Copyright -->
-            <div class="border-t border-gray-300 mt-8 pt-8 text-center">
+
+          <div class="border-t border-gray-300 mt-8 pt-8 text-center">
             <p class="text-gray-600 mb-4">
-              Copyright &copy; 2025 Fowse. All rights reserved.
+              Copyright &copy; 2026 Arkayb. All rights reserved.
             </p>
             <div class="flex justify-center">
-              <a href="https://github.com/Comfac-Global-Group/archive" target="_blank" rel="noopener noreferrer" 
+              <a href="https://github.com/09078270504/EDMS" target="_blank" rel="noopener noreferrer"
                  class="text-gray-600 hover:text-gray-800 transition-colors">
                 <i class="fa-brands fa-github text-2xl"></i>
               </a>
             </div>
-            </div>
-              </div>
+          </div>
+        </div>
       </footer>
 
-    {% endif %}
 
+    </div>
+
+    {% endif %}
+    {% endif %}
     {% if user.is_authenticated and not hide_sidebar %}
     <div class="min-h-screen flex bg-white">
     <!-- Sidebar (only shows if logged in) -->
     <aside id="logo-sidebar" class="fixed inset-y-0 left-0 z-40 bg-white shadow" aria-label="Sidebar">
+
+
+
 
       <div class="h-full flex flex-col bg-gray-200">
         <!-- Brand + Collapse -->
@@ -405,7 +366,7 @@
             type="button" aria-label="Toggle sidebar" aria-pressed="false">
             <img src="{% static 'img/fowse.png' %}"
            class="h-8 w-8 rounded-full object-cover inline-block" alt="Fowse Logo" />
-            <span class="brand-text text-lg font-semibold whitespace-nowrap">Fowse</span>
+            <span class="brand-text text-lg font-semibold whitespace-nowrap">Arkayb</span>
           </button>
           <button id="collapseSidebar"
                   class="hidden sm:inline-flex items-center justify-center w-8 h-8 rounded hover:bg-gray-100 text-gray-600"
@@ -413,6 +374,9 @@
             <i class="fa-solid fa-angles-left text-sm"></i>
           </button>
         </div>
+
+
+
 
         <!-- Apps in Nav -->
         <nav class="px-2 py-2 flex-1 overflow-y-auto" style="display: flex; flex-direction: column;"> <!-- Made scrollable, removed fixed height -->
@@ -425,6 +389,9 @@
               <span class="item-tooltip pointer-events-none absolute left-11 top-1/2 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100">Document</span>
             </a>
 
+
+
+
             <a href="{% url 'dashboard' %}"
               class="group relative flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-green-50 text-gray-800 transition-colors">
               <i class="fa-regular fa-file text-base shrink-0"></i>
@@ -432,6 +399,9 @@
               <span class="item-tooltip pointer-events-none absolute left-11 top-1/2 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100">New Chat</span>
             </a>
           </div>
+
+
+
 
           <!-- Chat History Section - Only show on chat pages -->
           {% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'dashboard_conversation' %}
@@ -449,7 +419,7 @@
                 <i class="fa-regular fa-message text-sm shrink-0"></i>
                 <span class="item-label truncate flex-1">{{ conversation.title }}</span>
                 <!-- Three dots menu button -->
-                <button onclick="showContextMenu(event, this.closest('.chat-history-item')); event.preventDefault(); event.stopPropagation();" 
+                <button onclick="showContextMenu(event, this.closest('.chat-history-item')); event.preventDefault(); event.stopPropagation();"
             class="opacity-0 group-hover:opacity-100 w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-all rounded hover:bg-gray-100 ml-1 menu-button">
             <i class="fa-solid fa-ellipsis text-sm"></i>
                 </button>
@@ -464,6 +434,9 @@
           {% endif %}
         </nav>
 
+
+
+
         <!-- User -->
         <div class="px-2 py-3 border-t-2 border-gray-300 user-profile-section"> <!-- sticky profile section -->
           <div class="group relative w-full overflow-visible">
@@ -476,6 +449,9 @@
               </svg>
               <span class="item-tooltip pointer-events-none absolute left-11 top-1/2 -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100">{{ user.username }}</span>
             </button>
+
+
+
 
             <!-- Dropdown (upward by default; flyout when collapsed) -->
             <div id="userDropdown"
@@ -490,6 +466,9 @@
     </aside>
     {% endif %}
 
+
+
+
     <!-- Context Menu for Chat History -->
     <div id="chatContextMenu" class="hidden fixed bg-white rounded-lg shadow-lg border py-2 z-50 min-w-32">
       <button onclick="renameChatItem()" class="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
@@ -501,6 +480,9 @@
         <span>Delete</span>
       </button>
     </div>
+
+
+
 
     <!-- Delete Confirmation Modal -->
     <div id="deleteConfirmModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -519,6 +501,9 @@
       </div>
     </div>
 
+
+
+
     <!-- Rename Modal -->
     <div id="renameModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white rounded-lg p-6 max-w-sm w-full mx-4 shadow-xl">
@@ -531,13 +516,24 @@
       </div>
     </div>
 
+
+
+
     <!-- PAGE-SPECIFIC CONTENT -->
     <div id="pageContent" class="flex-1 container mx-auto mt-8 {% if hide_sidebar %}no-sidebar{% endif %}">
       {% block content %}{% endblock %}
     </div>
+
+
+
 
     <!-- JavaScript at the end for better performance -->
     <script src="{% static 'js/base.js' %}"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>
+
+
+
+
+
