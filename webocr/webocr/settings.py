@@ -222,8 +222,9 @@ CACHES = {
 
 
 # Logging configuration
-# Enhanced LOGGING configuration
-LOGGING = {
+# Enhanced LOGGING configuration - Note: This gets overridden by the main LOGGING config below
+# Kept for reference but inactive
+LOGGING_SECURITY = {
    'version': 1,
    'disable_existing_loggers': False,
    'formatters': {
@@ -237,22 +238,6 @@ LOGGING = {
        },
    },
    'handlers': {
-       'security_file': {
-           'level': 'INFO',
-           'class': 'logging.handlers.RotatingFileHandler',
-           'filename': BASE_DIR / 'logs' / 'security.log',
-           'maxBytes': 1024*1024*5,  # 5 MB
-           'backupCount': 5,
-           'formatter': 'detailed',
-       },
-       'auth_file': {
-           'level': 'INFO',
-           'class': 'logging.handlers.RotatingFileHandler',
-           'filename': BASE_DIR / 'logs' / 'auth.log',
-           'maxBytes': 1024*1024*5,  # 5 MB
-           'backupCount': 5,
-           'formatter': 'detailed',
-       },
        'console': {
            'level': 'INFO',
            'class': 'logging.StreamHandler',
@@ -261,17 +246,17 @@ LOGGING = {
    },
    'loggers': {
        'security': {
-           'handlers': ['security_file', 'console'],
+           'handlers': ['console'],
            'level': 'INFO',
            'propagate': False,
        },
        'authentication': {
-           'handlers': ['auth_file', 'console'],
+           'handlers': ['console'],
            'level': 'INFO',
            'propagate': False,
        },
        'database': {
-           'handlers': ['security_file', 'console'],
+           'handlers': ['console'],
            'level': 'INFO',
            'propagate': True,
        },
@@ -372,7 +357,7 @@ CACHES = {
 # LOGGING CONFIGURATION
 # ====================================
 
-
+# Base logging configuration
 LOGGING = {
    'version': 1,
    'disable_existing_loggers': False,
@@ -387,12 +372,6 @@ LOGGING = {
        },
    },
    'handlers': {
-       'file': {
-           'level': 'INFO',
-           'class': 'logging.FileHandler',
-           'filename': 'logs/search.log',
-           'formatter': 'verbose',
-       },
        'console': {
            'level': 'DEBUG' if DEBUG else 'INFO',
            'class': 'logging.StreamHandler',
@@ -401,22 +380,33 @@ LOGGING = {
    },
    'loggers': {
        'django': {
-           'handlers': ['file', 'console'],
+           'handlers': ['console'],
            'level': 'INFO',
            'propagate': True,
        },
        'core.services.llm_search': {
-           'handlers': ['file', 'console'],
+           'handlers': ['console'],
            'level': 'DEBUG' if DEBUG else 'INFO',
            'propagate': True,
        },
    },
 }
 
-
-# Create logs directory if it doesn't exist
-LOGS_DIR = os.path.join(BASE_DIR, 'logs')
-os.makedirs(LOGS_DIR, exist_ok=True)
+# Only add file logging in development (local environment with writable filesystem)
+if DEBUG:
+    # Create logs directory if it doesn't exist
+    LOGS_DIR = os.path.join(BASE_DIR, 'logs')
+    os.makedirs(LOGS_DIR, exist_ok=True)
+    
+    # Add file handler for local development
+    LOGGING['handlers']['file'] = {
+        'level': 'INFO',
+        'class': 'logging.FileHandler',
+        'filename': 'logs/search.log',
+        'formatter': 'verbose',
+    }
+    LOGGING['loggers']['django']['handlers'].append('file')
+    LOGGING['loggers']['core.services.llm_search']['handlers'].append('file')
 
 
 # ====================================
