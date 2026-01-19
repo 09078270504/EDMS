@@ -14,12 +14,12 @@
 </head>
 <body class="neon-theme">
     {% if not user.is_authenticated %}
-    {% if request.resolver_match.url_name != 'login' %}
+    {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'forgot_password' %}
     <!-- Navbar -->
     <nav class="neon-nav p-4 z-10 w-full top-0 left-0">
       <div class="container mx-auto flex justify-between items-center">
         <div class="flex items-center space-x-2">
-          <img src="{% static 'img/fowse.png' %}" class="h-10 inline-block neon-logo" alt="Fowse Logo" />
+          <img src="{% static 'img/fowse.png' %}?v=2" class="h-10 inline-block neon-logo" alt="Fowse Logo" />
           <h1 class="text-xl font-bold" style="color: var(--accent-1)">Arkayb</h1>
         </div>
       </div>
