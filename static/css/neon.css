@@ -1,0 +1,135 @@
+/* Neon Dark Theme (Crypto/NFT vibe) */
+/* Scope styles under .neon-theme to avoid affecting non-themed pages */
+
+@font-face {
+  font-family: 'Orbitron';
+  src: url('https://fonts.gstatic.com/s/orbitron/v30/yMJRMIlzdpvBhQil_j8FCI6G.woff2') format('woff2');
+  font-display: swap;
+}
+
+:root {
+  --neon-bg-start: #0a0518; /* deep purple */
+  --neon-bg-end: #120a2a;   /* darker purple */
+  --neon-surface: rgba(24, 16, 48, 0.6);
+  --neon-surface-strong: rgba(36, 24, 72, 0.85);
+  --neon-border: rgba(160, 110, 255, 0.25);
+  --neon-text: #e8e1ff;
+  --muted-text: #bdb4e6;
+  --accent-1: #9c6bff;      /* violet */
+  --accent-2: #7a5cff;      /* purple */
+  --accent-3: #22d3ee;      /* cyan */
+  --accent-4: #f472b6;      /* pink */
+  --success: #22c55e;       /* green for success states */
+}
+
+.neon-theme {
+  background: radial-gradient(1200px 800px at 20% 10%, rgba(145, 86, 255, 0.2), transparent 60%),
+              radial-gradient(1000px 600px at 80% 70%, rgba(34, 211, 238, 0.2), transparent 55%),
+              linear-gradient(160deg, var(--neon-bg-start), var(--neon-bg-end));
+  min-height: 100vh;
+  color: var(--neon-text);
+}
+
+/* Override common Tailwind utility colors inside theme */
+.neon-theme .bg-white { background-color: var(--neon-surface) !important; backdrop-filter: blur(10px); }
+.neon-theme .bg-gray-50 { background-color: var(--neon-surface) !important; }
+.neon-theme .bg-gray-100, .neon-theme .bg-gray-200 { background-color: var(--neon-surface) !important; }
+.neon-theme .text-gray-900 { color: var(--neon-text) !important; }
+.neon-theme .text-gray-800, .neon-theme .text-gray-700 { color: var(--neon-text) !important; opacity: 0.9; }
+.neon-theme .text-gray-600, .neon-theme .text-gray-500 { color: var(--muted-text) !important; }
+.neon-theme .border-gray-200, .neon-theme .border-gray-300 { border-color: var(--neon-border) !important; }
+
+/* Brand title */
+.neon-theme h1, .neon-theme h2, .neon-theme h3, .neon-theme h4 { font-family: 'Orbitron', ui-sans-serif, system-ui; letter-spacing: 0.5px; }
+
+/* Glass card vibe */
+.neon-card { background: var(--neon-surface); border: 0px solid var(--neon-border); border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 25px rgba(124, 58, 237, 0.25); backdrop-filter: blur(12px); }
+.neon-section { border: 1px solid var(--neon-border); border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 35px rgba(124, 58, 237, 0.25); }
+
+/* Glow buttons */
+.glow-btn { background: linear-gradient(135deg, var(--accent-2), var(--accent-3)); color: white; border-radius: 9999px; padding: 0.55rem 1rem; font-weight: 600; box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.3) inset, 0 10px 25px rgba(124, 58, 237, 0.35), 0 0 12px rgba(34, 211, 238, 0.4); transition: transform 0.15s ease, box-shadow 0.2s ease; }
+.glow-btn:hover { transform: translateY(-1px); box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.5) inset, 0 12px 30px rgba(124, 58, 237, 0.45), 0 0 18px rgba(34, 211, 238, 0.6); }
+.glow-btn.pink { background: linear-gradient(135deg, var(--accent-4), var(--accent-2)); }
+.glow-outline { color: var(--accent-3); border: 1px solid var(--neon-border); border-radius: 9999px; padding: 0.5rem 1rem; backdrop-filter: blur(8px); box-shadow: 0 0 12px rgba(34,211,238,0.25); }
+
+/* Pills */
+.neon-pill { background: rgba(124, 58, 237, 0.15); color: #d9d2ff; border: 1px solid var(--neon-border); border-radius: 9999px; padding: 0.25rem 0.6rem; font-size: 0.75rem; }
+.neon-pill.green { background: rgba(22, 163, 74, 0.22); color: #d1fae5; }
+
+/* Tables & list styles */
+.neon-theme table { color: var(--neon-text); }
+.neon-theme thead { background: rgba(124, 58, 237, 0.15) !important; }
+.neon-theme tbody tr:hover { background: rgba(124, 58, 237, 0.12) !important; }
+
+/* Header/Nav */
+.neon-nav { background: transparent; border-bottom: 1px solid var(--neon-border); }
+.neon-logo { filter: drop-shadow(0 0 12px rgba(124, 58, 237, 0.6)); }
+
+/* Sections */
+.hero { position: relative; padding-top: 4rem; padding-bottom: 2rem; }
+.hero .title { font-size: 2.2rem; font-weight: 700; }
+.hero .subtitle { color: var(--muted-text); }
+
+/* Cards grid (used in search results replacement) */
+.neon-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; }
+@media (max-width: 1024px) { .neon-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .neon-grid { grid-template-columns: 1fr; } }
+
+.neon-doc-card { position: relative; padding: 1rem; border-radius: 16px; background: var(--neon-surface-strong); border: 1px solid var(--neon-border); box-shadow: 0 12px 35px rgba(0,0,0,0.4), 0 0 18px rgba(124, 58, 237, 0.3); }
+.neon-doc-card .doc-title { font-weight: 600; }
+.neon-doc-card .doc-type { font-size: 0.85rem; color: var(--muted-text); }
+.neon-doc-card .actions { display: flex; gap: 0.5rem; margin-top: 0.65rem; }
+
+/* Badges for match types */
+.badge-exact { background: rgba(22, 163, 74, 0.18); color: #a7f3d0; }
+.badge-fuzzy { background: rgba(249, 115, 22, 0.22); color: #fed7aa; }
+
+/* Footer */
+.neon-footer { border-top: 1px solid var(--neon-border); color: var(--muted-text); }
+
+/* Sidebar (left bar) */
+.neon-theme #logo-sidebar { 
+  background: white;
+  border-right: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.neon-theme #logo-sidebar > div { 
+  background: #f3f4f6;
+}
+.neon-theme #logo-sidebar .user-profile-section {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  z-index: 20;
+  border-top: 1px solid #e5e7eb;
+}
+.neon-theme #logo-sidebar .brand-text { color: #000; }
+.neon-theme #logo-sidebar .item-label { color: #1f2937; }
+.neon-theme #logo-sidebar .item-tooltip { background: #1f2937 !important; border: none; color: white !important; }
+.neon-theme #logo-sidebar .chat-history-item a { background: transparent; }
+.neon-theme #logo-sidebar .chat-history-item a:hover { background: #f0f9ff !important; }
+.neon-theme #logo-sidebar a:hover { background: #f3f4f6 !important; }
+.neon-theme #logo-sidebar .hover\:bg-gray-100:hover { background: #f3f4f6 !important; }
+.neon-theme #logo-sidebar .border-b-2 { border-color: #e5e7eb !important; }
+.neon-theme #logo-sidebar .border-t-2 { border-color: #e5e7eb !important; }
+.neon-theme #logo-sidebar .text-gray-500 { color: #6b7280 !important; }
+.neon-theme #logo-sidebar .text-gray-600 { color: #4b5563 !important; }
+.neon-theme #logo-sidebar .ring-gray-200 { --tw-ring-color: #e5e7eb !important; }
+.neon-theme #logo-sidebar .brand-text { color: var(--accent-1); }
+.neon-theme #logo-sidebar .item-label { color: var(--neon-text); }
+.neon-theme #logo-sidebar .item-tooltip { background: var(--neon-surface-strong) !important; border: 1px solid var(--neon-border); color: var(--neon-text) !important; }
+.neon-theme #logo-sidebar .chat-history-item a { background: transparent; }
+.neon-theme #logo-sidebar .chat-history-item a:hover { background: rgba(124,58,237,0.15) !important; }
+.neon-theme #logo-sidebar a:hover { background: rgba(124,58,237,0.12) !important; }
+.neon-theme #logo-sidebar .hover\:bg-gray-100:hover { background: rgba(124,58,237,0.12) !important; }
+.neon-theme #logo-sidebar .border-b-2 { border-color: var(--neon-border) !important; }
+.neon-theme #logo-sidebar .border-t-2 { border-color: var(--neon-border) !important; }
+.neon-theme #logo-sidebar .text-gray-500 { color: var(--muted-text) !important; }
+.neon-theme #logo-sidebar .text-gray-600 { color: var(--muted-text) !important; }
+.neon-theme #logo-sidebar .ring-gray-200 { --tw-ring-color: var(--neon-border) !important; }
+
+/* Strengthen page content contrast when sidebar present */
+.neon-theme .no-sidebar ~ #pageContent,
+.neon-theme #pageContent { color: var(--neon-text); }

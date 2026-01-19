@@ -1,0 +1,383 @@
+{% extends "base.html" %}
+
+{% block title %}Document Search - Archive System{% endblock %}
+{% block page_title %}Document Search{% endblock %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/search_form.css' %}">
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'js/search_form.js' %}" defer></script>
+{% endblock %}
+{% block content %}
+<div class="relative max-w-4xl mx-auto px-4 py-10 flex-1">
+
+    <!-- Header -->
+    <div id="pageHeader" class="text-center mb-10 transition-opacity duration-500 ease-out">
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-wide text-green-700">Document Search</h1>
+        <p class="mt-3 text-s font-custom-verdana text-gray-600">Find your documents quickly with smart matching</p>
+    </div>
+
+    <!-- Search Mode Toggle -->
+    <div class="flex justify-center mb-6">
+        <div class="inline-flex rounded-xl bg-gray-100 p-1">
+            <button id="keywordSearchBtn" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-white shadow text-green-600 font-medium transition">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"/>
+                </svg>
+                Keyword Search
+            </button>
+            <button id="llmSearchBtn" class="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 font-medium hover:bg-gray-200 transition">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+                </svg>
+                AI Search
+            </button>
+        </div>
+    </div>
+
+    <!-- Search Form -->
+    <div class="relative max-w-a mx-auto">
+        <form id="searchForm" action="{% url 'search_documents' %}" method="GET" class="relative">
+            <!-- Search icon -->
+            <div class="absolute inset-y-0 left-4 flex items-center">
+                <svg class="h-5 w-5 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"/>
+                </svg>
+            </div>
+
+            <input
+                type="text"
+                id="search_query"
+                name="search_query"
+                placeholder="Search documents..."
+                value="{{ request.GET.search_query }}"
+                autocomplete="off"
+                class="w-full h-14 pl-12 pr-28 rounded-full bg-white shadow-2xl shadow-gray-500/50
+                        focus:ring-2 focus:ring-green-600 focus:outline-none text-base placeholder-gray-400"
+            />
+
+            <!-- Hidden inputs -->
+            <input type="hidden" id="client_filter_hidden" name="client_filter" value="{{ request.GET.client_filter }}">
+            <input type="hidden" id="date_from_hidden" name="date_from" value="{{ request.GET.date_from }}">
+            <input type="hidden" id="date_to_hidden" name="date_to" value="{{ request.GET.date_to }}">
+            <input type="hidden" id="fuzzy_hidden" name="fuzzy" value="{{ request.GET.fuzzy|default:'true' }}">
+            <input type="hidden" name="view" value="{{ request.GET.view }}">
+
+            <!-- Right-side buttons -->
+            <div class="absolute inset-y-0 right-2 flex items-center gap-1">
+                <!-- Clear button -->
+                <button id="clearBtn" type="button"
+                        class="hidden h-10 w-10 rounded-full hover:bg-gray-100 text-black"
+                        title="Clear">
+                    <svg class="mx-auto h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6L6 18"/>
+                    </svg>
+                </button>
+
+                <!-- Filter button -->
+                <button id="filterBtn" type="button"
+                        class="h-10 w-10 rounded-full hover:bg-gray-100 text-black transition-colors"
+                        title="Filters & Options">
+                    <svg class="mx-auto h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6h18M6 12h12M10 18h4"/>
+                    </svg>
+                </button>
+            </div>
+
+            <button type="submit" class="hidden">Search</button>
+        </form>
+    </div>
+
+    <!-- Search Mode Description -->
+    <div id="searchDescription" class="text-center mt-6 text-sm text-gray-600 max-w-2xl mx-auto">
+        <div id="keywordDescription">
+            Search by keywords, company names, amounts, or document IDs. Smart matching enabled by default.
+        </div>
+        <div id="llmDescription" class="hidden">
+            Ask questions in natural language. AI will analyze documents and provide intelligent answers with enhanced matching.
+        </div>
+    </div>
+
+    <!-- Search Examples -->
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div id="keywordExamples" class="rounded-xl bg-gray-50 border border-gray-200 p-6">
+            <h3 class="text-gray-900 font-semibold mb-2">Keyword Search Examples</h3>
+            <ul class="text-sm text-gray-700 space-y-1">
+                <li>• "Philippine Airlines" or "Philipine Air" (fuzzy)</li>
+                <li>• "PHP 15,000" or "15000 peso" (flexible)</li>
+                <li>• "OR-12345" or "OR12345" (variations)</li>
+                <li>• "invoice 2024" or "invoce 2024" (typo-tolerant)</li>
+            </ul>
+        </div>
+        
+        <div id="llmExamples" class="hidden rounded-xl bg-gray-50 border border-gray-200 p-6">
+            <h3 class="text-gray-900 font-semibold mb-2">AI Search Examples</h3>
+            <ul class="text-sm text-gray-700 space-y-1">
+                <li>• "What invoices are from December 2024?"</li>
+                <li>• "Show me all Philippine Airlines documents"</li>
+                <li>• "What's the total amount for client ABC?"</li>
+                <li>• "Find receipts over 10,000 pesos"</li>
+            </ul>
+        </div>
+        
+        <div class="rounded-xl bg-gray-50 border border-gray-200 p-6">
+            <h3 class="text-gray-900 font-semibold mb-2">Enhanced Features</h3>
+            <div class="text-sm text-gray-700 space-y-1">
+                <span id="keywordFeatures">
+                    Smart matching handles typos, variations, and partial matches. Use filters to narrow by client and date.
+                </span>
+                <span id="llmFeatures" class="hidden">
+                    AI search now includes fuzzy matching for better document discovery and more accurate answers.
+                </span>
+            </div>
+        </div>
+        
+        <div class="rounded-xl bg-orange-50 border border-orange-200 p-6">
+            <h3 class="text-orange-900 font-semibold mb-2">Smart Matching</h3>
+            <ul class="text-sm text-orange-700 space-y-1">
+                <li>• Handles common typos automatically</li>
+                <li>• Finds similar company names</li>
+                <li>• Flexible number formatting</li>
+                <li>• Works with partial document numbers</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Filter Modal -->
+<div id="filterModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl w-full max-w-2xl mx-4 p-8 shadow-2xl transform transition-all">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between mb-8">
+            <h3 class="text-2xl font-bold font-custom-verdana text-green-600">Search Options</h3>
+            <button id="closeModalBtn" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                <svg class="h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6L6 18"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Filter Form -->
+        <div class="space-y-6">
+            <!-- Client Filter -->
+            <div>
+                <label class="block text-sm font-medium text-gray-900 mb-3">Client:</label>
+                <div class="relative">
+                    <select id="client_filter" class="w-full appearance-none bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:ring-green-600 focus:border-transparent">
+                        <option value="">Any client</option>
+                        {% for client in available_clients %}
+                        <option value="{{ client }}" {% if request.GET.client_filter == client %}selected{% endif %}>{{ client }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Date Range -->
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-900 mb-3">From date:</label>
+                    <input type="date" id="date_from" value="{{ request.GET.date_from }}"
+                           class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:ring-green-600 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-900 mb-3">To date:</label>
+                    <input type="date" id="date_to" value="{{ request.GET.date_to }}"
+                           class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:ring-green-600 focus:border-transparent">
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="flex justify-center gap-4 mt-8 pt-6">
+            <button id="resetFiltersBtn" class="px-8 py-3 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors">
+                Reset All
+            </button>
+            <button id="applyFiltersBtn" class="px-8 py-3 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors">
+                Apply & Search
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing search form...');
+    
+    const keywordBtn = document.getElementById('keywordSearchBtn');
+    const llmBtn = document.getElementById('llmSearchBtn');
+    const searchForm = document.getElementById('searchForm');
+    const searchInput = document.getElementById('search_query');
+    const fuzzyQuickToggle = document.getElementById('fuzzyQuickToggle');
+    const fuzzyModalToggle = document.getElementById('fuzzy_search_modal');
+    const fuzzyHidden = document.getElementById('fuzzy_hidden');
+    
+    console.log('Elements found:', {
+        keywordBtn: !!keywordBtn,
+        llmBtn: !!llmBtn,
+        searchForm: !!searchForm,
+        searchInput: !!searchInput
+    });
+    
+    // Sync fuzzy toggles
+    function syncFuzzyToggles() {
+        const fuzzyEnabled = fuzzyQuickToggle ? fuzzyQuickToggle.checked : true;
+        if (fuzzyModalToggle) {
+            fuzzyModalToggle.checked = fuzzyEnabled;
+        }
+        if (fuzzyHidden) {
+            fuzzyHidden.value = fuzzyEnabled ? 'true' : 'false';
+        }
+    }
+    
+    if (fuzzyQuickToggle) {
+        fuzzyQuickToggle.addEventListener('change', syncFuzzyToggles);
+    }
+    if (fuzzyModalToggle) {
+        fuzzyModalToggle.addEventListener('change', function() {
+            if (fuzzyQuickToggle) {
+                fuzzyQuickToggle.checked = this.checked;
+            }
+            syncFuzzyToggles();
+        });
+    }
+    
+    // Initialize fuzzy state from URL or default
+    const urlParams = new URLSearchParams(window.location.search);
+    const fuzzyFromUrl = urlParams.get('fuzzy');
+    if (fuzzyFromUrl !== null) {
+        const fuzzyEnabled = fuzzyFromUrl === 'true';
+        fuzzyQuickToggle.checked = fuzzyEnabled;
+        if (fuzzyModalToggle) {
+            fuzzyModalToggle.checked = fuzzyEnabled;
+        }
+    }
+    syncFuzzyToggles();
+    
+    // Search mode toggling
+    function setSearchMode(mode) {
+        if (mode === 'llm') {
+            keywordBtn.classList.remove('bg-white', 'shadow', 'text-green-600');
+            keywordBtn.classList.add('text-gray-600', 'hover:bg-gray-200');
+            
+            llmBtn.classList.remove('text-gray-600', 'hover:bg-gray-200');
+            llmBtn.classList.add('bg-white', 'shadow', 'text-green-600');
+            
+            searchForm.action = '{% url "llm_search_documents" %}';
+            searchInput.placeholder = 'Ask a question about your documents...';
+            
+            // Toggle descriptions and examples
+            document.getElementById('keywordDescription').classList.add('hidden');
+            document.getElementById('llmDescription').classList.remove('hidden');
+            document.getElementById('keywordExamples').classList.add('hidden');
+            document.getElementById('llmExamples').classList.remove('hidden');
+            document.getElementById('keywordFeatures').classList.add('hidden');
+            document.getElementById('llmFeatures').classList.remove('hidden');
+        } else {
+            llmBtn.classList.remove('bg-white', 'shadow', 'text-green-600');
+            llmBtn.classList.add('text-gray-600', 'hover:bg-gray-200');
+            
+            keywordBtn.classList.remove('text-gray-600', 'hover:bg-gray-200');
+            keywordBtn.classList.add('bg-white', 'shadow', 'text-green-600');
+            
+            searchForm.action = '{% url "search_documents" %}';
+            searchInput.placeholder = 'Search documents...';
+            
+            // Toggle descriptions and examples
+            document.getElementById('llmDescription').classList.add('hidden');
+            document.getElementById('keywordDescription').classList.remove('hidden');
+            document.getElementById('llmExamples').classList.add('hidden');
+            document.getElementById('keywordExamples').classList.remove('hidden');
+            document.getElementById('llmFeatures').classList.add('hidden');
+            document.getElementById('keywordFeatures').classList.remove('hidden');
+        }
+    }
+    
+    if (keywordBtn && llmBtn) {
+        keywordBtn.addEventListener('click', () => {
+            console.log('Keyword button clicked');
+            setSearchMode('keyword');
+        });
+        llmBtn.addEventListener('click', () => {
+            console.log('AI Search button clicked');
+            setSearchMode('llm');
+        });
+    } else {
+        console.error('Search mode buttons not found:', { keywordBtn, llmBtn });
+    }
+    
+    // Clear functionality
+    const clearBtn = document.getElementById('clearBtn');
+    function toggleClearButton() {
+        if (searchInput.value.trim()) {
+            clearBtn.classList.remove('hidden');
+        } else {
+            clearBtn.classList.add('hidden');
+        }
+    }
+    
+    searchInput.addEventListener('input', toggleClearButton);
+    clearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        toggleClearButton();
+        searchInput.focus();
+    });
+    toggleClearButton();
+    
+    // Filter modal
+    const filterBtn = document.getElementById('filterBtn');
+    const filterModal = document.getElementById('filterModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    
+    filterBtn.addEventListener('click', () => filterModal.classList.remove('hidden'));
+    closeModalBtn.addEventListener('click', () => filterModal.classList.add('hidden'));
+    filterModal.addEventListener('click', (e) => {
+        if (e.target === filterModal) filterModal.classList.add('hidden');
+    });
+    
+    // Apply filters
+    document.getElementById('applyFiltersBtn').addEventListener('click', function() {
+        document.getElementById('client_filter_hidden').value = document.getElementById('client_filter').value;
+        document.getElementById('date_from_hidden').value = document.getElementById('date_from').value;
+        document.getElementById('date_to_hidden').value = document.getElementById('date_to').value;
+        
+        // Update fuzzy setting
+        syncFuzzyToggles();
+        
+        searchForm.submit();
+    });
+    
+    // Reset filters
+    document.getElementById('resetFiltersBtn').addEventListener('click', function() {
+        document.getElementById('client_filter').value = '';
+        document.getElementById('date_from').value = '';
+        document.getElementById('date_to').value = '';
+        
+        // Reset fuzzy to enabled by default
+        fuzzyQuickToggle.checked = true;
+        if (fuzzyModalToggle) {
+            fuzzyModalToggle.checked = true;
+        }
+        syncFuzzyToggles();
+    });
+    
+    // Form submission
+    searchForm.addEventListener('submit', function(e) {
+        syncFuzzyToggles(); // Ensure fuzzy setting is current
+        
+        if (!searchInput.value.trim()) {
+            e.preventDefault();
+            alert('Please enter a search query');
+            searchInput.focus();
+        }
+    });
+});
+</script>
+
+{% endblock %}

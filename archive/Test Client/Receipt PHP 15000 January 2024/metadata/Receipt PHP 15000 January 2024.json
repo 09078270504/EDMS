@@ -1,0 +1,11 @@
+{
+    "document_type": "Receipt",
+    "client_name": "Test Client",
+    "names": ["Test Client", "ABC Corporation"],
+    "invoice_numbers": ["RCT-2024-001"],
+    "financial": ["PHP 15,000.00", "15000"],
+    "dates": ["January 20, 2024"],
+    "emails": ["accounting@testclient.com"],
+    "phones": ["+63-2-1234-5678"],
+    "addresses": ["123 Business Avenue, Makati City"]
+}

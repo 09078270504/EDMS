@@ -1,0 +1,12 @@
+{
+    "document_type": "Invoice",
+    "client_name": "Philippine Airlines",
+    "names": ["Philippine Airlines", "PAL", "Philippines Airlines", "Philipine Airlines"],
+    "invoice_numbers": ["INV-2024-001", "INV2024001"],
+    "financial": ["PHP 45,750.00", "45750", "Forty-Five Thousand Seven Hundred Fifty Pesos"],
+    "dates": ["January 15, 2024", "2024-01-15", "Jan 15, 2024"],
+    "emails": ["billing@philippineairlines.com", "corporate@pal.com.ph"],
+    "phones": ["+63-2-8855-8888", "02-8855-8888", "885-5888"],
+    "addresses": ["PNB Financial Center, Roxas Boulevard, Pasay City", "Roxas Blvd, Pasay"],
+    "keywords": ["flight", "airfare", "business class", "domestic", "manila", "cebu"]
+}

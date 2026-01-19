@@ -1,0 +1,42 @@
+MERCURY DRUG CORPORATION
+Your Partner in Health
+
+Official Receipt
+OR No: 789123
+Date: March 10, 2024
+Time: 3:45 PM
+
+Store: Mercury Drug - SM North EDSA
+Cashier: DELA CRUZ, A.
+Terminal: 05
+
+PRESCRIPTION MEDICINES:
+Biogesic 500mg (10 tablets)     PHP 85.00
+Neozep Forte (10 capsules)      PHP 95.00  
+Solmux 600mg (10 tablets)       PHP 180.00
+Ascorbic Acid 500mg (100 tabs)  PHP 120.00
+
+NON-PRESCRIPTION:
+Colgate Total (150g)            PHP 185.00
+Johnson's Baby Oil (200ml)      PHP 135.00
+
+Subtotal:                       PHP 800.00
+Senior Citizen Discount (20%):  PHP 50.50
+VAT:                            PHP 0.00
+
+TOTAL AMOUNT:                   PHP 850.50
+
+Payment Method: Cash
+Amount Tendered:                PHP 1,000.00
+Change:                         PHP 149.50
+
+PWD/Senior ID: 12345678901234
+Prescribed by: DR. MARIA SANTOS
+
+Thank you for choosing Mercury Drug!
+
+For inquiries: customerservice@mercurydrug.com.ph
+Hotline: 02-8888-7777
+
+This receipt is valid for returns within 7 days.
+Keep your receipt for warranty purposes.

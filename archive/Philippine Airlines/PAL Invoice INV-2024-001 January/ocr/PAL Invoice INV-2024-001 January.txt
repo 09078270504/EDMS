@@ -1,0 +1,33 @@
+PHILIPPINE AIRLINES
+Corporate Invoice
+
+Invoice No: INV-2024-001
+Date: January 15, 2024
+Due Date: February 15, 2024
+
+Bill To:
+ABC Corporation
+123 Business Street
+Makati City, Philippines
+
+Flight Details:
+Manila (MNL) to Cebu (CEB)
+Flight PR-1843
+Date: January 20, 2024
+Class: Business
+Passenger: Juan Dela Cruz
+
+Ticket Amount: PHP 38,500.00
+Taxes & Fees: PHP 6,250.00
+Service Charge: PHP 1,000.00
+
+TOTAL AMOUNT: PHP 45,750.00
+
+Payment Terms: Net 30 Days
+Reference: PAL-CORP-2024-001
+
+For inquiries:
+Email: billing@philippineairlines.com
+Phone: +63-2-8855-8888
+
+Thank you for choosing Philippine Airlines!

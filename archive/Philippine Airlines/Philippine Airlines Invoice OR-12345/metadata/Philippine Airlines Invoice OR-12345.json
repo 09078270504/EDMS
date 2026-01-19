@@ -1,0 +1,11 @@
+{
+    "document_type": "Invoice",
+    "client_name": "Philippine Airlines",
+    "names": ["Philippine Airlines", "PAL"],
+    "invoice_numbers": ["OR-12345"],
+    "financial": ["PHP 25,500.00", "25500"],
+    "dates": ["January 15, 2024"],
+    "emails": ["billing@philippineairlines.com"],
+    "phones": ["+63-2-8855-8888"],
+    "addresses": ["PNB Financial Center, Roxas Boulevard, Manila"]
+}
