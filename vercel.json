@@ -1,11 +1,11 @@
 {
   "functions": {
     "api/index.py": {
-      "runtime": "python3.11",
+      "runtime": "python3.9",
       "maxDuration": 300
     }
   },
-  "buildCommand": "pip install -r requirements.txt && cd webocr && python manage.py collectstatic --noinput && cd .. && mkdir static && xcopy webocr\\staticfiles static /E /I /Y",
+  "buildCommand": "pip install -r requirements.txt && cd webocr && python manage.py collectstatic --noinput && cd .. && mkdir -p static && cp -r webocr/staticfiles/. static/",
   "routes": [
     { "src": "/static/(.*)", "dest": "/static/$1" },
     { "src": "/(.*)", "dest": "/api/index.py" }
