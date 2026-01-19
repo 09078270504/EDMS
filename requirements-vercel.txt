@@ -1,0 +1,26 @@
+# Minimal Django requirements for Vercel deployment
+# Local development should use requirements.txt
+
+# Django Framework
+Django>=4.2.0,<5.0.0
+djangorestframework>=3.14.0
+djangorestframework-simplejwt>=5.3.0
+
+# Database - PostgreSQL for production
+psycopg2-binary>=2.9.0
+
+# Security & Auth
+django-csp>=4.0
+django-axes>=8.0.0
+django-cors-headers>=4.3.0
+
+# Environment & Configuration
+python-decouple>=3.8.0
+django-environ>=0.12.0
+
+# Basic utilities
+pytz>=2023.3
+python-dateutil>=2.8.0
+
+# NLP - lightweight only
+rapidfuzz>=3.0.0
