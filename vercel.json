@@ -1,12 +1,17 @@
 {
   "version": 2,
-  "buildCommand": "python webocr/manage.py collectstatic --noinput",
+  "buildCommand": "python webocr/manage.py migrate --noinput && python webocr/manage.py collectstatic --noinput",
   "builds": [
     {
       "src": "api/index.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "50mb"
+        "maxLambdaSize": "50mb",
+        "includeFiles": [
+          "webocr/staticfiles/**",
+          "webocr/static/**",
+          "webocr/templates/**"
+        ]
       }
     }
   ],
