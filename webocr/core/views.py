@@ -31,6 +31,7 @@ import os
 import re
 from pathlib import Path
 from datetime import timedelta
+from django.db.utils import OperationalError as DbOperationalError
 
 # ===========================
 # FUZZY SEARXGH
@@ -697,11 +698,19 @@ def login_view(request):
                 return redirect('account_locked')
         except LoginAttempt.DoesNotExist:
             pass
+        except DbOperationalError:
+            # Database not available (e.g., serverless env without configured DB)
+            messages.error(request, 'Login is temporarily unavailable. Please contact admin to configure the database.')
+            return render(request, 'auth/login.html')
         
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
-            LoginAttempt.objects.filter(ip_address=ip_address, username=username).delete()
+            try:
+                LoginAttempt.objects.filter(ip_address=ip_address, username=username).delete()
+            except DbOperationalError:
+                # Ignore if DB not available; still allow session login
+                pass
             
             log_security_event(
                 event_type='login_success',
@@ -715,15 +724,20 @@ def login_view(request):
             
             return redirect('search_form')
         else:
-            attempt, created = LoginAttempt.objects.get_or_create(
-                ip_address=ip_address,
-                username=username,
-                defaults={'failures_count': 1}
-            )
-            if not created:
-                attempt.failures_count += 1
-                attempt.attempt_time = timezone.now()
-                attempt.save()
+            try:
+                attempt, created = LoginAttempt.objects.get_or_create(
+                    ip_address=ip_address,
+                    username=username,
+                    defaults={'failures_count': 1}
+                )
+                if not created:
+                    attempt.failures_count += 1
+                    attempt.attempt_time = timezone.now()
+                    attempt.save()
+            except DbOperationalError:
+                # If DB not available, just show generic error without lockout tracking
+                messages.error(request, 'Invalid username or password')
+                return render(request, 'auth/login.html')
             
             log_security_event(
                 event_type='login_failure',
@@ -735,7 +749,7 @@ def login_view(request):
             
             check_multiple_failed_logins(ip_address, username)
             
-            if attempt.failures_count >= 5:
+            if 'attempt' in locals() and getattr(attempt, 'failures_count', 0) >= 5:
                 log_security_event(
                     event_type='account_locked',
                     username_attempted=username,

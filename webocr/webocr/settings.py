@@ -298,20 +298,14 @@ if not DEBUG:
    CSRF_COOKIE_SECURE = True
 
 
-# Content Security Policy (CSP) settings
-CCONTENT_SECURITY_POLICY = {
-   'DIRECTIVES': {
-       'default-src': ("'self'",),
-       'script-src': ("'self'", "'unsafe-inline'"),
-       'style-src': ("'self'", "'unsafe-inline'"),
-       'img-src': ("'self'", "data:", "https:"),
-       'font-src': ("'self'", "https://fonts.gstatic.com"),
-       'connect-src': ("'self'",),
-       'form-action': ("'self'",),
-       'object-src': ("'none'",),
-       'media-src': ("'none'",),
-   }
-}
+# Content Security Policy (CSP) settings using django-csp variables
+# Allow CDN styles and fonts used by Tailwind and Font Awesome
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com")
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com")
+CSP_IMG_SRC = ("'self'", "data:", "https:")
+CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com")
+CSP_CONNECT_SRC = ("'self'",)
 
 
 # Domain name
