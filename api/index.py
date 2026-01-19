@@ -9,8 +9,9 @@ sys.path.insert(0, str(ROOT / "webocr"))
 # Django settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webocr.settings")
 
-from django.core.wsgi import get_wsgi_application  # noqa: E402
-from vercel_wsgi import make_lambda_handler  # noqa: E402
+from django.core.wsgi import get_wsgi_application
 
 application = get_wsgi_application()
-handler = make_lambda_handler(application)
+
+# Vercel expects 'app' or a handler function
+app = application
