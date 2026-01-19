@@ -20,7 +20,8 @@ from .models import LoginAttempt, SecurityEvent, UserSession, SuspiciousActivity
 from database.models import Document
 from database.serializer import DocumentListSerializer
 from .security_utils import log_security_event, track_user_session, check_multiple_failed_logins
-from .services.llm_search import answer_from_context
+# Note: llm_search import moved to function level to avoid importing torch on Vercel
+# from .services.llm_search import answer_from_context
 
 # ===========================
 # STANDARD LIBRARY IMPORTS
@@ -1426,8 +1427,13 @@ def llm_search_documents(request):
 
                 full_context = "\n\n".join(context_blocks)
                 
-                # Send to LLM
-                llm_answer = answer_from_context(search_query, full_context, temperature=0.2)
+                # Send to LLM (only available locally with ML packages)
+                try:
+                    from .services.llm_search import answer_from_context
+                    llm_answer = answer_from_context(search_query, full_context, temperature=0.2)
+                except ImportError:
+                    # LLM not available (e.g., on Vercel without torch)
+                    llm_answer = "AI-powered answers are not available in this deployment. Showing search results only."
                 
                 # Convert results for display
                 if 'matched_snippets' in docs_for_context[0] if docs_for_context else False:
@@ -1470,6 +1476,7 @@ def llm_test_connection(request):
     Test endpoint to verify LLM service is working
     """
     try:
+        from .services.llm_search import answer_from_context
         test_query = "What is a test?"
         test_context = "This is a test document with sample information."
         result = answer_from_context(test_query, test_context, temperature=0.1)
@@ -1479,6 +1486,11 @@ def llm_test_connection(request):
             'message': 'LLM service is working',
             'test_response': result[:100] + "..." if len(result) > 100 else result
         })
+    except ImportError as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': f'LLM service not available (missing dependencies): {str(e)}'
+        }, status=503)
     except Exception as e:
         return JsonResponse({
             'status': 'error',
