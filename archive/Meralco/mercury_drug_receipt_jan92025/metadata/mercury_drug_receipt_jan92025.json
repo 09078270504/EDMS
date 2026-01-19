@@ -1,0 +1,60 @@
+{
+  "doc_type": "general",
+  "title": "TOTAL AMOUNT   TENDERED CASH",
+  "ids": {
+    "document_no": "042-205713621-000336-18404"
+  },
+  "parties": {
+    "issuer": {
+      "name": "Systems Inc",
+      "tin": null
+    },
+    "recipient": {
+      "name": "Page",
+      "tin": null
+    },
+    "other": []
+  },
+  "dates": {},
+  "amounts": {
+    "currency": "PHP",
+    "total": null,
+    "subtotal": null,
+    "tax": null
+  },
+  "line_items": [],
+  "payment_terms": null,
+  "addresses": {},
+  "contacts": {},
+  "status": "processed",
+  "tags": [
+    "general"
+  ],
+  "extracted_entities": {
+    "people": [
+      "Page",
+      "MERCURY DRUG",
+      "Kalookan CTV",
+      "IMLL",
+      "CAMARIN Unit"
+    ],
+    "companies": [
+      "Systems Inc"
+    ],
+    "locations": [],
+    "projects": []
+  },
+  "notes": [],
+  "confidence": 0.75,
+  "extraction_method": "fast_pattern",
+  "processing_time": 0.001014,
+  "model_used": "Enhanced-7B",
+  "processing_info": {
+    "category": "Meralco",
+    "classification": "successful",
+    "document_name": "mercury_drug_receipt_jan92025",
+    "original_filename": "Mercury Drug Receipt - jan92025.pdf",
+    "processed_at": "2026-01-20T01:39:09.177505+08:00",
+    "processed_at_ph_formatted": "2026-01-20 01:39:09"
+  }
+}

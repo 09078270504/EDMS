@@ -1,0 +1,60 @@
+{
+  "doc_type": "general",
+  "title": "MERALCC Mete Ang liwanag ng buk Wete",
+  "ids": {
+    "document_no": "VALICHES"
+  },
+  "parties": {
+    "issuer": {
+      "name": "bar inc",
+      "tin": null
+    },
+    "recipient": {
+      "name": "Page",
+      "tin": null
+    },
+    "other": []
+  },
+  "dates": {
+    "issue_date": "10/01/2020"
+  },
+  "amounts": {
+    "currency": "PHP",
+    "total": null,
+    "subtotal": null,
+    "tax": null
+  },
+  "line_items": [],
+  "payment_terms": null,
+  "addresses": {},
+  "contacts": {},
+  "status": "processed",
+  "tags": [
+    "general"
+  ],
+  "extracted_entities": {
+    "people": [
+      "Page",
+      "Residential",
+      "Business"
+    ],
+    "companies": [
+      "bar inc"
+    ],
+    "locations": [],
+    "projects": []
+  },
+  "notes": [],
+  "confidence": 0.85,
+  "extraction_method": "fast_pattern",
+  "processing_time": 0.001508,
+  "model_used": "Enhanced-7B",
+  "processing_info": {
+    "category": "Meralco",
+    "classification": "successful",
+    "document_name": "electric_bill_sep2020",
+    "original_filename": "Electric Bill - Sep2020.pdf",
+    "processed_at": "2026-01-20T01:38:04.061875+08:00",
+    "processed_at_ph_formatted": "2026-01-20 01:38:04"
+  }
+}

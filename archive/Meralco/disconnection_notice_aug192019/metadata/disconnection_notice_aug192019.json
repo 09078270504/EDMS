@@ -1,0 +1,62 @@
+{
+  "doc_type": "general",
+  "title": "DISCONNECTION NOTICE",
+  "ids": {
+    "document_no": "TICE"
+  },
+  "parties": {
+    "issuer": {
+      "name": "PRODUCTS INC",
+      "tin": null
+    },
+    "recipient": {
+      "name": "Page",
+      "tin": null
+    },
+    "other": []
+  },
+  "dates": {
+    "issue_date": "30/06/2019"
+  },
+  "amounts": {
+    "currency": "PHP",
+    "total": null,
+    "subtotal": null,
+    "tax": null
+  },
+  "line_items": [],
+  "payment_terms": null,
+  "addresses": {},
+  "contacts": {},
+  "status": "processed",
+  "tags": [
+    "general"
+  ],
+  "extracted_entities": {
+    "people": [
+      "Page",
+      "DISCONNECTION NOTICE\nMERALCO\nDEASIO",
+      "MICHELLE",
+      "DA",
+      "STAGING AREA BLDG"
+    ],
+    "companies": [
+      "PRODUCTS INC"
+    ],
+    "locations": [],
+    "projects": []
+  },
+  "notes": [],
+  "confidence": 0.85,
+  "extraction_method": "fast_pattern",
+  "processing_time": 0.089647,
+  "model_used": "Enhanced-7B",
+  "processing_info": {
+    "category": "Meralco",
+    "classification": "successful",
+    "document_name": "disconnection_notice_aug192019",
+    "original_filename": "Disconnection Notice - Aug192019.pdf",
+    "processed_at": "2026-01-20T01:29:31.417635+08:00",
+    "processed_at_ph_formatted": "2026-01-20 01:29:31"
+  }
+}

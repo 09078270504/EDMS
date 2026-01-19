@@ -1,0 +1,11 @@
+.venv
+venv
+__pycache__/
+.env
+.env.production
+logs/
+db.sqlite3
+staticfiles/
+uploads/
+upload/
+*.log

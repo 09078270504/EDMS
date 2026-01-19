@@ -2,8 +2,10 @@
 (function () {
   'use strict';
 
+
   const STORAGE_KEY = 'sidebar:collapsed';
   const mSM = window.matchMedia('(min-width: 640px)');
+
 
   const $ = (id) => document.getElementById(id);
   const sidebar      = $('logo-sidebar');
@@ -13,26 +15,9 @@
   const userMenuBtn  = $('userMenuButton');
   const userDropdown = $('userDropdown');
 
+
   if (!sidebar) return;
 
-  // Add smooth transitions to elements
-  const addTransitions = () => {
-    // Add transition styles to sidebar
-    sidebar.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-    
-    // Add transition to page content
-    if (pageContent) {
-      pageContent.style.transition = 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-    }
-    
-    // Add transition to user dropdown
-    if (userDropdown) {
-      userDropdown.style.transition = 'opacity 0.2s ease-in-out, transform 0.2s ease-in-out';
-    }
-  };
-
-  // Initialize transitions
-  addTransitions();
 
   // ---------- helpers ----------
   const getStored = () => {
@@ -43,6 +28,7 @@
     document.documentElement.classList.toggle('sidebar-collapsed', collapsed);
   };
 
+
   const applyDesktop = (collapsed) => {
     sidebar.classList.toggle('collapsed', collapsed);
     pageContent && pageContent.classList.toggle('collapsed', collapsed);
@@ -52,6 +38,7 @@
     sidebar.classList.remove('-translate-x-full', 'translate-x-0');
     document.body.classList.remove('overflow-hidden');
   };
+
 
   const openMobile = () => {
     sidebar.classList.remove('-translate-x-full');
@@ -64,28 +51,15 @@
     document.body.classList.remove('overflow-hidden');
   };
 
-  const showDropdown = () => { 
-    if (userDropdown) {
-      userDropdown.classList.remove('hidden');
-      // Force reflow to ensure transition works
-      userDropdown.offsetHeight;
-      userDropdown.style.opacity = '1';
-      userDropdown.style.transform = 'translateY(0)';
-    }
-  };
-  const hideDropdown = () => { 
-    if (userDropdown) {
-      userDropdown.style.opacity = '0';
-      userDropdown.style.transform = 'translateY(-10px)';
-      setTimeout(() => {
-        userDropdown.classList.add('hidden');
-      }, 200);
-    }
-  };
+
+  const showDropdown = () => { userDropdown?.classList.remove('hidden'); };
+  const hideDropdown = () => { userDropdown?.classList.add('hidden'); };
+
 
   // ---------- initial state ----------
   const initialCollapsed =
     document.documentElement.classList.contains('sidebar-collapsed') || getStored();
+
 
   if (mSM.matches) {
     applyDesktop(initialCollapsed);
@@ -94,6 +68,7 @@
   }
   // persist the resolved initial state so every page keeps it
   setStored(initialCollapsed);
+
 
   // keep layout strict on bfcache return / forward-back nav
   window.addEventListener('pageshow', (e) => {
@@ -106,6 +81,7 @@
       }
     }
   });
+
 
   // Keep consistent when crossing the sm breakpoint
   mSM.addEventListener('change', (e) => {
@@ -120,15 +96,13 @@
     }
   });
 
+
   // ---------- user dropdown ----------
   if (userMenuBtn && userDropdown) {
-    // Initialize dropdown styles
-    userDropdown.style.opacity = '0';
-    userDropdown.style.transform = 'translateY(-10px)';
-    
     userMenuBtn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
+
 
       if (mSM.matches) {
         // DESKTOP: if collapsed, expand first (this *changes* state to open intentionally)
@@ -137,11 +111,7 @@
           setStored(false);      // persist OPEN
           requestAnimationFrame(showDropdown);
         } else {
-          if (userDropdown.classList.contains('hidden')) {
-            showDropdown();
-          } else {
-            hideDropdown();
-          }
+          userDropdown.classList.toggle('hidden');
         }
       } else {
         // MOBILE
@@ -149,14 +119,11 @@
           openMobile();
           requestAnimationFrame(() => requestAnimationFrame(showDropdown));
         } else {
-          if (userDropdown.classList.contains('hidden')) {
-            showDropdown();
-          } else {
-            hideDropdown();
-          }
+          userDropdown.classList.toggle('hidden');
         }
       }
     });
+
 
     document.addEventListener('click', (e) => {
       if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
@@ -164,6 +131,7 @@
       }
     }, { passive: true });
   }
+
 
   // ---------- controls ----------
   // Arrow CLOSES only (desktop collapse, mobile drawer close) and persists CLOSED
@@ -178,6 +146,7 @@
     }
     hideDropdown();
   });
+
 
   // Brand logo: **OPEN ONLY** (never closes)
   brandToggle && brandToggle.addEventListener('click', () => {
@@ -194,15 +163,18 @@
     }
     hideDropdown();
   });
-  
+ 
 })();
+
 
 // Chat and UI functionality
 (function() {
-  'use strict'; 
+  'use strict';
+
 
   let currentConversationId = null;
   let currentConversationTitle = null;
+
 
   // Get CSRF token
   function getCSRFToken() {
@@ -211,31 +183,33 @@
     return token;
   }
 
+
   // Context menu functions
   function showContextMenu(event, element) {
     event.preventDefault();
     event.stopPropagation();
-    
+   
     currentConversationId = element.dataset.conversationId;
     currentConversationTitle = element.dataset.conversationTitle;
-    
+   
     console.log('Opening context menu for:', currentConversationId, currentConversationTitle);
-    
+   
     const contextMenu = document.getElementById('chatContextMenu');
     if (contextMenu) {
       contextMenu.classList.remove('hidden');
-      
+     
       // Position the context menu near the button that was clicked
       const buttonRect = event.target.closest('button').getBoundingClientRect();
       contextMenu.style.left = (buttonRect.right - contextMenu.offsetWidth) + 'px';
       contextMenu.style.top = (buttonRect.bottom + 5) + 'px';
-      
+     
       // Hide context menu when clicking elsewhere
       setTimeout(() => {
         document.addEventListener('click', hideContextMenu);
       }, 10);
     }
   }
+
 
   function hideContextMenu() {
     const contextMenu = document.getElementById('chatContextMenu');
@@ -244,6 +218,7 @@
     }
     document.removeEventListener('click', hideContextMenu);
   }
+
 
   // Rename functions
   function renameChatItem() {
@@ -256,6 +231,7 @@
     }
   }
 
+
   function cancelRename() {
     const renameModal = document.getElementById('renameModal');
     if (renameModal) {
@@ -263,10 +239,11 @@
     }
   }
 
+
   function confirmRename() {
     const renameInput = document.getElementById('renameInput');
     const renameModal = document.getElementById('renameModal');
-    
+   
     if (renameInput) {
       const newTitle = renameInput.value.trim();
       if (newTitle && newTitle !== currentConversationTitle) {
@@ -293,11 +270,12 @@
         });
       }
     }
-    
+   
     if (renameModal) {
       renameModal.classList.add('hidden');
     }
   }
+
 
   // Delete functions
   function deleteChatItem() {
@@ -309,6 +287,7 @@
     }
   }
 
+
   function cancelDelete() {
     const deleteModal = document.getElementById('deleteConfirmModal');
     if (deleteModal) {
@@ -316,13 +295,14 @@
     }
   }
 
+
   function confirmDelete() {
     console.log('Confirming delete for conversation:', currentConversationId);
     if (!currentConversationId) {
       alert('No conversation selected for deletion');
       return;
     }
-    
+   
     // Send delete request
     fetch(`/chat/delete/${currentConversationId}/`, {
       method: 'DELETE',
@@ -346,12 +326,13 @@
       console.error('Error:', error);
       alert('Error deleting conversation');
     });
-    
+   
     const deleteModal = document.getElementById('deleteConfirmModal');
     if (deleteModal) {
       deleteModal.classList.add('hidden');
     }
   }
+
 
   // Legacy delete function (if still needed)
   function deleteConversation(conversationId) {
@@ -378,46 +359,6 @@
     }
   }
 
-  // Smooth panel transition function
-  function smoothPanelTransition(hidePanel, showPanel, activeBtn, inactiveBtn) {
-    // First fade out the current panel
-    if (hidePanel && !hidePanel.classList.contains('hidden')) {
-      hidePanel.style.opacity = '0';
-      hidePanel.style.transform = 'translateY(10px)';
-      
-      setTimeout(() => {
-        hidePanel.classList.add('hidden');
-        
-        // Then show and fade in the new panel
-        if (showPanel) {
-          showPanel.classList.remove('hidden');
-          showPanel.style.opacity = '0';
-          showPanel.style.transform = 'translateY(-10px)';
-          
-          // Force reflow
-          showPanel.offsetHeight;
-          
-          showPanel.style.opacity = '1';
-          showPanel.style.transform = 'translateY(0)';
-        }
-      }, 150);
-    } else {
-      // If no panel to hide, just show the new one
-      if (showPanel) {
-        showPanel.classList.remove('hidden');
-        showPanel.style.opacity = '0';
-        showPanel.style.transform = 'translateY(-10px)';
-        
-        requestAnimationFrame(() => {
-          showPanel.style.opacity = '1';
-          showPanel.style.transform = 'translateY(0)';
-        });
-      }
-    }
-    
-    // Update button states
-    setActiveButton(activeBtn, inactiveBtn);
-  }
 
   // Initialize chat/search panels
   function initializePanels() {
@@ -425,45 +366,97 @@
     const searchPanel = document.getElementById("searchPanel");
     const chatButton = document.getElementById("chatButton");
     const searchButton = document.getElementById("searchButton");
+    const chatPanelText = document.getElementById("chatPanelText");
+    const searchPanelText = document.getElementById("searchPanelText");
 
-    // Add transitions to panels
+
     if (chatPanel) {
-      chatPanel.style.transition = 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out';
-      chatPanel.style.opacity = '1';
-      chatPanel.style.transform = 'translateY(0)';
+      // Show Chat panel by default
       chatPanel.classList.remove("hidden");
     }
-    
+
+
     if (searchPanel) {
-      searchPanel.style.transition = 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out';
-      searchPanel.style.opacity = '0';
-      searchPanel.style.transform = 'translateY(-10px)';
+      // Hide Search panel by default
+      searchPanel.classList.add("hidden");
     }
+
+
+    if (chatPanelText) {
+      // Show Chat description by default
+      chatPanelText.classList.remove("hidden");
+    }
+
+
+    if (searchPanelText) {
+      // Hide Search description by default
+      searchPanelText.classList.add("hidden");
+    }
+
+
+    // Set initial active state for chat button
+    if (chatButton && searchButton) {
+      setActiveButton(chatButton, searchButton);
+    }
+
 
     function setActiveButton(activeBtn, inactiveBtn) {
       // Active button styles (green background, white text)
       activeBtn.classList.remove('text-gray-600', 'bg-transparent');
       activeBtn.classList.add('text-white', 'bg-green-600');
-      
+     
       // Inactive button styles (gray text, transparent background)
       inactiveBtn.classList.remove('text-white', 'bg-green-600');
       inactiveBtn.classList.add('text-gray-600', 'bg-transparent');
     }
 
-    if (chatButton && searchButton) {
-      // Set initial active state
-      setActiveButton(chatButton, searchButton);
-      
-      // Add event listeners for Chat/Search buttons
-      chatButton.addEventListener("click", function() {
-        smoothPanelTransition(searchPanel, chatPanel, chatButton, searchButton);
-      });
 
-      searchButton.addEventListener("click", function() {
-        smoothPanelTransition(chatPanel, searchPanel, searchButton, chatButton);
-      });
+    function showChatPanel() {
+      // Show Chat, hide Search
+      if (searchPanel) searchPanel.classList.add("hidden");
+      if (chatPanel) chatPanel.classList.remove("hidden");
+
+
+      // Show Chat description, hide Search description
+      if (searchPanelText) searchPanelText.classList.add("hidden");
+      if (chatPanelText) chatPanelText.classList.remove("hidden");
+
+
+      // Set Chat as active, Search as inactive
+      if (chatButton && searchButton) {
+        setActiveButton(chatButton, searchButton);
+      }
+    }
+
+
+    function showSearchPanel() {
+      // Show Search, hide Chat
+      if (chatPanel) chatPanel.classList.add("hidden");
+      if (searchPanel) searchPanel.classList.remove("hidden");
+
+
+      // Show Search description, hide Chat description
+      if (chatPanelText) chatPanelText.classList.add("hidden");
+      if (searchPanelText) searchPanelText.classList.remove("hidden");
+
+
+      // Set Search as active, Chat as inactive
+      if (searchButton && chatButton) {
+        setActiveButton(searchButton, chatButton);
+      }
+    }
+
+
+    if (chatButton) {
+      chatButton.addEventListener("click", showChatPanel);
+    }
+
+
+    if (searchButton) {
+      searchButton.addEventListener("click", showSearchPanel);
     }
   }
+
 
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
@@ -471,6 +464,7 @@
   } else {
     initializePanels();
   }
+
 
   // Make functions globally available
   window.showContextMenu = showContextMenu;
@@ -483,4 +477,8 @@
   window.confirmDelete = confirmDelete;
   window.deleteConversation = deleteConversation;
 
+
 })();
+
+
+

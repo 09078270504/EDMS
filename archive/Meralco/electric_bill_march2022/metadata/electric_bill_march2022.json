@@ -1,0 +1,59 @@
+{
+  "doc_type": "general",
+  "title": "MERALCO Page 1 of 2",
+  "ids": {
+    "document_no": "VALICHES"
+  },
+  "parties": {
+    "issuer": {
+      "name": "not inc",
+      "tin": null
+    },
+    "recipient": {
+      "name": "Page",
+      "tin": null
+    },
+    "other": []
+  },
+  "dates": {},
+  "amounts": {
+    "currency": "PHP",
+    "total": null,
+    "subtotal": null,
+    "tax": null
+  },
+  "line_items": [],
+  "payment_terms": null,
+  "addresses": {},
+  "contacts": {},
+  "status": "processed",
+  "tags": [
+    "general"
+  ],
+  "extracted_entities": {
+    "people": [
+      "Page",
+      "MICHELLE R. DEASIO",
+      "DA",
+      "STAGING AREA BLDG"
+    ],
+    "companies": [
+      "not inc"
+    ],
+    "locations": [],
+    "projects": []
+  },
+  "notes": [],
+  "confidence": 0.75,
+  "extraction_method": "fast_pattern",
+  "processing_time": 0.005513,
+  "model_used": "Enhanced-7B",
+  "processing_info": {
+    "category": "Meralco",
+    "classification": "successful",
+    "document_name": "electric_bill_march2022",
+    "original_filename": "Electric Bill - march2022 .pdf",
+    "processed_at": "2026-01-20T01:36:44.590490+08:00",
+    "processed_at_ph_formatted": "2026-01-20 01:36:44"
+  }
+}

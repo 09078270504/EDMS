@@ -1,0 +1,65 @@
+{
+  "doc_type": "invoice",
+  "title": "VOC#790524101 DAEP/ Meter No_ 33CZN79624 Route Seq. 2230 84 0007 1980",
+  "ids": {},
+  "parties": {
+    "issuer": {
+      "name": "any inc",
+      "tin": null
+    },
+    "recipient": {
+      "name": "Page",
+      "tin": null
+    },
+    "other": []
+  },
+  "dates": {
+    "issue_date": "24/05/2079"
+  },
+  "amounts": {
+    "currency": "PHP",
+    "total": 19.0,
+    "subtotal": null,
+    "tax": null
+  },
+  "line_items": [],
+  "payment_terms": null,
+  "addresses": {},
+  "contacts": {
+    "emails": [
+      "customercare@meralco.com"
+    ],
+    "email": "customercare@meralco.com"
+  },
+  "status": "processed",
+  "tags": [
+    "invoice"
+  ],
+  "extracted_entities": {
+    "people": [
+      "Page",
+      "DEASIO",
+      "MICHELLE",
+      "DA",
+      "STAGING AREA BLDG"
+    ],
+    "companies": [
+      "any inc"
+    ],
+    "locations": [],
+    "projects": []
+  },
+  "notes": [],
+  "confidence": 0.95,
+  "extraction_method": "fast_pattern",
+  "processing_time": 0.006872,
+  "model_used": "Enhanced-7B",
+  "processing_info": {
+    "category": "Meralco",
+    "classification": "successful",
+    "document_name": "disconnection_notice_march112025",
+    "original_filename": "Disconnection Notice - March112025.pdf",
+    "processed_at": "2026-01-20T01:32:13.779295+08:00",
+    "processed_at_ph_formatted": "2026-01-20 01:32:13"
+  }
+}

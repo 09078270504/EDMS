@@ -2,8 +2,10 @@
 (function () {
   'use strict';
 
+
   const STORAGE_KEY = 'sidebar:collapsed';
   const mSM = window.matchMedia('(min-width: 640px)');
+
 
   const $ = (id) => document.getElementById(id);
   const sidebar      = $('logo-sidebar');
@@ -13,7 +15,9 @@
   const userMenuBtn  = $('userMenuButton');
   const userDropdown = $('userDropdown');
 
+
   if (!sidebar) return;
+
 
   // ---------- helpers ----------
   const getStored = () => {
@@ -24,6 +28,7 @@
     document.documentElement.classList.toggle('sidebar-collapsed', collapsed);
   };
 
+
   const applyDesktop = (collapsed) => {
     sidebar.classList.toggle('collapsed', collapsed);
     pageContent && pageContent.classList.toggle('collapsed', collapsed);
@@ -33,6 +38,7 @@
     sidebar.classList.remove('-translate-x-full', 'translate-x-0');
     document.body.classList.remove('overflow-hidden');
   };
+
 
   const openMobile = () => {
     sidebar.classList.remove('-translate-x-full');
@@ -45,12 +51,15 @@
     document.body.classList.remove('overflow-hidden');
   };
 
+
   const showDropdown = () => { userDropdown?.classList.remove('hidden'); };
   const hideDropdown = () => { userDropdown?.classList.add('hidden'); };
+
 
   // ---------- initial state ----------
   const initialCollapsed =
     document.documentElement.classList.contains('sidebar-collapsed') || getStored();
+
 
   if (mSM.matches) {
     applyDesktop(initialCollapsed);
@@ -59,6 +68,7 @@
   }
   // persist the resolved initial state so every page keeps it
   setStored(initialCollapsed);
+
 
   // keep layout strict on bfcache return / forward-back nav
   window.addEventListener('pageshow', (e) => {
@@ -71,6 +81,7 @@
       }
     }
   });
+
 
   // Keep consistent when crossing the sm breakpoint
   mSM.addEventListener('change', (e) => {
@@ -85,11 +96,13 @@
     }
   });
 
+
   // ---------- user dropdown ----------
   if (userMenuBtn && userDropdown) {
     userMenuBtn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
+
 
       if (mSM.matches) {
         // DESKTOP: if collapsed, expand first (this *changes* state to open intentionally)
@@ -111,12 +124,14 @@
       }
     });
 
+
     document.addEventListener('click', (e) => {
       if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
         hideDropdown();
       }
     }, { passive: true });
   }
+
 
   // ---------- controls ----------
   // Arrow CLOSES only (desktop collapse, mobile drawer close) and persists CLOSED
@@ -131,6 +146,7 @@
     }
     hideDropdown();
   });
+
 
   // Brand logo: **OPEN ONLY** (never closes)
   brandToggle && brandToggle.addEventListener('click', () => {
@@ -147,15 +163,18 @@
     }
     hideDropdown();
   });
-  
+ 
 })();
+
 
 // Chat and UI functionality
 (function() {
-  'use strict'; 
+  'use strict';
+
 
   let currentConversationId = null;
   let currentConversationTitle = null;
+
 
   // Get CSRF token
   function getCSRFToken() {
@@ -164,31 +183,33 @@
     return token;
   }
 
+
   // Context menu functions
   function showContextMenu(event, element) {
     event.preventDefault();
     event.stopPropagation();
-    
+   
     currentConversationId = element.dataset.conversationId;
     currentConversationTitle = element.dataset.conversationTitle;
-    
+   
     console.log('Opening context menu for:', currentConversationId, currentConversationTitle);
-    
+   
     const contextMenu = document.getElementById('chatContextMenu');
     if (contextMenu) {
       contextMenu.classList.remove('hidden');
-      
+     
       // Position the context menu near the button that was clicked
       const buttonRect = event.target.closest('button').getBoundingClientRect();
       contextMenu.style.left = (buttonRect.right - contextMenu.offsetWidth) + 'px';
       contextMenu.style.top = (buttonRect.bottom + 5) + 'px';
-      
+     
       // Hide context menu when clicking elsewhere
       setTimeout(() => {
         document.addEventListener('click', hideContextMenu);
       }, 10);
     }
   }
+
 
   function hideContextMenu() {
     const contextMenu = document.getElementById('chatContextMenu');
@@ -197,6 +218,7 @@
     }
     document.removeEventListener('click', hideContextMenu);
   }
+
 
   // Rename functions
   function renameChatItem() {
@@ -209,6 +231,7 @@
     }
   }
 
+
   function cancelRename() {
     const renameModal = document.getElementById('renameModal');
     if (renameModal) {
@@ -216,10 +239,11 @@
     }
   }
 
+
   function confirmRename() {
     const renameInput = document.getElementById('renameInput');
     const renameModal = document.getElementById('renameModal');
-    
+   
     if (renameInput) {
       const newTitle = renameInput.value.trim();
       if (newTitle && newTitle !== currentConversationTitle) {
@@ -246,11 +270,12 @@
         });
       }
     }
-    
+   
     if (renameModal) {
       renameModal.classList.add('hidden');
     }
   }
+
 
   // Delete functions
   function deleteChatItem() {
@@ -262,6 +287,7 @@
     }
   }
 
+
   function cancelDelete() {
     const deleteModal = document.getElementById('deleteConfirmModal');
     if (deleteModal) {
@@ -269,13 +295,14 @@
     }
   }
 
+
   function confirmDelete() {
     console.log('Confirming delete for conversation:', currentConversationId);
     if (!currentConversationId) {
       alert('No conversation selected for deletion');
       return;
     }
-    
+   
     // Send delete request
     fetch(`/chat/delete/${currentConversationId}/`, {
       method: 'DELETE',
@@ -299,12 +326,13 @@
       console.error('Error:', error);
       alert('Error deleting conversation');
     });
-    
+   
     const deleteModal = document.getElementById('deleteConfirmModal');
     if (deleteModal) {
       deleteModal.classList.add('hidden');
     }
   }
+
 
   // Legacy delete function (if still needed)
   function deleteConversation(conversationId) {
@@ -331,6 +359,7 @@
     }
   }
 
+
   // Initialize chat/search panels
   function initializePanels() {
     const chatPanel = document.getElementById("chatPanel");
@@ -340,49 +369,58 @@
     const chatPanelText = document.getElementById("chatPanelText");
     const searchPanelText = document.getElementById("searchPanelText");
 
+
     if (chatPanel) {
       // Show Chat panel by default
       chatPanel.classList.remove("hidden");
     }
+
 
     if (searchPanel) {
       // Hide Search panel by default
       searchPanel.classList.add("hidden");
     }
 
+
     if (chatPanelText) {
       // Show Chat description by default
       chatPanelText.classList.remove("hidden");
     }
+
 
     if (searchPanelText) {
       // Hide Search description by default
       searchPanelText.classList.add("hidden");
     }
 
+
     // Set initial active state for chat button
     if (chatButton && searchButton) {
       setActiveButton(chatButton, searchButton);
     }
 
+
     function setActiveButton(activeBtn, inactiveBtn) {
       // Active button styles (green background, white text)
       activeBtn.classList.remove('text-gray-600', 'bg-transparent');
       activeBtn.classList.add('text-white', 'bg-green-600');
-      
+     
       // Inactive button styles (gray text, transparent background)
       inactiveBtn.classList.remove('text-white', 'bg-green-600');
       inactiveBtn.classList.add('text-gray-600', 'bg-transparent');
     }
+
 
     function showChatPanel() {
       // Show Chat, hide Search
       if (searchPanel) searchPanel.classList.add("hidden");
       if (chatPanel) chatPanel.classList.remove("hidden");
 
+
       // Show Chat description, hide Search description
       if (searchPanelText) searchPanelText.classList.add("hidden");
       if (chatPanelText) chatPanelText.classList.remove("hidden");
+
 
       // Set Chat as active, Search as inactive
       if (chatButton && searchButton) {
@@ -390,14 +428,17 @@
       }
     }
 
+
     function showSearchPanel() {
       // Show Search, hide Chat
       if (chatPanel) chatPanel.classList.add("hidden");
       if (searchPanel) searchPanel.classList.remove("hidden");
 
+
       // Show Search description, hide Chat description
       if (chatPanelText) chatPanelText.classList.add("hidden");
       if (searchPanelText) searchPanelText.classList.remove("hidden");
+
 
       // Set Search as active, Chat as inactive
       if (searchButton && chatButton) {
@@ -405,14 +446,17 @@
       }
     }
 
+
     if (chatButton) {
       chatButton.addEventListener("click", showChatPanel);
     }
+
 
     if (searchButton) {
       searchButton.addEventListener("click", showSearchPanel);
     }
   }
+
 
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
@@ -420,6 +464,7 @@
   } else {
     initializePanels();
   }
+
 
   // Make functions globally available
   window.showContextMenu = showContextMenu;
@@ -432,4 +477,8 @@
   window.confirmDelete = confirmDelete;
   window.deleteConversation = deleteConversation;
 
+
 })();
+
+
+

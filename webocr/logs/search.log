@@ -1762,3 +1762,245 @@ INFO 2026-01-10 17:42:14,162 basehttp 12556 31668 "GET /search/llm/?search_query
 INFO 2026-01-10 17:42:14,189 basehttp 12556 31668 "GET /static/css/neon.css HTTP/1.1" 200 7805
 INFO 2026-01-10 17:47:54,319 basehttp 12556 29536 "GET /documents/ HTTP/1.1" 200 26668
 INFO 2026-01-10 17:47:54,360 basehttp 12556 29536 "GET /static/css/neon.css HTTP/1.1" 304 0
+INFO 2026-01-19 22:42:23,541 autoreload 24008 15676 Watching for file changes with StatReloader
+INFO 2026-01-19 22:51:59,478 autoreload 15956 11440 Watching for file changes with StatReloader
+INFO 2026-01-19 22:54:18,164 autoreload 27280 13096 Watching for file changes with StatReloader
+INFO 2026-01-19 22:56:36,356 autoreload 15700 12912 Watching for file changes with StatReloader
+INFO 2026-01-19 22:56:58,726 basehttp 15700 18144 "GET / HTTP/1.1" 200 19983
+INFO 2026-01-19 22:57:29,018 basehttp 15700 18144 "GET /login/ HTTP/1.1" 200 7505
+INFO 2026-01-19 22:57:30,487 basehttp 15700 18144 "POST /login/ HTTP/1.1" 200 7732
+INFO 2026-01-19 22:58:59,198 autoreload 18536 26336 Watching for file changes with StatReloader
+INFO 2026-01-19 22:59:10,381 basehttp 18536 5836 "GET / HTTP/1.1" 200 19983
+INFO 2026-01-19 22:59:31,895 basehttp 18536 5836 "GET /login/ HTTP/1.1" 200 7505
+INFO 2026-01-19 22:59:33,538 basehttp 18536 5836 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-19 22:59:33,561 basehttp 18536 5836 "GET /documents/ HTTP/1.1" 200 25352
+INFO 2026-01-19 22:59:40,308 basehttp 18536 5836 "GET /search/documents/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 12432
+INFO 2026-01-19 22:59:55,855 basehttp 18536 5836 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 11882
+WARNING 2026-01-19 23:00:03,146 log 18536 5836 Forbidden (CSRF token from POST incorrect.): /login/
+WARNING 2026-01-19 23:00:03,147 basehttp 18536 5836 "POST /login/ HTTP/1.1" 403 2518
+INFO 2026-01-19 23:00:06,140 basehttp 18536 5836 "GET /login/ HTTP/1.1" 200 11866
+INFO 2026-01-19 23:00:08,396 basehttp 18536 15844 "GET / HTTP/1.1" 302 0
+INFO 2026-01-19 23:00:13,328 basehttp 18536 15844 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 11882
+INFO 2026-01-19 23:00:50,436 basehttp 18536 24660 "GET /search/llm/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 11882
+INFO 2026-01-19 23:07:44,186 autoreload 27204 13292 Watching for file changes with StatReloader
+INFO 2026-01-19 23:07:59,745 basehttp 27204 23908 "GET / HTTP/1.1" 302 0
+INFO 2026-01-19 23:07:59,797 basehttp 27204 23908 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-19 23:08:48,813 basehttp 27204 20596 "GET /search/llm/?search_query=Villanueva&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25637
+INFO 2026-01-19 23:12:27,753 basehttp 27204 2356 "GET /document/5/original/ HTTP/1.1" 200 49546
+INFO 2026-01-19 23:16:41,083 basehttp 27204 2040 "GET / HTTP/1.1" 302 0
+INFO 2026-01-19 23:16:41,165 basehttp 27204 2040 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-19 23:16:54,610 basehttp 27204 2040 "GET /search/documents/?search_query=Villanueva&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 26003
+INFO 2026-01-19 23:18:14,426 basehttp 27204 21280 "GET /chat/ HTTP/1.1" 200 12584
+INFO 2026-01-19 23:18:14,481 basehttp 27204 21280 "GET /static/css/dashboard.css HTTP/1.1" 200 3425
+INFO 2026-01-19 23:18:15,118 basehttp 27204 13352 "GET /static/js/dashboard.js HTTP/1.1" 200 10737
+INFO 2026-01-19 23:18:18,797 basehttp 27204 13352 "POST /chat/message/ HTTP/1.1" 200 333
+INFO 2026-01-19 23:18:19,903 basehttp 27204 13352 "GET /chat/1/ HTTP/1.1" 200 12231
+INFO 2026-01-19 23:18:24,446 basehttp 27204 13352 "POST /chat/message/ HTTP/1.1" 200 328
+INFO 2026-01-19 23:18:30,628 basehttp 27204 13352 "GET /chat/ HTTP/1.1" 200 13429
+INFO 2026-01-19 23:18:32,160 basehttp 27204 13352 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-19 23:18:33,807 basehttp 27204 13352 "GET /chat/ HTTP/1.1" 200 13429
+INFO 2026-01-19 23:18:35,252 basehttp 27204 8552 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-19 23:25:08,206 autoreload 26324 24788 Watching for file changes with StatReloader
+INFO 2026-01-19 23:25:24,631 basehttp 26324 19476 "GET /documents/ HTTP/1.1" 200 25485
+WARNING 2026-01-19 23:25:25,334 log 26324 19476 Not Found: /favicon.ico
+WARNING 2026-01-19 23:25:25,335 basehttp 26324 19476 "GET /favicon.ico HTTP/1.1" 404 6581
+INFO 2026-01-19 23:25:29,566 basehttp 26324 19476 "GET / HTTP/1.1" 302 0
+INFO 2026-01-19 23:25:29,592 basehttp 26324 19476 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-19 23:29:32,191 autoreload 2516 7312 Watching for file changes with StatReloader
+INFO 2026-01-19 23:29:50,219 basehttp 2516 27292 "GET / HTTP/1.1" 302 0
+INFO 2026-01-19 23:29:50,278 basehttp 2516 27292 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-19 23:29:57,660 basehttp 2516 9772 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-19 23:30:08,749 basehttp 2516 25472 "GET / HTTP/1.1" 302 0
+INFO 2026-01-19 23:30:08,778 basehttp 2516 25472 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-19 23:30:39,719 basehttp 2516 4640 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-19 23:30:40,021 basehttp 2516 2768 "GET /static/js/base.js HTTP/1.1" 200 13724
+INFO 2026-01-19 23:30:40,025 basehttp 2516 4640 "GET /static/css/search_form.css HTTP/1.1" 200 502
+INFO 2026-01-19 23:30:40,041 basehttp 2516 17716 "GET /static/css/base.css HTTP/1.1" 200 7712
+INFO 2026-01-19 23:30:40,062 basehttp 2516 19440 "GET /static/img/fowse.png HTTP/1.1" 200 137981
+INFO 2026-01-19 23:30:40,064 basehttp 2516 27100 "GET /static/css/neon.css HTTP/1.1" 200 10059
+INFO 2026-01-19 23:30:40,110 basehttp 2516 5668 "GET /static/js/search_form.js HTTP/1.1" 200 5396
+WARNING 2026-01-19 23:30:40,453 log 2516 5668 Not Found: /favicon.ico
+WARNING 2026-01-19 23:30:40,454 basehttp 2516 5668 "GET /favicon.ico HTTP/1.1" 404 6581
+INFO 2026-01-19 23:32:17,500 basehttp 2516 19324 "GET /logout/ HTTP/1.1" 302 0
+INFO 2026-01-19 23:32:17,570 basehttp 2516 19324 "GET /login/ HTTP/1.1" 200 7509
+INFO 2026-01-19 23:32:17,614 basehttp 2516 19324 "GET /static/img/fowse.png?v=2 HTTP/1.1" 200 137981
+INFO 2026-01-19 23:32:24,173 basehttp 2516 19324 "GET / HTTP/1.1" 200 19987
+INFO 2026-01-19 23:32:24,236 basehttp 2516 19324 "GET /static/img/fowse.png HTTP/1.1" 304 0
+INFO 2026-01-19 23:32:59,416 basehttp 2516 19324 "GET /login/ HTTP/1.1" 200 7509
+INFO 2026-01-19 23:32:59,457 basehttp 2516 19324 "GET /static/img/fowse.png?v=2 HTTP/1.1" 304 0
+INFO 2026-01-19 23:33:02,110 basehttp 2516 19324 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-19 23:33:02,123 basehttp 2516 19324 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-19 23:33:02,161 basehttp 2516 19324 "GET /static/img/fowse.png HTTP/1.1" 304 0
+INFO 2026-01-19 23:34:46,355 basehttp 2516 10200 "GET /login/ HTTP/1.1" 200 11872
+INFO 2026-01-19 23:34:46,392 basehttp 2516 10200 "GET /static/img/fowse.png HTTP/1.1" 304 0
+INFO 2026-01-19 23:34:46,393 basehttp 2516 23088 "GET /static/img/fowse.png?v=2 HTTP/1.1" 304 0
+INFO 2026-01-19 23:34:51,061 basehttp 2516 12872 "GET / HTTP/1.1" 302 0
+INFO 2026-01-19 23:35:02,188 basehttp 2516 21792 "GET /login/ HTTP/1.1" 200 11872
+INFO 2026-01-19 23:35:19,602 basehttp 2516 22760 "GET /login/ HTTP/1.1" 200 11870
+INFO 2026-01-19 23:36:08,161 basehttp 2516 26304 "GET / HTTP/1.1" 302 0
+INFO 2026-01-19 23:36:08,185 basehttp 2516 26304 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-19 23:36:08,490 basehttp 2516 26304 "GET /static/img/fowse.png HTTP/1.1" 304 0
+INFO 2026-01-19 23:36:10,749 basehttp 2516 26304 "GET / HTTP/1.1" 302 0
+INFO 2026-01-19 23:36:10,763 basehttp 2516 26304 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-19 23:36:18,024 basehttp 2516 27092 "GET /logout/ HTTP/1.1" 302 0
+INFO 2026-01-19 23:36:18,045 basehttp 2516 27092 "GET /login/ HTTP/1.1" 200 7509
+INFO 2026-01-19 23:36:18,089 basehttp 2516 27092 "GET /static/img/fowse.png?v=2 HTTP/1.1" 304 0
+INFO 2026-01-19 23:36:22,713 basehttp 2516 27092 "GET /logout/ HTTP/1.1" 302 0
+INFO 2026-01-19 23:36:22,718 basehttp 2516 27092 "GET /login/ HTTP/1.1" 200 7509
+INFO 2026-01-19 23:37:12,382 basehttp 2516 15964 "GET /logout HTTP/1.1" 301 0
+INFO 2026-01-19 23:37:12,393 basehttp 2516 9864 "GET /logout/ HTTP/1.1" 302 0
+INFO 2026-01-19 23:37:12,403 basehttp 2516 9864 "GET /login/ HTTP/1.1" 200 7509
+INFO 2026-01-19 23:37:12,521 basehttp 2516 9864 "GET /static/img/fowse.png?v=2 HTTP/1.1" 304 0
+INFO 2026-01-19 23:37:21,409 basehttp 2516 9864 "POST /login/ HTTP/1.1" 200 7736
+INFO 2026-01-19 23:38:28,358 basehttp 2516 21448 "GET /login/ HTTP/1.1" 200 7511
+INFO 2026-01-19 23:38:28,394 basehttp 2516 21448 "GET /static/img/fowse.png?v=2 HTTP/1.1" 304 0
+INFO 2026-01-19 23:38:36,773 basehttp 2516 21448 "GET /forgot-password/ HTTP/1.1" 200 21828
+INFO 2026-01-19 23:38:36,806 basehttp 2516 21448 "GET /static/img/fowse.png HTTP/1.1" 304 0
+INFO 2026-01-19 23:40:23,277 basehttp 2516 16008 "GET /forgot-password/ HTTP/1.1" 200 5341
+INFO 2026-01-19 23:40:32,615 basehttp 2516 16008 "POST /forgot-password/ HTTP/1.1" 200 5640
+INFO 2026-01-19 23:40:45,215 basehttp 2516 16008 "GET /login/ HTTP/1.1" 200 7511
+INFO 2026-01-19 23:40:45,243 basehttp 2516 16008 "GET /static/img/fowse.png?v=2 HTTP/1.1" 304 0
+INFO 2026-01-19 23:43:01,449 basehttp 2516 9380 "GET /forgot-password/ HTTP/1.1" 200 5341
+INFO 2026-01-19 23:43:01,491 basehttp 2516 9380 "GET /static/js/base.js HTTP/1.1" 304 0
+INFO 2026-01-19 23:43:03,858 basehttp 2516 16472 "GET /login/ HTTP/1.1" 200 7511
+INFO 2026-01-19 23:43:03,889 basehttp 2516 16472 "GET /static/img/fowse.png?v=2 HTTP/1.1" 304 0
+INFO 2026-01-19 23:43:06,467 basehttp 2516 16472 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-19 23:43:06,492 basehttp 2516 16472 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-19 23:43:06,537 basehttp 2516 16472 "GET /static/img/fowse.png HTTP/1.1" 304 0
+INFO 2026-01-19 23:43:13,107 basehttp 2516 5820 "GET /forgot-password/ HTTP/1.1" 200 9702
+WARNING 2026-01-19 23:43:20,131 log 2516 5820 Forbidden (CSRF token from POST incorrect.): /login/
+WARNING 2026-01-19 23:43:20,138 basehttp 2516 5820 "POST /login/ HTTP/1.1" 403 2518
+INFO 2026-01-19 23:43:47,242 basehttp 2516 4372 "GET /login/ HTTP/1.1" 200 11872
+INFO 2026-01-19 23:43:52,639 basehttp 2516 22468 "GET /login/ HTTP/1.1" 200 11872
+INFO 2026-01-19 23:43:52,683 basehttp 2516 22468 "GET /static/css/neon.css HTTP/1.1" 304 0
+INFO 2026-01-19 23:43:56,643 basehttp 2516 22468 "GET /logout/ HTTP/1.1" 302 0
+INFO 2026-01-19 23:43:56,650 basehttp 2516 22468 "GET /login/ HTTP/1.1" 200 7511
+INFO 2026-01-19 23:47:02,270 basehttp 2516 22884 "GET / HTTP/1.1" 200 19987
+INFO 2026-01-19 23:47:02,365 basehttp 2516 26036 "GET /static/img/fowse.png HTTP/1.1" 304 0
+INFO 2026-01-19 23:47:02,367 basehttp 2516 22884 "GET /static/img/fowse.png?v=2 HTTP/1.1" 304 0
+INFO 2026-01-19 23:47:10,941 basehttp 2516 22884 "GET /login/ HTTP/1.1" 200 7511
+INFO 2026-01-19 23:47:12,733 basehttp 2516 22884 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-19 23:47:12,750 basehttp 2516 22884 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-19 23:47:19,706 basehttp 2516 22884 "GET /search/documents/?search_query=Villanueva&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 26003
+INFO 2026-01-20 00:22:04,176 autoreload 7680 7076 Watching for file changes with StatReloader
+INFO 2026-01-20 00:22:20,852 basehttp 7680 27588 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-20 00:22:20,917 basehttp 7680 27588 "GET /static/css/neon.css HTTP/1.1" 304 0
+INFO 2026-01-20 00:22:20,923 basehttp 7680 18128 "GET /static/img/fowse.png HTTP/1.1" 304 0
+INFO 2026-01-20 00:22:20,929 basehttp 7680 2236 "GET /static/js/base.js HTTP/1.1" 304 0
+WARNING 2026-01-20 00:22:21,418 log 7680 2236 Not Found: /favicon.ico
+WARNING 2026-01-20 00:22:21,419 basehttp 7680 2236 "GET /favicon.ico HTTP/1.1" 404 6581
+INFO 2026-01-20 00:22:25,048 basehttp 7680 2236 "GET / HTTP/1.1" 302 0
+INFO 2026-01-20 00:22:25,075 basehttp 7680 2236 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-20 00:22:31,921 basehttp 7680 8564 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-20 00:22:38,559 basehttp 7680 8564 "GET /logout/ HTTP/1.1" 302 0
+INFO 2026-01-20 00:22:38,570 basehttp 7680 8564 "GET /login/ HTTP/1.1" 200 7531
+INFO 2026-01-20 00:22:38,600 basehttp 7680 8564 "GET /static/img/fowse.png?v=2 HTTP/1.1" 304 0
+INFO 2026-01-20 00:24:02,136 basehttp 7680 27032 "GET /login/ HTTP/1.1" 200 7511
+INFO 2026-01-20 00:24:21,116 basehttp 7680 11188 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-20 00:24:21,129 basehttp 7680 11188 "GET /documents/ HTTP/1.1" 200 25485
+WARNING 2026-01-20 00:25:03,515 log 7680 20952 Not Found: /documents/document_view.html
+WARNING 2026-01-20 00:25:03,516 basehttp 7680 20952 "GET /documents/document_view.html HTTP/1.1" 404 6632
+ERROR 2026-01-20 01:17:42,279 log 7680 8860 Internal Server Error: /documents/view/
+Traceback (most recent call last):
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\OneDrive\Desktop\archive\archive\webocr\core\views.py", line 1224, in documents_view
+    return render(request, 'documents/documents_view.html', {'document': document})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\backends\django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\engine.py", line 175, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\engine.py", line 157, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\base.py", line 200, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\base.py", line 513, in parse
+    raise self.error(token, e)
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\base.py", line 511, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\loader_tags.py", line 293, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\base.py", line 513, in parse
+    raise self.error(token, e)
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\base.py", line 511, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\loader_tags.py", line 232, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\base.py", line 518, in parse
+    self.unclosed_block_tag(parse_until)
+  File "C:\Users\Shania Jarrisse\.conda\envs\webocr\Lib\site-packages\django\template\base.py", line 581, in unclosed_block_tag
+    raise self.error(token, msg)
+django.template.exceptions.TemplateSyntaxError: Unclosed tag on line 5: 'block'. Looking for one of: endblock.
+ERROR 2026-01-20 01:17:42,306 basehttp 7680 8860 "GET /documents/view/ HTTP/1.1" 500 187005
+INFO 2026-01-20 01:19:03,235 basehttp 7680 3656 "GET /documents/view/ HTTP/1.1" 200 10074
+INFO 2026-01-20 01:19:03,274 basehttp 7680 3656 "GET /static/css/neon.css HTTP/1.1" 304 0
+INFO 2026-01-20 01:19:03,275 basehttp 7680 26300 "GET /static/img/fowse.png HTTP/1.1" 304 0
+INFO 2026-01-20 01:19:03,279 basehttp 7680 22560 "GET /static/js/base.js HTTP/1.1" 304 0
+INFO 2026-01-20 01:19:32,557 basehttp 7680 25704 "GET /chat/ HTTP/1.1" 200 13429
+INFO 2026-01-20 01:19:32,623 basehttp 7680 26408 - Broken pipe from ('127.0.0.1', 49592)
+INFO 2026-01-20 01:19:32,623 basehttp 7680 16484 - Broken pipe from ('127.0.0.1', 51798)
+INFO 2026-01-20 01:19:32,805 basehttp 7680 25704 "GET /static/css/dashboard.css HTTP/1.1" 200 3425
+INFO 2026-01-20 01:19:32,975 basehttp 7680 15004 "GET /static/js/dashboard.js HTTP/1.1" 200 10737
+INFO 2026-01-20 01:19:36,407 basehttp 7680 15004 "GET /chat/1/ HTTP/1.1" 200 12956
+INFO 2026-01-20 01:19:47,298 basehttp 7680 22180 "POST /chat/message/ HTTP/1.1" 200 319
+INFO 2026-01-20 01:20:18,316 basehttp 7680 22536 "POST /chat/message/ HTTP/1.1" 200 417
+INFO 2026-01-20 01:21:27,741 basehttp 7680 15216 "POST /chat/message/ HTTP/1.1" 200 326
+INFO 2026-01-20 01:21:35,783 basehttp 7680 15216 "POST /chat/message/ HTTP/1.1" 200 342
+INFO 2026-01-20 01:21:50,423 basehttp 7680 11644 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-20 01:21:53,503 basehttp 7680 11644 "GET /chat/ HTTP/1.1" 200 13429
+INFO 2026-01-20 01:21:55,120 basehttp 7680 5772 "GET /documents/ HTTP/1.1" 200 25485
+INFO 2026-01-20 01:22:16,518 basehttp 7680 20348 "GET /search/documents/?search_query=pup&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25479
+INFO 2026-01-20 01:40:08,003 autoreload 17052 12880 Watching for file changes with StatReloader
+INFO 2026-01-20 01:40:30,646 basehttp 17052 20908 "GET / HTTP/1.1" 302 0
+INFO 2026-01-20 01:40:30,729 basehttp 17052 20908 "GET /documents/ HTTP/1.1" 200 25576
+INFO 2026-01-20 01:40:30,934 basehttp 17052 20908 "GET /static/img/fowse.png HTTP/1.1" 304 0
+INFO 2026-01-20 01:41:17,900 basehttp 17052 13216 "GET /search/documents/?search_query=Meralco+&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 60859
+INFO 2026-01-20 01:41:56,824 basehttp 17052 8596 "GET /search/llm/?search_query=Anything+about+Meralco+Disconnection&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 38803
+INFO 2026-01-20 01:42:40,712 basehttp 17052 15284 "GET /search/llm/?search_query=Disconnection&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 22880
+INFO 2026-01-20 01:42:40,764 basehttp 17052 15284 "GET /static/js/base.js HTTP/1.1" 304 0
+INFO 2026-01-20 01:43:09,067 basehttp 17052 15284 "GET /documents/ HTTP/1.1" 200 25576
+INFO 2026-01-20 01:43:09,106 basehttp 17052 15284 "GET /static/css/neon.css HTTP/1.1" 304 0
+INFO 2026-01-20 01:43:32,467 basehttp 17052 15284 "GET /search/llm/?search_query=is+there+any+disconnection+related+document%3F+&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 23081
+INFO 2026-01-20 01:46:55,290 basehttp 17052 25136 "GET /document/10/ocr/ HTTP/1.1" 200 2464
+INFO 2026-01-20 01:48:45,615 basehttp 17052 16072 "GET /search/llm/?search_query=is+there+any+disconnection+related+document%3F+&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 23051
+INFO 2026-01-20 01:48:56,496 basehttp 17052 9848 "GET /search/llm/?search_query=is+there+any+disconnection+related+document%3F+&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 23008
+INFO 2026-01-20 01:48:56,771 basehttp 17052 24220 "GET /static/img/fowse.png HTTP/1.1" 200 137981
+INFO 2026-01-20 01:48:56,788 basehttp 17052 9848 "GET /static/css/base.css HTTP/1.1" 200 7712
+INFO 2026-01-20 01:48:56,838 basehttp 17052 14680 "GET /static/css/neon.css HTTP/1.1" 200 10059
+INFO 2026-01-20 01:48:56,988 basehttp 17052 13772 "GET /static/js/base.js HTTP/1.1" 200 13724
+WARNING 2026-01-20 01:48:57,404 log 17052 13772 Not Found: /favicon.ico
+WARNING 2026-01-20 01:48:57,404 basehttp 17052 13772 "GET /favicon.ico HTTP/1.1" 404 6581

@@ -1,0 +1,60 @@
+{
+  "doc_type": "invoice",
+  "title": "MERALCO Ang liwanag ng bukas",
+  "ids": {
+    "invoice_no": "230114083630"
+  },
+  "parties": {
+    "issuer": {
+      "name": "flyer inc",
+      "tin": null
+    },
+    "recipient": {
+      "name": "Page",
+      "tin": null
+    },
+    "other": []
+  },
+  "dates": {
+    "issue_date": "12/01/2020"
+  },
+  "amounts": {
+    "currency": "PHP",
+    "total": 1791.82,
+    "subtotal": null,
+    "tax": null
+  },
+  "line_items": [],
+  "payment_terms": null,
+  "addresses": {},
+  "contacts": {},
+  "status": "processed",
+  "tags": [
+    "invoice"
+  ],
+  "extracted_entities": {
+    "people": [
+      "Page",
+      "Residential",
+      "Businessb"
+    ],
+    "companies": [
+      "flyer inc"
+    ],
+    "locations": [],
+    "projects": []
+  },
+  "notes": [],
+  "confidence": 0.95,
+  "extraction_method": "fast_pattern",
+  "processing_time": 0.001336,
+  "model_used": "Enhanced-7B",
+  "processing_info": {
+    "category": "Meralco",
+    "classification": "successful",
+    "document_name": "electric_bill_dec2020",
+    "original_filename": "Electric Bill - dec2020.pdf",
+    "processed_at": "2026-01-20T01:33:47.782742+08:00",
+    "processed_at_ph_formatted": "2026-01-20 01:33:47"
+  }
+}

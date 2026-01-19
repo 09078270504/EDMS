@@ -1,0 +1,63 @@
+{
+  "doc_type": "general",
+  "title": "Billing Statement No:: 2231114229696",
+  "ids": {
+    "document_no": "VALICHES"
+  },
+  "parties": {
+    "issuer": {
+      "name": null,
+      "tin": null
+    },
+    "recipient": {
+      "name": "Page",
+      "tin": null
+    },
+    "other": []
+  },
+  "dates": {},
+  "amounts": {
+    "currency": "PHP",
+    "total": 21.0,
+    "subtotal": null,
+    "tax": null
+  },
+  "line_items": [],
+  "payment_terms": null,
+  "addresses": {},
+  "contacts": {
+    "emails": [
+      "customercare@meralco.com"
+    ],
+    "email": "customercare@meralco.com"
+  },
+  "status": "processed",
+  "tags": [
+    "general"
+  ],
+  "extracted_entities": {
+    "people": [
+      "Page",
+      "MICHELLE",
+      "DEASIO",
+      "DA",
+      "STAGING AREA BLDG"
+    ],
+    "companies": [],
+    "locations": [],
+    "projects": []
+  },
+  "notes": [],
+  "confidence": 0.95,
+  "extraction_method": "fast_pattern",
+  "processing_time": 0.002998,
+  "model_used": "Enhanced-7B",
+  "processing_info": {
+    "category": "Meralco",
+    "classification": "successful",
+    "document_name": "electric_bill_dec2021",
+    "original_filename": "Electric Bill - Dec2021.pdf",
+    "processed_at": "2026-01-20T01:34:19.261574+08:00",
+    "processed_at_ph_formatted": "2026-01-20 01:34:19"
+  }
+}

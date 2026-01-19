@@ -1,0 +1,62 @@
+{
+  "doc_type": "general",
+  "title": "General",
+  "ids": {
+    "document_no": "VALICHES"
+  },
+  "parties": {
+    "issuer": {
+      "name": "not inc",
+      "tin": null
+    },
+    "recipient": {
+      "name": "Page",
+      "tin": null
+    },
+    "other": []
+  },
+  "dates": {
+    "issue_date": "month 87 0207"
+  },
+  "amounts": {
+    "currency": "PHP",
+    "total": null,
+    "subtotal": null,
+    "tax": null
+  },
+  "line_items": [],
+  "payment_terms": null,
+  "addresses": {},
+  "contacts": {},
+  "status": "processed",
+  "tags": [
+    "general"
+  ],
+  "extracted_entities": {
+    "people": [
+      "Page",
+      "MICHELLE",
+      "DEASIO",
+      "DA",
+      "STAGING AREA BLDG"
+    ],
+    "companies": [
+      "not inc"
+    ],
+    "locations": [],
+    "projects": []
+  },
+  "notes": [],
+  "confidence": 0.85,
+  "extraction_method": "fast_pattern",
+  "processing_time": 0.006859,
+  "model_used": "Enhanced-7B",
+  "processing_info": {
+    "category": "Meralco",
+    "classification": "successful",
+    "document_name": "electric_bill_nov2021",
+    "original_filename": "Electric Bill - Nov2021.pdf",
+    "processed_at": "2026-01-20T01:37:25.487156+08:00",
+    "processed_at_ph_formatted": "2026-01-20 01:37:25"
+  }
+}
