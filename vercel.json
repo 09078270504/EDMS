@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "if [ -n \"$DATABASE_URL\" ]; then python webocr/manage.py migrate --noinput; else echo 'Skipping migrate: DATABASE_URL not set'; fi && python webocr/manage.py collectstatic --noinput",
+  "buildCommand": "if [ -n \"$DATABASE_URL\" ]; then python webocr/manage.py migrate --noinput; python webocr/manage.py create_default_superuser; else echo 'Skipping migrate & superuser: DATABASE_URL not set'; fi && python webocr/manage.py collectstatic --noinput",
   "builds": [
     {
       "src": "api/index.py",
