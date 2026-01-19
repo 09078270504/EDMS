@@ -41,8 +41,7 @@ scikit-image>=0.24.0  # Often needed for image processing
 openai>=1.40.0
 PyMuPDF>=1.23.0
 pdf2image>=1.16.0
-python-magic-bin>=0.4.14  # Windows compatible version
-poppler-utils  # Required for pdf2image on Windows
+python-magic>=0.4.27  # Cross-platform file type detection
 
 # Utilities
 pytz>=2023.3
