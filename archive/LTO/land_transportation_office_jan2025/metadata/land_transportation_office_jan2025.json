@@ -1,0 +1,55 @@
+{
+  "doc_type": "official_receipt",
+  "title": "Republic of the Philipplnes",
+  "ids": {
+    "official_receipt_no": "Street"
+  },
+  "parties": {
+    "issuer": {
+      "name": null,
+      "tin": null
+    },
+    "recipient": {
+      "name": "Page",
+      "tin": null
+    },
+    "other": []
+  },
+  "dates": {},
+  "amounts": {
+    "currency": "PHP",
+    "total": null,
+    "subtotal": null,
+    "tax": null
+  },
+  "line_items": [],
+  "payment_terms": null,
+  "addresses": {},
+  "contacts": {},
+  "status": "processed",
+  "tags": [
+    "official_receipt"
+  ],
+  "extracted_entities": {
+    "people": [
+      "Page",
+      "Republic"
+    ],
+    "companies": [],
+    "locations": [],
+    "projects": []
+  },
+  "notes": [],
+  "confidence": 0.8,
+  "extraction_method": "fast_pattern",
+  "processing_time": 0.814367,
+  "model_used": "Enhanced-7B",
+  "processing_info": {
+    "category": "LTO",
+    "classification": "successful",
+    "document_name": "land_transportation_office_jan2025",
+    "original_filename": "Land Transportation Office - Jan2025.pdf",
+    "processed_at": "2026-01-20T07:28:01.649715+08:00",
+    "processed_at_ph_formatted": "2026-01-20 07:28:01"
+  }
+}

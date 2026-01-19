@@ -810,11 +810,11 @@ def forgot_password_view(request):
                     risk_level='medium'
                 )
                 
-                subject = 'Password Reset - Archive System'
+                subject = 'Password Reset - Arkayb Sistem'
                 message = f'''
 Dear {user.first_name or user.username},
 
-We have successfully processed your password reset request for your Archive System account.
+We have successfully processed your password reset request for your Arkayb Sistem account.
 
 Your password has been reset to: comfac123
 

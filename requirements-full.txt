@@ -1,3 +1,4 @@
+# pip install -r requirements-full.txt --For local development going forward:
 # Django Framework
 Django>=4.2.0,<5.0.0
 djangorestframework>=3.14.0

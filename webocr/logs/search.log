@@ -2004,3 +2004,39 @@ INFO 2026-01-20 01:48:56,838 basehttp 17052 14680 "GET /static/css/neon.css HTTP
 INFO 2026-01-20 01:48:56,988 basehttp 17052 13772 "GET /static/js/base.js HTTP/1.1" 200 13724
 WARNING 2026-01-20 01:48:57,404 log 17052 13772 Not Found: /favicon.ico
 WARNING 2026-01-20 01:48:57,404 basehttp 17052 13772 "GET /favicon.ico HTTP/1.1" 404 6581
+INFO 2026-01-20 07:02:17,969 autoreload 4768 27976 Watching for file changes with StatReloader
+INFO 2026-01-20 07:05:25,976 autoreload 28404 26812 Watching for file changes with StatReloader
+INFO 2026-01-20 07:05:31,672 basehttp 28404 20732 "GET / HTTP/1.1" 200 19987
+INFO 2026-01-20 07:05:31,774 basehttp 28404 25452 "GET /static/img/fowse.png?v=2 HTTP/1.1" 304 0
+INFO 2026-01-20 07:05:31,775 basehttp 28404 332 "GET /static/css/neon.css HTTP/1.1" 304 0
+INFO 2026-01-20 07:05:31,876 basehttp 28404 14300 "GET /static/js/base.js HTTP/1.1" 200 13724
+INFO 2026-01-20 07:05:31,908 basehttp 28404 20732 "GET /static/img/fowse.png HTTP/1.1" 200 137981
+INFO 2026-01-20 07:05:32,216 basehttp 28404 20732 "GET /favicon.ico HTTP/1.1" 301 0
+INFO 2026-01-20 07:05:40,940 basehttp 28404 20732 "GET /login/ HTTP/1.1" 200 7511
+INFO 2026-01-20 07:05:43,847 basehttp 28404 20732 "POST /login/ HTTP/1.1" 200 7738
+INFO 2026-01-20 07:07:10,664 basehttp 28404 21804 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-20 07:07:11,264 basehttp 28404 21804 "GET /documents/ HTTP/1.1" 200 25342
+INFO 2026-01-20 07:07:26,748 basehttp 28404 21804 "GET /search/llm/?search_query=what+are+the+current+documents+here&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 11936
+INFO 2026-01-20 07:09:41,392 autoreload 23536 23508 Watching for file changes with StatReloader
+INFO 2026-01-20 07:09:47,716 basehttp 23536 22004 "GET / HTTP/1.1" 200 19987
+INFO 2026-01-20 07:10:02,845 basehttp 23536 27804 "GET /login/ HTTP/1.1" 200 7511
+INFO 2026-01-20 07:10:06,971 basehttp 23536 27804 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-20 07:10:06,993 basehttp 23536 27804 "GET /documents/ HTTP/1.1" 200 25576
+INFO 2026-01-20 07:11:39,117 basehttp 23536 27804 "GET /search/llm/?search_query=What+are+the+available+documents+here&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 39124
+INFO 2026-01-20 07:14:34,895 basehttp 23536 27488 "GET /documents/ HTTP/1.1" 200 25576
+INFO 2026-01-20 07:14:50,114 basehttp 23536 27488 "GET /search/llm/?search_query=Villanueva&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25637
+INFO 2026-01-20 07:29:59,814 autoreload 9980 12996 Watching for file changes with StatReloader
+INFO 2026-01-20 07:30:18,295 basehttp 9980 17056 "GET / HTTP/1.1" 302 0
+INFO 2026-01-20 07:30:18,459 basehttp 9980 17056 "GET /documents/ HTTP/1.1" 200 25760
+INFO 2026-01-20 07:30:51,602 basehttp 9980 25556 "GET /search/documents/?search_query=LTO&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 14863
+INFO 2026-01-20 07:31:26,652 basehttp 9980 25556 "GET /document/27/ocr/ HTTP/1.1" 200 1084
+INFO 2026-01-20 07:32:04,938 basehttp 9980 25556 "GET /document/27/ocr/ HTTP/1.1" 200 1031
+INFO 2026-01-20 07:32:19,410 basehttp 9980 25556 "GET /documents/ HTTP/1.1" 200 25760
+INFO 2026-01-20 07:32:55,343 basehttp 9980 25556 "GET /search/llm/?search_query=LTO&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 15024
+INFO 2026-01-20 07:33:12,307 basehttp 9980 25556 "GET /documents/ HTTP/1.1" 200 25760
+INFO 2026-01-20 07:33:24,854 basehttp 9980 25556 "GET /search/llm/?search_query=who+is+the+owner+of+the+file+LTO&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 25592
+INFO 2026-01-20 07:33:49,102 basehttp 9980 9068 "GET /search/documents/?search_query=lto&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 14863
+INFO 2026-01-20 07:33:51,474 basehttp 9980 9068 "GET /documents/ HTTP/1.1" 200 25760
+INFO 2026-01-20 07:33:56,555 basehttp 9980 9068 "GET /search/documents/?search_query=Mercury+Drugs&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 20578
+INFO 2026-01-20 07:34:03,278 basehttp 9980 9068 "GET /documents/ HTTP/1.1" 200 25760
+INFO 2026-01-20 07:34:09,895 basehttp 9980 9068 "GET /search/llm/?search_query=Mercury&client_filter=&date_from=&date_to=&fuzzy=true&view= HTTP/1.1" 200 20260
