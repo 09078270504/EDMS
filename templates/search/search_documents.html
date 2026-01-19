@@ -215,8 +215,8 @@
 
                     <!-- Show text snippets for content search -->
                     {% if document.search_stage >= 2 and document.matched_snippets %}
-                      <div class="mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded text-xs">
-                        <strong class="text-yellow-800">Found in content:</strong><br>
+                      <div class="mt-2 p-3 bg-cyan-50 border border-cyan-200 rounded text-xs">
+                        <strong class="text-cyan-800">Found in content:</strong><br>
                         <span class="text-gray-700">{{ document.matched_snippets.0|safe|truncatewords:20 }}...</span>
                       </div>
                     {% endif %}

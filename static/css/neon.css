@@ -133,3 +133,105 @@
 /* Strengthen page content contrast when sidebar present */
 .neon-theme .no-sidebar ~ #pageContent,
 .neon-theme #pageContent { color: var(--neon-text); }
+
+
+/* =========================
+   LOGIN PAGE BLUR EFFECT
+   ========================= */
+
+/* Blur all content behind login modal */
+.neon-theme.login-page nav,
+.neon-theme.login-page .pt-16 > section,
+.neon-theme.login-page .pt-16 > .py-16 {
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+/* Login modal overlay */
+.login-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Login modal content */
+.login-modal-content {
+  position: relative;
+  z-index: 101;
+  background: var(--neon-surface-strong);
+  border: 1px solid var(--neon-border);
+  border-radius: 24px;
+  padding: 3rem 2.5rem;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 
+              0 0 40px rgba(124, 58, 237, 0.4);
+  backdrop-filter: blur(20px);
+  pointer-events: auto;
+}
+
+.login-modal-content h2 {
+  color: var(--accent-3);
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 20px rgba(34, 211, 238, 0.5);
+}
+
+.login-modal-content label {
+  color: var(--neon-text);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.login-modal-content input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--neon-border);
+  border-radius: 12px;
+  color: #1f2937;
+  font-size: 1rem;
+  margin-bottom: 1.25rem;
+  transition: all 0.2s ease;
+}
+
+.login-modal-content input:focus {
+  outline: none;
+  border-color: var(--accent-3);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+}
+
+.login-modal-content button[type="submit"],
+.login-modal-content .glow-btn {
+  width: 100%;
+  padding: 0.875rem;
+  font-size: 1.125rem;
+  margin-top: 1rem;
+}
+
+.login-modal-content a {
+  color: var(--accent-3);
+  text-decoration: none;
+  font-size: 0.875rem;
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  transition: color 0.2s ease;
+}
+
+.login-modal-content a:hover {
+  color: var(--accent-1);
+  text-decoration: underline;
+}
