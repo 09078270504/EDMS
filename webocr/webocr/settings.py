@@ -61,6 +61,9 @@ DEBUG = env('DEBUG')
 
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['.vercel.app', 'localhost', '127.0.0.1'])
+# Always allow all Vercel preview domains, even when ALLOWED_HOSTS is provided via env
+if '.vercel.app' not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append('.vercel.app')
 
 
 INSTALLED_APPS = [
@@ -315,6 +318,9 @@ CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[
     'https://arkayb.vercel.app',
     'https://*.vercel.app'
 ])
+# Ensure wildcard for Vercel previews is always present even if env overrides
+if 'https://*.vercel.app' not in CSRF_TRUSTED_ORIGINS:
+    CSRF_TRUSTED_ORIGINS.append('https://*.vercel.app')
 
 
 # Model Configuration
