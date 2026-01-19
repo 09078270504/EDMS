@@ -473,6 +473,11 @@ STORAGES = {
     },
 }
 
+# In serverless deployments, prefer using finders so static files can be served
+# directly from app/static and STATICFILES_DIRS without requiring collectstatic.
+# WhiteNoise will still compress files when possible.
+WHITENOISE_USE_FINDERS = True
+
 
 # ====================================
 # TEMPLATE UPDATE
