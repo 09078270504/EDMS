@@ -9,9 +9,6 @@
       }
     }
   ],
-  "install": {
-    "pip": "-r requirements-vercel.txt"
-  },
   "routes": [
     { "src": "/static/(.*)", "dest": "/static/$1" },
     { "src": "/(.*)", "dest": "/api/index.py" }
