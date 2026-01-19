@@ -52,3 +52,4 @@ tqdm>=4.66.0  # Progress bars for ML tasks
 # Development
 black>=24.0.0  # Code formatting
 flake8>=7.0.0  # Linting
+vercel-wsgi>=0.1.6  # Vercel serverless wrapper for Django WSGI
