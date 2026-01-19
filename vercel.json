@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "python webocr/manage.py collectstatic --noinput",
   "builds": [
     {
       "src": "api/index.py",
