@@ -60,7 +60,7 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default= [])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['.vercel.app', 'localhost', '127.0.0.1'])
 
 
 INSTALLED_APPS = [
@@ -310,8 +310,10 @@ CSP_CONNECT_SRC = ("'self'",)
 
 # Domain name
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[
-   'http://localhost:8000',
-   'http://127.0.0.1:8000'
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'https://arkayb.vercel.app',
+    'https://*.vercel.app'
 ])
 
 
