@@ -469,8 +469,11 @@ STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
+    # Use non-manifest storage to avoid runtime errors when collectstatic output
+    # is not packaged into the serverless function on Vercel.
+    # This still serves compressed static files via WhiteNoise.
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 
